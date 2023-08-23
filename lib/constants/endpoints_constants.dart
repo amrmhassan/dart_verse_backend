@@ -1,4 +1,4 @@
-import 'package:dart_verse/constants/path_fields.dart';
+import 'package:dart_verse_backend/constants/path_fields.dart';
 
 class EndpointsConstants {
   // server

@@ -2,7 +2,7 @@
 //! i will use jwt to create the token for email verification and add the
 //! expiry date to the json web token
 
-import 'package:dart_verse/layers/services/auth/auth_service.dart';
+import 'package:dart_verse_backend/layers/services/auth/auth_service.dart';
 
 abstract class EmailVerificationProvider {
   final String? emailTemplate;

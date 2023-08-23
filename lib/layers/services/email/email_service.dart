@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:dart_verse/errors/models/email_exceptions.dart';
-import 'package:dart_verse/layers/settings/app/app.dart';
+import 'package:dart_verse_backend/errors/models/email_exceptions.dart';
+import 'package:dart_verse_backend/layers/settings/app/app.dart';
 import 'package:mailer/mailer.dart';
 
 import 'package:html/parser.dart' as parser;

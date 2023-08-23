@@ -1,5 +1,5 @@
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
-import 'package:dart_verse/layers/settings/defaults/default_auth_settings.dart';
+import 'package:dart_verse_backend/layers/settings/defaults/default_auth_settings.dart';
 
 class AuthSettings {
   /// this is the collection name of the auth table(collection) that you want to save users auth info in

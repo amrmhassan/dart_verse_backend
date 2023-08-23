@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import 'package:dart_verse/constants/context_fields.dart';
-import 'package:dart_verse/constants/header_fields.dart';
-import 'package:dart_verse/errors/models/auth_errors.dart';
-import 'package:dart_verse/errors/serverless_exception.dart';
-import 'package:dart_verse/layers/services/auth/auth_service.dart';
-import 'package:dart_verse/layers/service_server/auth_server/repo/auth_middlewares.dart';
+import 'package:dart_verse_backend/constants/context_fields.dart';
+import 'package:dart_verse_backend/constants/header_fields.dart';
+import 'package:dart_verse_backend/errors/models/auth_errors.dart';
+import 'package:dart_verse_backend/errors/serverless_exception.dart';
+import 'package:dart_verse_backend/layers/services/auth/auth_service.dart';
+import 'package:dart_verse_backend/layers/service_server/auth_server/repo/auth_middlewares.dart';
 import 'package:dart_webcore/dart_webcore/server/impl/request_holder.dart';
 import 'package:dart_webcore/dart_webcore/server/impl/response_holder.dart';
 import 'package:dart_webcore/dart_webcore/server/repo/passed_http_entity.dart';

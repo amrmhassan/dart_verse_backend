@@ -1,4 +1,4 @@
-import 'package:dart_verse/layers/services/db_manager/data/repositories/path_entity.dart';
+import 'package:dart_verse_backend/layers/services/db_manager/data/repositories/path_entity.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 import '../../../domain/repositories/coll_ref_repo.dart';

@@ -1,10 +1,10 @@
-import 'package:dart_verse/errors/models/storage_errors.dart';
-import 'package:dart_verse/layers/service_server/storage_server/impl/default_storage_server_handlers.dart';
-import 'package:dart_verse/layers/service_server/storage_server/repo/storage_server_handlers.dart';
-import 'package:dart_verse/layers/services/storage_buckets/models/storage_bucket_model.dart';
-import 'package:dart_verse/layers/services/storage_service/utils/buckets_store.dart';
-import 'package:dart_verse/layers/services/web_server/server_service.dart';
-import 'package:dart_verse/layers/settings/app/app.dart';
+import 'package:dart_verse_backend/errors/models/storage_errors.dart';
+import 'package:dart_verse_backend/layers/service_server/storage_server/impl/default_storage_server_handlers.dart';
+import 'package:dart_verse_backend/layers/service_server/storage_server/repo/storage_server_handlers.dart';
+import 'package:dart_verse_backend/layers/services/storage_buckets/models/storage_bucket_model.dart';
+import 'package:dart_verse_backend/layers/services/storage_service/utils/buckets_store.dart';
+import 'package:dart_verse_backend/layers/services/web_server/server_service.dart';
+import 'package:dart_verse_backend/layers/settings/app/app.dart';
 import 'package:dart_webcore/dart_webcore.dart';
 
 import '../storage_buckets/repo/bucket_controller_repo.dart';

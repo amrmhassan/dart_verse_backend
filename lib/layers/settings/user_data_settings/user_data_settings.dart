@@ -1,4 +1,4 @@
-import 'package:dart_verse/constants/collections.dart';
+import 'package:dart_verse_backend/constants/collections.dart';
 
 class UserDataSettings {
   final String collectionName;

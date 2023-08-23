@@ -1,4 +1,4 @@
-import 'package:dart_verse/constants/model_fields.dart';
+import 'package:dart_verse_backend/constants/model_fields.dart';
 
 class BodyFields {
   static const String email = ModelFields.email;

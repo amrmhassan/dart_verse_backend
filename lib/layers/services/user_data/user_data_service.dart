@@ -1,13 +1,13 @@
-import 'package:dart_verse/errors/models/auth_errors.dart';
-import 'package:dart_verse/errors/models/user_data_errors.dart';
-import 'package:dart_verse/features/auth_db_provider/impl/memory_db_auth_provider/memory_db_auth_provider.dart';
-import 'package:dart_verse/features/auth_db_provider/impl/mongo_db_auth_provider/mongo_db_auth_provider.dart';
-import 'package:dart_verse/features/user_data_db_provider/memory_db_user_data_provider/memory_db_user_data_provider.dart';
-import 'package:dart_verse/features/user_data_db_provider/mongo_db_user_data_provider/mongo_db_user_data_provider.dart';
-import 'package:dart_verse/features/user_data_db_provider/user_data_db_provider.dart';
-import 'package:dart_verse/layers/services/auth/auth_service.dart';
-import 'package:dart_verse/layers/services/auth/models/auth_model.dart';
-import 'package:dart_verse/layers/services/service.dart';
+import 'package:dart_verse_backend/errors/models/auth_errors.dart';
+import 'package:dart_verse_backend/errors/models/user_data_errors.dart';
+import 'package:dart_verse_backend/features/auth_db_provider/impl/memory_db_auth_provider/memory_db_auth_provider.dart';
+import 'package:dart_verse_backend/features/auth_db_provider/impl/mongo_db_auth_provider/mongo_db_auth_provider.dart';
+import 'package:dart_verse_backend/features/user_data_db_provider/memory_db_user_data_provider/memory_db_user_data_provider.dart';
+import 'package:dart_verse_backend/features/user_data_db_provider/mongo_db_user_data_provider/mongo_db_user_data_provider.dart';
+import 'package:dart_verse_backend/features/user_data_db_provider/user_data_db_provider.dart';
+import 'package:dart_verse_backend/layers/services/auth/auth_service.dart';
+import 'package:dart_verse_backend/layers/services/auth/models/auth_model.dart';
+import 'package:dart_verse_backend/layers/services/service.dart';
 
 class UserDataService implements DVService {
   final AuthService _authService;

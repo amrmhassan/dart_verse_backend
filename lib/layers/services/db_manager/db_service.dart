@@ -1,8 +1,8 @@
-import 'package:dart_verse/errors/models/app_exceptions.dart';
-import 'package:dart_verse/errors/models/database_errors.dart';
-import 'package:dart_verse/features/app_database/controllers/db_connect.dart';
-import 'package:dart_verse/layers/services/service.dart';
-import 'package:dart_verse/layers/settings/app/app.dart';
+import 'package:dart_verse_backend/errors/models/app_exceptions.dart';
+import 'package:dart_verse_backend/errors/models/database_errors.dart';
+import 'package:dart_verse_backend/features/app_database/controllers/db_connect.dart';
+import 'package:dart_verse_backend/layers/services/service.dart';
+import 'package:dart_verse_backend/layers/settings/app/app.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'data/repositories/db_controllers/memory_db_controller.dart';
 import 'data/repositories/db_controllers/mongo_db_controller.dart';

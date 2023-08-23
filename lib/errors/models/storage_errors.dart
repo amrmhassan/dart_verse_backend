@@ -2,7 +2,7 @@
 
 import 'dart:io';
 
-import 'package:dart_verse/constants/error_codes.dart';
+import 'package:dart_verse_backend/constants/error_codes.dart';
 
 import '../serverless_exception.dart';
 

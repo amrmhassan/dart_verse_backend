@@ -1,10 +1,10 @@
 // ignore_for_file: overridden_fields
 
-import 'package:dart_verse/features/auth_db_provider/auth_db_provider.dart';
-import 'package:dart_verse/features/auth_db_provider/repo/memory_db_repo_provider.dart';
-import 'package:dart_verse/layers/services/auth/controllers/jwt_controller.dart';
-import 'package:dart_verse/layers/services/auth/models/auth_model.dart';
-import 'package:dart_verse/layers/services/db_manager/db_service.dart';
+import 'package:dart_verse_backend/features/auth_db_provider/auth_db_provider.dart';
+import 'package:dart_verse_backend/features/auth_db_provider/repo/memory_db_repo_provider.dart';
+import 'package:dart_verse_backend/layers/services/auth/controllers/jwt_controller.dart';
+import 'package:dart_verse_backend/layers/services/auth/models/auth_model.dart';
+import 'package:dart_verse_backend/layers/services/db_manager/db_service.dart';
 
 import '../../../../constants/model_fields.dart';
 import '../../../../layers/settings/app/app.dart';

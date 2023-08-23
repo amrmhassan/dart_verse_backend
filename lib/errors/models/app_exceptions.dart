@@ -1,7 +1,7 @@
 // ignore_for_file: overridden_fields
 
-import 'package:dart_verse/errors/serverless_exception.dart';
-import 'package:dart_verse/constants/error_codes.dart';
+import 'package:dart_verse_backend/errors/serverless_exception.dart';
+import 'package:dart_verse_backend/constants/error_codes.dart';
 
 class AppExceptions extends ServerLessException {
   String _message;

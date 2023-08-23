@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:dart_verse/layers/services/storage_buckets/acm_permissions/controller/acm_permission_controller.dart';
-import 'package:dart_verse/layers/services/storage_buckets/impl/default_bucket_controller.dart';
-import 'package:dart_verse/layers/services/storage_buckets/repo/bucket_controller_repo.dart';
-import 'package:dart_verse/utils/string_utils.dart';
+import 'package:dart_verse_backend/layers/services/storage_buckets/acm_permissions/controller/acm_permission_controller.dart';
+import 'package:dart_verse_backend/layers/services/storage_buckets/impl/default_bucket_controller.dart';
+import 'package:dart_verse_backend/layers/services/storage_buckets/repo/bucket_controller_repo.dart';
+import 'package:dart_verse_backend/utils/string_utils.dart';
 import 'package:path/path.dart';
 
 String get defaultBucketsContainer => 'Buckets';

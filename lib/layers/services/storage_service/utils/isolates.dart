@@ -1,5 +1,5 @@
 import 'dart:isolate';
-import 'package:dart_verse/utils/string_utils.dart';
+import 'package:dart_verse_backend/utils/string_utils.dart';
 import 'package:path/path.dart' as path_operations;
 import 'dart:io';
 

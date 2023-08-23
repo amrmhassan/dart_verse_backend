@@ -1,5 +1,5 @@
-import 'package:dart_verse/constants/endpoints_constants.dart';
-import 'package:dart_verse/layers/settings/endpoints/repo/storage_endpoints.dart';
+import 'package:dart_verse_backend/constants/endpoints_constants.dart';
+import 'package:dart_verse_backend/layers/settings/endpoints/repo/storage_endpoints.dart';
 
 class DefaultStorageEndpoints implements StorageEndpoints {
   @override

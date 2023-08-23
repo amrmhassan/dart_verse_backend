@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:dart_verse/layers/services/storage_buckets/acm_permissions/constants/default_permissions.dart';
-import 'package:dart_verse/layers/services/storage_buckets/acm_permissions/models/acm.dart';
-import 'package:dart_verse/layers/services/storage_buckets/models/storage_bucket_model.dart';
-import 'package:dart_verse/utils/encryption.dart';
+import 'package:dart_verse_backend/layers/services/storage_buckets/acm_permissions/constants/default_permissions.dart';
+import 'package:dart_verse_backend/layers/services/storage_buckets/acm_permissions/models/acm.dart';
+import 'package:dart_verse_backend/layers/services/storage_buckets/models/storage_bucket_model.dart';
+import 'package:dart_verse_backend/utils/encryption.dart';
 
 class ACMPermissionController {
   final StorageBucket bucket;

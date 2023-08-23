@@ -1,6 +1,6 @@
-// import 'package:dart_verse/constants/model_fields.dart';
-// import 'package:dart_verse/services/db_manager/db_service.dart';
-// import 'package:dart_verse/settings/app/app.dart';
+// import 'package:dart_verse_backend/constants/model_fields.dart';
+// import 'package:dart_verse_backend/services/db_manager/db_service.dart';
+// import 'package:dart_verse_backend/settings/app/app.dart';
 // import 'package:mongo_dart/mongo_dart.dart';
 
 // import '../../../services/auth/models/auth_model.dart';

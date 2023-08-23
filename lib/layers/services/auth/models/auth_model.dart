@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:dart_verse/constants/model_fields.dart';
-import 'package:dart_verse/constants/reserved_keys.dart';
+import 'package:dart_verse_backend/constants/model_fields.dart';
+import 'package:dart_verse_backend/constants/reserved_keys.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'auth_model.g.dart';

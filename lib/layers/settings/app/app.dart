@@ -1,15 +1,15 @@
 // this app is the starting point of the server
 // it will require settings for auth, database, realtime database, etc...
-import 'package:dart_verse/errors/models/app_exceptions.dart';
-import 'package:dart_verse/errors/models/storage_errors.dart';
-import 'package:dart_verse/layers/settings/auth_settings/auth_settings.dart';
-import 'package:dart_verse/layers/settings/db_settings/db_settings.dart';
-import 'package:dart_verse/layers/settings/email_settings/email_settings.dart';
-import 'package:dart_verse/layers/settings/endpoints/endpoints.dart';
-import 'package:dart_verse/layers/settings/server_settings/server_settings.dart';
-import 'package:dart_verse/layers/settings/storage_settings/storage_settings.dart';
-import 'package:dart_verse/layers/settings/user_data_settings/user_data_settings.dart';
-import 'package:dart_verse/utils/string_utils.dart';
+import 'package:dart_verse_backend/errors/models/app_exceptions.dart';
+import 'package:dart_verse_backend/errors/models/storage_errors.dart';
+import 'package:dart_verse_backend/layers/settings/auth_settings/auth_settings.dart';
+import 'package:dart_verse_backend/layers/settings/db_settings/db_settings.dart';
+import 'package:dart_verse_backend/layers/settings/email_settings/email_settings.dart';
+import 'package:dart_verse_backend/layers/settings/endpoints/endpoints.dart';
+import 'package:dart_verse_backend/layers/settings/server_settings/server_settings.dart';
+import 'package:dart_verse_backend/layers/settings/storage_settings/storage_settings.dart';
+import 'package:dart_verse_backend/layers/settings/user_data_settings/user_data_settings.dart';
+import 'package:dart_verse_backend/utils/string_utils.dart';
 
 //! i should keep track of collections and sub collections names in a string file or something
 

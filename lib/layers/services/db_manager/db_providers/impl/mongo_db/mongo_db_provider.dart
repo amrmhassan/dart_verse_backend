@@ -1,5 +1,5 @@
-import 'package:dart_verse/errors/models/database_errors.dart';
-import 'package:dart_verse/layers/settings/db_settings/repo/conn_link.dart';
+import 'package:dart_verse_backend/errors/models/database_errors.dart';
+import 'package:dart_verse_backend/layers/settings/db_settings/repo/conn_link.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 import '../../repo/db_provider.dart';

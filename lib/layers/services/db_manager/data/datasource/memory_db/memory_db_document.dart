@@ -1,4 +1,4 @@
-import 'package:dart_verse/constants/reserved_keys.dart';
+import 'package:dart_verse_backend/constants/reserved_keys.dart';
 
 import '../../repositories/memory_ref/coll_ref_memory.dart';
 import '../../repositories/memory_ref/doc_ref_memory.dart';

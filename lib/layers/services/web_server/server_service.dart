@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:dart_verse/constants/endpoints_constants.dart';
-import 'package:dart_verse/errors/models/auth_server_exceptions.dart';
-import 'package:dart_verse/layers/service_server/auth_server/auth_server.dart';
-import 'package:dart_verse/layers/service_server/db_server/db_server.dart';
-import 'package:dart_verse/layers/settings/app/app.dart';
+import 'package:dart_verse_backend/constants/endpoints_constants.dart';
+import 'package:dart_verse_backend/errors/models/auth_server_exceptions.dart';
+import 'package:dart_verse_backend/layers/service_server/auth_server/auth_server.dart';
+import 'package:dart_verse_backend/layers/service_server/db_server/db_server.dart';
+import 'package:dart_verse_backend/layers/settings/app/app.dart';
 import 'package:dart_webcore/dart_webcore.dart';
 
 //! move handlers  of the auth service to a middle step between the authService and serverService

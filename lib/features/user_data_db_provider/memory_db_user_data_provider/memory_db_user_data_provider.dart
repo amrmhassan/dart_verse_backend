@@ -1,4 +1,4 @@
-import 'package:dart_verse/features/auth_db_provider/repo/memory_db_repo_provider.dart';
+import 'package:dart_verse_backend/features/auth_db_provider/repo/memory_db_repo_provider.dart';
 
 import '../user_data_db_provider.dart';
 
