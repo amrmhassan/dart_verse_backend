@@ -1,0 +1,3 @@
+# App Database
+this is responsible for local app database querying for authentication etc...
+connecting to different database providers
