@@ -1,0 +1,4 @@
+-- to build json serilzation
+flutter packages pub run build_runner build --delete-conflicting-outputs
+-- start replica set
+mongod --replSet rs0 --port 27017 --dbpath C:\Users\amrha\mongo_db
