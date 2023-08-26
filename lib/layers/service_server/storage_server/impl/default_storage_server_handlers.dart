@@ -137,6 +137,11 @@ class DefaultStorageServerHandlers implements StorageServerHandlers {
       String? onFileExist = request.headers.value(HeaderFields.onFileExist);
       bool overrideIfExist = onFileExist == 'override';
       bool throwErrorIfExist = onFileExist == 'error';
+      if (onFileExist == 'ignore') {
+        overrideIfExist = false;
+        throwErrorIfExist = false;
+      }
+
       if (bucket == null) {
         throw NoBucketException(bucketName);
       }

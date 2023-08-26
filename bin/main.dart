@@ -22,6 +22,7 @@ import 'package:dart_verse_backend/layers/settings/db_settings/db_settings.dart'
 import 'package:dart_verse_backend/layers/settings/server_settings/server_settings.dart';
 import 'package:dart_verse_backend/layers/settings/storage_settings/storage_settings.dart';
 import 'package:dart_verse_backend/layers/settings/user_data_settings/user_data_settings.dart';
+import 'package:dart_webcore/dart_webcore.dart';
 
 import 'constants.dart';
 
@@ -61,8 +62,12 @@ void main(List<String> arguments) async {
     authServer: authServer,
     dbServer: dbServer,
   );
+  Router router = Router()
+    ..get('/checkServerAlive',
+        (request, response, pathArgs) => response.write('Yes i am a live'));
 
   var storageService = StorageService(app, serverService);
+  serverService.addRouter(router, appIdSecured: true);
   await storageService.init();
   await serverService.runServer();
 }

@@ -59,7 +59,7 @@ class StorageService {
   void _addEndpoints({
     bool jwtSecured = false,
     bool emailMustBeVerified = false,
-    bool appIdSecured = true,
+    bool appIdSecured = false,
   }) {
     // paths
     String upload = _app.endpoints.storageEndpoints.upload;
@@ -76,6 +76,6 @@ class StorageService {
       jwtSecured: jwtSecured,
     );
     Router downloadRouter = Router()..get(download, _serverHandlers.download);
-    _serverService.addRouter(downloadRouter);
+    _serverService.addRouter(downloadRouter, appIdSecured: false);
   }
 }
