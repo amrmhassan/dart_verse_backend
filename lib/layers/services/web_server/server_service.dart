@@ -22,10 +22,10 @@ class ServerService {
     DBServer? dbServer,
   })  : _authServer = authServer,
         _dbServer = dbServer {
-    _cascade = Cascade();
+    _pipeline = Pipeline();
   }
 
-  late Cascade _cascade;
+  late Pipeline _pipeline;
 
   Future<HttpServer> runServer({
     bool log = false,
@@ -33,7 +33,7 @@ class ServerService {
     InternetAddress ip = _app.serverSettings.ip;
     int port = _app.serverSettings.port;
     _addServicesEndpoints();
-    ServerHolder serverHolder = ServerHolder(_cascade);
+    ServerHolder serverHolder = ServerHolder(_pipeline);
     serverHolder.addGlobalMiddleware(logRequest);
     var server = await serverHolder.bind(ip, port);
     return server;
@@ -102,16 +102,15 @@ class ServerService {
             .authServerSettings.authServerMiddlewares.checkUserEmailVerified,
       );
     }
-    Pipeline pipeline = Pipeline().addRouter(router);
 
     //?
 
-    _cascade = _cascade.add(pipeline);
+    _pipeline = _pipeline.addRouter(router);
     return this;
   }
 
-  Cascade get cascade {
-    return _cascade;
+  Pipeline get pipeline {
+    return _pipeline;
   }
 
   AuthServer get authServer {

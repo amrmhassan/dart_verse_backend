@@ -7,4 +7,5 @@ class HeaderFields {
   static const String allowed = 'allowed';
   static const String ref = 'ref';
   static const String fileName = 'fileName';
+  static const String onFileExist = 'onFileExist';
 }

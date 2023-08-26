@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:dart_verse_backend/constants/header_fields.dart';
 import 'package:dart_verse_backend/constants/path_fields.dart';
@@ -133,6 +134,9 @@ class DefaultStorageServerHandlers implements StorageServerHandlers {
       // if the user user sent bucket not found an error will be returned to the user
       String? bucketName = request.headers.value(HeaderFields.bucketName);
       StorageBucket? bucket = app.storageSettings.getBucket(bucketName);
+      String? onFileExist = request.headers.value(HeaderFields.onFileExist);
+      bool overrideIfExist = onFileExist == 'override';
+      bool throwErrorIfExist = onFileExist == 'error';
       if (bucket == null) {
         throw NoBucketException(bucketName);
       }
@@ -158,8 +162,13 @@ class DefaultStorageServerHandlers implements StorageServerHandlers {
 
       //? bucket permissions will be checked for the refBucket not the original bucket
       //? because the ref might refer to a child bucket inside the original one
+      File file;
+      file = await request.receiveFile(
+        refBucket.folderPath,
+        overrideIfExist: overrideIfExist,
+        throwErrorIfExist: throwErrorIfExist,
+      );
 
-      var file = await request.receiveFile(refBucket.folderPath);
       String downloadEndpoint =
           app.endpoints.storageEndpoints.download.split('/')[1];
       String? fileRef = bucket.getFileRef(file);
