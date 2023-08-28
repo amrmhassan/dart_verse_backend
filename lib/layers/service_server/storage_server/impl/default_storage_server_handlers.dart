@@ -136,6 +136,8 @@ class DefaultStorageServerHandlers implements StorageServerHandlers {
       String? bucketName = request.headers.value(HeaderFields.bucketName);
       StorageBucket? bucket = app.storageSettings.getBucket(bucketName);
       String? onFileExist = request.headers.value(HeaderFields.onFileExist);
+      String? fileName = request.headers.value(HeaderFields.fileName);
+      //! add this file name to the receive file on the dart_webcore
       bool overrideIfExist = onFileExist == 'override';
       bool throwErrorIfExist = onFileExist == 'error';
       if (onFileExist == 'ignore') {
@@ -173,6 +175,7 @@ class DefaultStorageServerHandlers implements StorageServerHandlers {
         request,
         overrideIfExist: overrideIfExist,
         throwErrorIfExist: throwErrorIfExist,
+        fileName: fileName,
       );
 
       String downloadEndpoint =

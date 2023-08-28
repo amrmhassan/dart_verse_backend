@@ -106,12 +106,14 @@ class DefaultBucketController implements BucketControllerRepo {
     RequestHolder request, {
     bool throwErrorIfExist = false,
     bool overrideIfExist = false,
+    String? fileName,
   }) async {
     String folderPath = storageBucket.targetFolderPath;
     final file = await request.receiveFile(
       folderPath,
       overrideIfExist: overrideIfExist,
       throwErrorIfExist: throwErrorIfExist,
+      fileName: fileName,
     );
     // storageBucket.permissionsController.per
 

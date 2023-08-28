@@ -17,6 +17,7 @@ abstract class BucketControllerRepo {
     RequestHolder request, {
     bool throwErrorIfExist = false,
     bool overrideIfExist = false,
+    String? fileName,
   });
 
   /// saving bucket info like name mapped to bucket path
