@@ -102,13 +102,17 @@ class DefaultBucketController implements BucketControllerRepo {
   }
 
   @override
-  Future<File> receiveFile(RequestHolder request
-      // , {
-      /// if allowed is null, it will default value equal to the bucket permissions
-      // required List<ACMPermission>? allowed,
-      // }
-      ) async {
-    final file = await request.receiveFile(storageBucket.folderPath);
+  Future<File> receiveFile(
+    RequestHolder request, {
+    bool throwErrorIfExist = false,
+    bool overrideIfExist = false,
+  }) async {
+    String folderPath = storageBucket.targetFolderPath;
+    final file = await request.receiveFile(
+      folderPath,
+      overrideIfExist: overrideIfExist,
+      throwErrorIfExist: throwErrorIfExist,
+    );
     // storageBucket.permissionsController.per
 
     return file;

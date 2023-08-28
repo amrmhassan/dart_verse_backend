@@ -5,6 +5,7 @@ import 'package:dart_verse_backend/constants/header_fields.dart';
 import 'package:dart_verse_backend/constants/path_fields.dart';
 import 'package:dart_verse_backend/errors/models/storage_errors.dart';
 import 'package:dart_verse_backend/layers/service_server/storage_server/repo/storage_server_handlers.dart';
+import 'package:dart_verse_backend/layers/services/storage_buckets/data/bucket_ref_creator.dart';
 import 'package:dart_verse_backend/layers/services/storage_buckets/models/storage_bucket_model.dart';
 import 'package:dart_verse_backend/layers/settings/app/app.dart';
 import 'package:dart_verse_backend/layers/settings/server_settings/utils/send_response.dart';
@@ -168,8 +169,8 @@ class DefaultStorageServerHandlers implements StorageServerHandlers {
       //? bucket permissions will be checked for the refBucket not the original bucket
       //? because the ref might refer to a child bucket inside the original one
       File file;
-      file = await request.receiveFile(
-        refBucket.folderPath,
+      file = await refBucket.controller.receiveFile(
+        request,
         overrideIfExist: overrideIfExist,
         throwErrorIfExist: throwErrorIfExist,
       );

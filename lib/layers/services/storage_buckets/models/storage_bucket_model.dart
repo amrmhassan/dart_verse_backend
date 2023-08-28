@@ -26,6 +26,10 @@ class StorageBucket {
   late BucketControllerRepo _controller;
   late ACMPermissionController _permissionsController;
 
+  /// this will represent if this storage bucket targets a sub dir inside that bucket or if null this mean that this ref targets
+  /// the bucket dir itself
+  String? subDirRef;
+
   final String creatorId;
 
   StorageBucket(
@@ -33,6 +37,7 @@ class StorageBucket {
     String? parentFolderPath,
     this.maxAllowedSize,
     BucketControllerRepo? controller,
+    this.subDirRef,
     required this.creatorId,
   }) {
     _controller = controller ?? DefaultBucketController(this);
@@ -66,29 +71,6 @@ class StorageBucket {
   ///? if this is the ref and the {} means this is a bucket then the amr bucket will be returned from this path <br>
   ///? so this must return a bucket
   ///? but not necessarily the current bucket
-  StorageBucket ref(String path) {
-    List<String> iterations = path.strip('/').split('/');
-    StorageBucket? bucketFromPath = fromPath(path);
-    if (bucketFromPath == null && iterations.length == 1) {
-      // return the current storage bucket if the ref is just one
-      return this;
-    }
-    if (bucketFromPath == null) {
-      String newPath = iterations.sublist(0, iterations.length - 1).join('/');
-      return ref(newPath);
-    } else {
-      return bucketFromPath;
-    }
-    // List<String> iterations = path.strip('/').split('/');
-    // String localFolderPath =
-    //     iterations.sublist(0, iterations.length - 1).join('/');
-    // var res = StorageBucket(
-    //   iterations.last,
-    //   parentFolderPath: '$folderPath/$localFolderPath',
-    //   creatorId: creatorId,
-    // );
-    // return res;
-  }
 
 //! every storage bucket must contain .acm file which will contain it's permissions
 //! write
@@ -104,6 +86,13 @@ class StorageBucket {
     } catch (e) {
       return null;
     }
+  }
+
+  /// this will return the folder path that this storage bucket ref model targets
+  String get targetFolderPath {
+    return subDirRef == null
+        ? folderPath
+        : '${folderPath.strip('/')}/${subDirRef!}';
   }
 
   static StorageBucket? fromPath(String path) {

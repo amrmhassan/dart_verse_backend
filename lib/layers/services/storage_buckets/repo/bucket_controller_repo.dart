@@ -13,7 +13,11 @@ abstract class BucketControllerRepo {
   /// returns exception if not info not valid like name or bucket path
   void validateBucketInfo();
   Future<void> deleteBucket();
-  Future<File> receiveFile(RequestHolder request);
+  Future<File> receiveFile(
+    RequestHolder request, {
+    bool throwErrorIfExist = false,
+    bool overrideIfExist = false,
+  });
 
   /// saving bucket info like name mapped to bucket path
   void saveBucketId();
