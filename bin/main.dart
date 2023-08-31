@@ -12,6 +12,8 @@ import 'package:dart_verse_backend/layers/service_server/auth_server/impl/defaul
 import 'package:dart_verse_backend/layers/service_server/auth_server/repo/auth_server_settings.dart';
 import 'package:dart_verse_backend/layers/service_server/db_server/db_server.dart';
 import 'package:dart_verse_backend/layers/service_server/db_server/impl/default_db_server_settings.dart';
+import 'package:dart_verse_backend/layers/service_server/storage_server/impl/default_storage_server_settings.dart';
+import 'package:dart_verse_backend/layers/service_server/storage_server/storage_server.dart';
 import 'package:dart_verse_backend/layers/services/auth/auth_service.dart';
 import 'package:dart_verse_backend/layers/services/db_manager/db_providers/impl/mongo_db/mongo_db_provider.dart';
 import 'package:dart_verse_backend/layers/services/db_manager/db_service.dart';
@@ -65,14 +67,17 @@ void main(List<String> arguments) async {
   );
   var authServer = AuthServer(serverService, authServerSettings);
   var dbServer = DBServer(serverService, DefaultDbServerSettings(dbService));
+  var storageServer =
+      StorageServer(serverService, DefaultStorageServerSettings(app));
   authServer.addRouters();
   dbServer.addRouters();
+  storageServer.addRouters();
 
   Router router = Router()
     ..get('/checkServerAlive',
         (request, response, pathArgs) => response.write('Yes i am a live'));
 
-  var storageService = StorageService(app, serverService);
+  var storageService = StorageService();
   serverService.addRouter(router, appIdSecured: true);
   await storageService.init();
   await serverService.runServer();
