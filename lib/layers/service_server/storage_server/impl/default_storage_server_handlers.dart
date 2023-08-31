@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:dart_verse_backend/constants/header_fields.dart';
 import 'package:dart_verse_backend/constants/path_fields.dart';
 import 'package:dart_verse_backend/errors/models/storage_errors.dart';
+import 'package:dart_verse_backend/features/storage_buckets/storage_buckets.dart';
 import 'package:dart_verse_backend/layers/service_server/storage_server/repo/storage_server_handlers.dart';
 import 'package:dart_verse_backend/features/storage_buckets/data/bucket_ref_creator.dart';
 import 'package:dart_verse_backend/features/storage_buckets/models/storage_bucket_model.dart';
@@ -20,6 +21,7 @@ import '../../../../errors/models/server_errors.dart';
 import '../../../../errors/serverless_exception.dart';
 
 class DefaultStorageServerHandlers implements StorageServerHandlers {
+  final StorageBuckets _storageBuckets = StorageBuckets();
   DefaultStorageServerHandlers({
     required this.storageService,
   });
@@ -70,7 +72,7 @@ class DefaultStorageServerHandlers implements StorageServerHandlers {
   ) {
     return _wrapper(request, response, pathArgs, () async {
       String? bucketName = request.headers.value(HeaderFields.bucketName);
-      StorageBucket? bucket = app.storageSettings.getBucket(bucketName);
+      StorageBucket? bucket = await _storageBuckets.getBucketById(bucketName);
       if (bucket == null) {
         throw NoBucketException(bucketName);
       }
@@ -107,7 +109,8 @@ class DefaultStorageServerHandlers implements StorageServerHandlers {
       String? bucketName = pathArgs[PathFields.bucketName] == 'null'
           ? null
           : pathArgs[PathFields.bucketName];
-      StorageBucket? storageBucket = app.storageSettings.getBucket(bucketName);
+      StorageBucket? storageBucket =
+          await _storageBuckets.getBucketById(bucketName);
       if (storageBucket == null) {
         throw NoBucketException(bucketName);
       }
@@ -137,7 +140,7 @@ class DefaultStorageServerHandlers implements StorageServerHandlers {
       // if the bucket name is null or not sent then the user will upload or deal with the default bucket
       // if the user user sent bucket not found an error will be returned to the user
       String? bucketName = request.headers.value(HeaderFields.bucketName);
-      StorageBucket? bucket = app.storageSettings.getBucket(bucketName);
+      StorageBucket? bucket = await _storageBuckets.getBucketById(bucketName);
       String? onFileExist = request.headers.value(HeaderFields.onFileExist);
       String? fileName = request.headers.value(HeaderFields.fileName);
       //! add this file name to the receive file on the dart_webcore
