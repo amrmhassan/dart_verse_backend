@@ -46,7 +46,11 @@ class StorageDatasource {
         if (force) {
           file.deleteSync(recursive: true);
         } else {
-          file.deleteSync();
+          try {
+            file.deleteSync();
+          } catch (e) {
+            throw RefNotEmpty();
+          }
         }
       }
     } else if (type == EntityType.folder) {
@@ -58,7 +62,11 @@ class StorageDatasource {
         if (force) {
           directory.deleteSync(recursive: true);
         } else {
-          directory.deleteSync();
+          try {
+            directory.deleteSync();
+          } catch (e) {
+            throw RefNotEmpty();
+          }
         }
       }
     }

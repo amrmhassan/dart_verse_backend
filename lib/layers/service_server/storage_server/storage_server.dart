@@ -25,7 +25,7 @@ class StorageServer implements ServiceServerLayer {
     // handlers
     var router = Router()
       ..post(upload, handlers.upload)
-      ..post(listChildren, handlers.listChildren)
+      ..get(listChildren, handlers.listChildren)
       ..delete(delete, handlers.delete);
 
     serverService.addRouter(

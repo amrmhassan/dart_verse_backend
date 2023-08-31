@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:dart_verse_backend/constants/error_codes.dart';
+import 'package:dart_verse_backend/constants/header_fields.dart';
 
 import '../serverless_exception.dart';
 
@@ -133,5 +134,14 @@ class StorageBucketExistsException extends StorageException {
           'storage bucket ($name) already exists with different path',
           ErrorCodes.storageBucketPathChange,
           errorCode: HttpStatus.internalServerError,
+        );
+}
+
+class RefNotEmpty extends StorageException {
+  RefNotEmpty()
+      : super(
+          'the ref you requested to delete is not empty, try ${HeaderFields.forceDelete}:true in the request body',
+          ErrorCodes.refNotEmpty,
+          errorCode: HttpStatus.notAcceptable,
         );
 }

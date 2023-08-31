@@ -61,6 +61,7 @@ class ErrorCodes {
   static const String storageServiceNotInit = 'storage-service-not-init';
   static const String storageBucketPathChange =
       'storage-bucket-exists-with-different-path';
+  static const String refNotEmpty = 'ref-not-empty';
 
   //? auth server errors
   static const String noAuthServerProvided = 'no-auth-server-provided';
