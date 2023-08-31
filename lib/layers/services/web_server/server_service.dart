@@ -2,9 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dart_verse_backend/constants/endpoints_constants.dart';
-import 'package:dart_verse_backend/errors/models/auth_server_exceptions.dart';
-import 'package:dart_verse_backend/layers/service_server/auth_server/auth_server.dart';
-import 'package:dart_verse_backend/layers/service_server/db_server/db_server.dart';
+import 'package:dart_verse_backend/layers/service_server/auth_server/repo/auth_server_settings.dart';
 import 'package:dart_verse_backend/layers/settings/app/app.dart';
 import 'package:dart_webcore/dart_webcore.dart';
 
@@ -12,16 +10,13 @@ import 'package:dart_webcore/dart_webcore.dart';
 //! you can call this step serverAuth
 //! and for the storage service you can add a step called serverStorage
 class ServerService {
-  final App _app;
-  final AuthServer? _authServer;
-  final DBServer? _dbServer;
+  final App app;
+  final AuthServerSettings authServerSettings;
 
   ServerService(
-    this._app, {
-    AuthServer? authServer,
-    DBServer? dbServer,
-  })  : _authServer = authServer,
-        _dbServer = dbServer {
+    this.app, {
+    required this.authServerSettings,
+  }) {
     _pipeline = Pipeline();
   }
 
@@ -30,8 +25,8 @@ class ServerService {
   Future<HttpServer> runServer({
     bool log = false,
   }) async {
-    InternetAddress ip = _app.serverSettings.ip;
-    int port = _app.serverSettings.port;
+    InternetAddress ip = app.serverSettings.ip;
+    int port = app.serverSettings.port;
     _addServicesEndpoints();
     ServerHolder serverHolder = ServerHolder(_pipeline);
     serverHolder.addGlobalMiddleware(logRequest);
@@ -72,7 +67,7 @@ class ServerService {
       router.addUpperMiddleware(
         null,
         HttpMethods.all,
-        authServer.authServerSettings.authServerMiddlewares.checkAppId,
+        authServerSettings.authServerMiddlewares.checkAppId,
       );
     }
     // checking if jwt is added and user logged in
@@ -81,15 +76,13 @@ class ServerService {
           .addUpperMiddleware(
             null,
             HttpMethods.all,
-            authServer
-                .authServerSettings.authServerMiddlewares.checkJwtInHeaders,
+            authServerSettings.authServerMiddlewares.checkJwtInHeaders,
             signature: 'checkJwtInHeadersFromUserCustomRoutes',
           )
           .addUpperMiddleware(
             null,
             HttpMethods.all,
-            authServer
-                .authServerSettings.authServerMiddlewares.checkJwtForUserId,
+            authServerSettings.authServerMiddlewares.checkJwtForUserId,
             signature: 'checkJwtForUserId',
           );
     }
@@ -98,8 +91,7 @@ class ServerService {
       router.addUpperMiddleware(
         null,
         HttpMethods.all,
-        authServer
-            .authServerSettings.authServerMiddlewares.checkUserEmailVerified,
+        authServerSettings.authServerMiddlewares.checkUserEmailVerified,
       );
     }
 
@@ -113,34 +105,10 @@ class ServerService {
     return _pipeline;
   }
 
-  AuthServer get authServer {
-    if (_authServer == null) {
-      throw NoAuthServerSettings();
-    }
-    return _authServer!;
-  }
-
-  DBServer get dbServer {
-    if (_dbServer == null) {
-      throw NoAuthServerSettings();
-    }
-    return _dbServer!;
-  }
-
   void _addServicesEndpoints() {
     // adding server check router
     addRouter(Router()
       ..get(EndpointsConstants.serverAlive,
           (request, response, pathArgs) => response.write('server is live')));
-
-    // adding routers for auth service
-    if (_authServer != null) {
-      addRouter(_authServer!.getRouter());
-    }
-
-    // adding routers for db service
-    if (_dbServer != null) {
-      addRouter(_dbServer!.getRouter());
-    }
   }
 }

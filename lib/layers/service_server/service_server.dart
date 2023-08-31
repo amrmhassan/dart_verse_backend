@@ -1,5 +1,6 @@
-import 'package:dart_webcore/dart_webcore/routing/impl/router.dart';
+import 'package:dart_verse_backend/layers/services/web_server/server_service.dart';
 
 abstract class ServiceServerLayer {
-  Router getRouter();
+  late ServerService serverService;
+  void addRouters();
 }

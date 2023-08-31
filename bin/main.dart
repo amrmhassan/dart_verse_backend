@@ -9,6 +9,7 @@ import 'package:dart_verse_backend/dart_verse.dart';
 import 'package:dart_verse_backend/features/auth_db_provider/impl/mongo_db_auth_provider/mongo_db_auth_provider.dart';
 import 'package:dart_verse_backend/layers/service_server/auth_server/auth_server.dart';
 import 'package:dart_verse_backend/layers/service_server/auth_server/impl/default_auth_server_settings.dart';
+import 'package:dart_verse_backend/layers/service_server/auth_server/repo/auth_server_settings.dart';
 import 'package:dart_verse_backend/layers/service_server/db_server/db_server.dart';
 import 'package:dart_verse_backend/layers/service_server/db_server/impl/default_db_server_settings.dart';
 import 'package:dart_verse_backend/layers/services/auth/auth_service.dart';
@@ -26,6 +27,8 @@ import 'package:dart_webcore/dart_webcore.dart';
 
 import 'constants.dart';
 
+// flutter packages pub run build_runner build --delete-conflicting-outputs
+// flutter pub run build_runner watch --delete-conflicting-outputs
 void main(List<String> arguments) async {
   await DartVerse.initializeApp();
   MongoDBProvider mongoDBProvider = MongoDBProvider(localConnLink);
@@ -54,14 +57,17 @@ void main(List<String> arguments) async {
     MongoDbAuthProvider(app, dbService),
   );
   await dbService.connectToDb();
-  var authServer = AuthServer(app, DefaultAuthServerSettings(authService));
-  var dbServer = DBServer(app, DefaultDbServerSettings(dbService));
-
+  AuthServerSettings authServerSettings =
+      DefaultAuthServerSettings(authService);
   ServerService serverService = ServerService(
     app,
-    authServer: authServer,
-    dbServer: dbServer,
+    authServerSettings: authServerSettings,
   );
+  var authServer = AuthServer(serverService, authServerSettings);
+  var dbServer = DBServer(serverService, DefaultDbServerSettings(dbService));
+  authServer.addRouters();
+  dbServer.addRouters();
+
   Router router = Router()
     ..get('/checkServerAlive',
         (request, response, pathArgs) => response.write('Yes i am a live'));
