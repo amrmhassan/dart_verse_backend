@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:dart_verse_backend/layers/services/storage_buckets/models/storage_bucket_model.dart';
+import 'package:dart_verse_backend/features/storage_buckets/models/storage_bucket_model.dart';
 import 'package:dart_webcore/dart_webcore/server/impl/request_holder.dart';
 
 abstract class BucketControllerRepo {

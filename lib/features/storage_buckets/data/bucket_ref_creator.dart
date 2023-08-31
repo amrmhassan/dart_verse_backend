@@ -1,4 +1,4 @@
-import 'package:dart_verse_backend/layers/services/storage_buckets/models/storage_bucket_model.dart';
+import 'package:dart_verse_backend/features/storage_buckets/models/storage_bucket_model.dart';
 import 'package:dart_verse_backend/utils/string_utils.dart';
 
 extension BucketRefCreator on StorageBucket {

@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dart_verse_backend/errors/models/storage_errors.dart';
-import 'package:dart_verse_backend/layers/services/storage_buckets/models/storage_bucket_model.dart';
-import 'package:dart_verse_backend/layers/services/storage_buckets/repo/bucket_controller_repo.dart';
+import 'package:dart_verse_backend/features/storage_buckets/models/storage_bucket_model.dart';
+import 'package:dart_verse_backend/features/storage_buckets/repo/bucket_controller_repo.dart';
 import 'package:dart_verse_backend/layers/services/storage_service/utils/buckets_store.dart';
 import 'package:dart_webcore/dart_webcore/server/impl/request_holder.dart';
 import 'package:path/path.dart';

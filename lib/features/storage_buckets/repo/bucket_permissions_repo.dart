@@ -1,7 +1,7 @@
 //! bucket can only contain other buckets or files
 //! so no thing called createSubFolder inside a bucket
 //! you can only upload a file to a bucket and play with that file, no folders can be created inside a bucket except those folders who are buckets
-import 'package:dart_verse_backend/layers/services/storage_buckets/models/storage_bucket_model.dart';
+import 'package:dart_verse_backend/features/storage_buckets/models/storage_bucket_model.dart';
 
 class BucketPermissionsRepo {
   late StorageBucket bucket;

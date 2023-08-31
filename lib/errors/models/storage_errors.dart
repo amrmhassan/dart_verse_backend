@@ -101,9 +101,9 @@ class FileNotFound extends StorageException {
 }
 
 class RefNotFound extends StorageException {
-  RefNotFound(String bucketName, String ref)
+  RefNotFound(String bucketName, String ref, [String? msg])
       : super(
-          'path not found for this ref:BucketName: $bucketName\nRef: $ref',
+          'path not found for this ref:BucketName: $bucketName\nRef: $ref, $msg',
           ErrorCodes.refNotFound,
           errorCode: HttpStatus.notFound,
         );
