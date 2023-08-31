@@ -26,11 +26,11 @@ class StorageSettings {
       if (paths.contains(bucket.folderPath)) {
         throw DuplicateBucketPathException(bucket.folderPath);
       }
-      if (names.contains(bucket.name)) {
-        throw DuplicateBucketNameException(bucket.name);
+      if (names.contains(bucket.id)) {
+        throw DuplicateBucketNameException(bucket.id);
       }
 
-      names.add(bucket.name);
+      names.add(bucket.id);
       paths.add(bucket.folderPath);
     }
   }

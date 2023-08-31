@@ -83,11 +83,11 @@ class DefaultBucketController implements BucketControllerRepo {
   @override
   void validateBucketInfo() {
     // validating bucket name
-    if (storageBucket.name.length > 50) {
+    if (storageBucket.id.length > 50) {
       throw StorageBucketNameException('exceeded 50 letters');
     }
-    if (!_valid(storageBucket.name)) {
-      throw StorageBucketNameException(storageBucket.name);
+    if (!_valid(storageBucket.id)) {
+      throw StorageBucketNameException(storageBucket.id);
     }
     String baseName = basename(storageBucket.folderPath);
     if (baseName == '..' || baseName == '.') {
@@ -122,7 +122,7 @@ class DefaultBucketController implements BucketControllerRepo {
 
   @override
   void saveBucketId() {
-    String name = storageBucket.name;
+    String name = storageBucket.id;
     String path = storageBucket.folderPath;
     var bucketExist = BucketsStore.bucketsBox.get(name);
     if (bucketExist != null) {

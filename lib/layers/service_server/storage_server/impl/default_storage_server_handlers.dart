@@ -81,11 +81,11 @@ class DefaultStorageServerHandlers implements StorageServerHandlers {
       // here if allowed just delete the ref
       String? path = refBucket.getRefAbsPath(ref);
       if (path == null) {
-        throw RefNotFound(refBucket.name, ref);
+        throw RefNotFound(refBucket.id, ref);
       }
       StorageUtils.deleteRef(
         path,
-        bucketName: refBucket.name,
+        bucketName: refBucket.id,
         ref: ref,
       );
 
@@ -189,7 +189,7 @@ class DefaultStorageServerHandlers implements StorageServerHandlers {
             response, 'file uploaded to: ${file.path}');
       }
       String downloadLink =
-          '${app.backendHost}/$downloadEndpoint/${bucket.name}/$fileRef';
+          '${app.backendHost}/$downloadEndpoint/${bucket.id}/$fileRef';
       return SendResponse.sendDataToUser(response, downloadLink);
     });
   }

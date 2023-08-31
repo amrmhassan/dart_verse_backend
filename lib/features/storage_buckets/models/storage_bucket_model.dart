@@ -11,7 +11,7 @@ String get defaultBucketsContainer => 'Buckets';
 class StorageBucket {
   /// this name is it's id, should be unique
   /// must only contain numbers and letters and not exceed 50 letters
-  final String name;
+  final String id;
 
   /// this is the maximum allowed bucket size in bytes
   /// if null this means that the bucket size can be infinity
@@ -33,7 +33,7 @@ class StorageBucket {
   final String creatorId;
 
   StorageBucket(
-    this.name, {
+    this.id, {
     String? parentFolderPath,
     this.maxAllowedSize,
     BucketControllerRepo? controller,
@@ -49,7 +49,7 @@ class StorageBucket {
     _permissionsController = ACMPermissionController(this);
   }
 
-  String get folderPath => '$_parentPath/$name';
+  String get folderPath => '$_parentPath/$id';
   String get parentPath => _parentPath;
   BucketControllerRepo get controller => _controller;
   ACMPermissionController get permissionsController => _permissionsController;
