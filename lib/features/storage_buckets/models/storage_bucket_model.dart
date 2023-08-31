@@ -79,7 +79,7 @@ class StorageBucket {
   }
 
   /// this will return the folder path that this storage bucket ref model targets
-  String get targetFolderPath {
+  String get targetRefPath {
     return subDirRef == null
         ? folderPath
         : '${folderPath.strip('/')}/${subDirRef!}';

@@ -12,7 +12,6 @@ import 'package:dart_verse_backend/layers/services/storage_service/data/models/s
 import 'package:dart_verse_backend/layers/services/storage_service/storage_service.dart';
 import 'package:dart_verse_backend/layers/settings/app/app.dart';
 import 'package:dart_verse_backend/layers/settings/server_settings/utils/send_response.dart';
-import 'package:dart_verse_backend/utils/storage_utils.dart';
 import 'package:dart_webcore/dart_webcore/server/impl/request_holder.dart';
 import 'package:dart_webcore/dart_webcore/server/impl/response_holder.dart';
 import 'package:dart_webcore/dart_webcore/server/repo/passed_http_entity.dart';
@@ -71,27 +70,18 @@ class DefaultStorageServerHandlers implements StorageServerHandlers {
     Map<String, dynamic> pathArgs,
   ) {
     return _wrapper(request, response, pathArgs, () async {
-      String? bucketName = request.headers.value(HeaderFields.bucketName);
-      StorageBucket? bucket = await _storageBuckets.getBucketById(bucketName);
-      if (bucket == null) {
-        throw NoBucketException(bucketName);
+      StorageRefModel? storageRefModel;
+      Map<String, dynamic> body;
+      try {
+        body = await request.readAsJson() as Map<String, dynamic>;
+        storageRefModel = StorageRefModel.fromJson(body);
+      } catch (e) {
+        throw BadStorageBodyException(
+            'Please provide the right body or Read the documentation');
       }
-
-      String ref = request.headers.value(HeaderFields.ref) ?? '/';
-      StorageBucket refBucket = ref == '/' ? bucket : bucket.ref(ref);
-      //! here i should check if this permission is allowed from the refBucket and the operation delete
-      // here if allowed just delete the ref
-      String? path = refBucket.getRefAbsPath(ref);
-      if (path == null) {
-        throw RefNotFound(refBucket.id, ref);
-      }
-      StorageUtils.deleteRef(
-        path,
-        bucketName: refBucket.id,
-        ref: ref,
-      );
-
-      return SendResponse.sendDataToUser(response, 'deleted');
+      bool forceDelete = body[HeaderFields.forceDelete] ?? false;
+      await storageService.delete(storageRefModel, forceDelete);
+      return SendResponse.sendDataToUser(response, 'deleted', httpCode: 204);
     });
   }
 

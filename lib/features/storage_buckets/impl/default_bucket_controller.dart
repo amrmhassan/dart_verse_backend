@@ -108,7 +108,7 @@ class DefaultBucketController implements BucketControllerRepo {
     bool overrideIfExist = false,
     String? fileName,
   }) async {
-    String folderPath = storageBucket.targetFolderPath;
+    String folderPath = storageBucket.targetRefPath;
     final file = await request.receiveFile(
       folderPath,
       overrideIfExist: overrideIfExist,

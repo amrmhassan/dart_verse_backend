@@ -46,13 +46,8 @@ class StorageService {
     String? bucketId,
     String ref,
   ) async {
-    StorageBucket? storageBucket =
-        await _storageBuckets.getBucketById(bucketId, subDirRef: ref);
-    if (storageBucket == null) {
-      throw NoBucketException(bucketId);
-    }
-
-    String path = storageBucket.targetFolderPath;
+    StorageBucket storageBucket = await _getTargetStorageBucket(bucketId, ref);
+    String path = storageBucket.targetRefPath;
     var children = await _storageDatasource.getChildren(
       path,
       bucketId: storageBucket.id,
@@ -70,5 +65,28 @@ class StorageService {
         );
       },
     ).toList();
+  }
+
+  Future<void> delete(StorageRefModel refModel, bool forceDelete) async {
+    StorageBucket storageBucket =
+        await _getTargetStorageBucket(refModel.bucketId, refModel.ref);
+    String path = storageBucket.targetRefPath;
+    return _storageDatasource.delete(
+      path,
+      refModel.type,
+      forceDelete,
+    );
+  }
+
+  Future<StorageBucket> _getTargetStorageBucket(
+    String? bucketId,
+    String ref,
+  ) async {
+    StorageBucket? storageBucket =
+        await _storageBuckets.getBucketById(bucketId, subDirRef: ref);
+    if (storageBucket == null) {
+      throw NoBucketException(bucketId);
+    }
+    return storageBucket;
   }
 }

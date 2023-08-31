@@ -95,7 +95,16 @@ class FileNotFound extends StorageException {
   FileNotFound(String msg)
       : super(
           'file not found: $msg',
-          ErrorCodes.noBucketFound,
+          ErrorCodes.fileNotFound,
+          errorCode: HttpStatus.notFound,
+        );
+}
+
+class FolderNotFound extends StorageException {
+  FolderNotFound(String msg)
+      : super(
+          'folder not found: $msg',
+          ErrorCodes.folderNotFound,
           errorCode: HttpStatus.notFound,
         );
 }
