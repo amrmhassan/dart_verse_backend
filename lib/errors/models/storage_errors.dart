@@ -74,9 +74,9 @@ class NoStorageSettingsProvided extends StorageException {
 }
 
 class NoBucketException extends StorageException {
-  NoBucketException(String? name)
+  NoBucketException(String? id)
       : super(
-          'please provide a valid bucket name or don\'t provide any name for using the default bucket: $name',
+          'please provide a valid bucket id or don\'t provide any ids for using the default bucket: $id',
           ErrorCodes.noBucketFound,
           errorCode: 404,
         );

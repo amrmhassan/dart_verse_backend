@@ -213,7 +213,9 @@ class DefaultStorageServerHandlers implements StorageServerHandlers {
             'Please provide the right body or Read the documentation');
       }
       var res = await storageService.listChildren(
-          storageRefModel.bucketId, storageRefModel.ref);
+        storageRefModel.bucketId,
+        storageRefModel.ref,
+      );
       return SendResponse.sendDataToUser(
         response,
         res,
