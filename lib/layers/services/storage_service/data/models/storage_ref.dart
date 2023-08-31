@@ -3,12 +3,12 @@ part 'storage_ref.g.dart';
 
 @JsonSerializable()
 class StorageRefModel {
-  final String? bucketName;
+  final String bucketId;
   final String ref;
   final String type;
 
   const StorageRefModel({
-    required this.bucketName,
+    required this.bucketId,
     required this.ref,
     required this.type,
   });

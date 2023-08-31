@@ -59,7 +59,7 @@ class ACMPermissionController {
   }
 
   String _initAcmObject() {
-    String creatorId = bucket.creatorId;
+    String creatorId = bucket.creatorId ?? '';
     _acm = ACM(defaultPermissionsWithCreatorId(creatorId));
 
     String jsonContent = json.encode(_acm.toJSON());
@@ -102,7 +102,7 @@ class ACMPermissionController {
   }
 
   //? getters
-  String get _creatorId => bucket.creatorId;
+  String get _creatorId => bucket.creatorId ?? '';
 
   //? acm file headers
   String get _acmHeader =>

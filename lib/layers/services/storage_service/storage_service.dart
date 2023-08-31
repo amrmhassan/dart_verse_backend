@@ -19,7 +19,7 @@ class StorageService {
   }
 
   Future<StorageBucket> createBucket(
-    String name, {
+    String id, {
     String? parentFolderPath,
     int? maxAllowedSize,
     BucketControllerRepo? controller,
@@ -29,7 +29,7 @@ class StorageService {
       throw StorageServiceNotInitializedException();
     }
     StorageBucket storageBucket = StorageBucket(
-      name,
+      id,
       creatorId: creatorId,
       controller: controller,
       maxAllowedSize: maxAllowedSize,
@@ -41,17 +41,21 @@ class StorageService {
   StorageService(this.app);
 
   Future<List<StorageRefModel>> listChildren(
-      String bucketName, String ref) async {
-    String path = '';
+    String bucketId,
+    String ref,
+  ) async {
+    StorageBucket storageBucket = StorageBucket(bucketId, subDirRef: ref);
+
+    String path = storageBucket.targetFolderPath;
     var children = await _storageDatasource.getChildren(
       path,
-      bucketName: bucketName,
+      bucketId: bucketId,
       ref: ref,
     );
     return children
         .map(
           (e) => StorageRefModel(
-            bucketName: bucketName,
+            bucketId: bucketId,
             ref: ref,
             type: e.statSync().type == FileSystemEntityType.file
                 ? 'file'

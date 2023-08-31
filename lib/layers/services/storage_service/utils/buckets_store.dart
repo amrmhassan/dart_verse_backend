@@ -11,11 +11,11 @@ class BucketsStore {
 
   static Box get bucketsBox => _bucketsBox;
 
-  static void putBucket(String name, String path) {
-    _bucketsBox.put(name, path);
+  static void putBucket(String id, String path) {
+    _bucketsBox.put(id, path);
   }
 
-  static String? getBucketPath(String bucketName) {
-    return _bucketsBox.get(bucketName) as String?;
+  static String? getBucketPath(String id) {
+    return _bucketsBox.get(id) as String?;
   }
 }

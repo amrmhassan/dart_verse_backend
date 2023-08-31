@@ -30,15 +30,15 @@ class StorageBucket {
   /// the bucket dir itself
   String? subDirRef;
 
-  final String creatorId;
+  final String? creatorId;
 
   StorageBucket(
     this.id, {
     String? parentFolderPath,
     this.maxAllowedSize,
     BucketControllerRepo? controller,
-    // this.subDirRef,
-    required this.creatorId,
+    this.subDirRef,
+    this.creatorId,
   }) {
     _controller = controller ?? DefaultBucketController(this);
     _parentPath = parentFolderPath ?? defaultBucketsContainer;

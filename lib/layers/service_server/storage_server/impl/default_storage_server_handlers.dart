@@ -209,10 +209,11 @@ class DefaultStorageServerHandlers implements StorageServerHandlers {
         throw BadStorageBodyException(
             'Please provide the right body or Read the documentation');
       }
-
+      var res = await storageService.listChildren(
+          storageRefModel.bucketId, storageRefModel.ref);
       return SendResponse.sendDataToUser(
         response,
-        'This should be the references',
+        res,
       );
     });
   }

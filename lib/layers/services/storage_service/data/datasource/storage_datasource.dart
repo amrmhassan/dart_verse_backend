@@ -6,13 +6,13 @@ import 'package:dart_verse_backend/layers/services/storage_service/data/datasour
 class StorageDatasource {
   Future<List<FileSystemEntity>> getChildren(
     String path, {
-    required String bucketName,
+    required String bucketId,
     required String ref,
   }) async {
     Directory directory = Directory(path);
     bool exist = directory.existsSync();
     if (!exist) {
-      throw RefNotFound(bucketName, ref, 'or this ref is not a directory');
+      throw RefNotFound(bucketId, ref, 'or this ref is not a directory');
     }
     var res = await customCompute(_listIsolate, directory);
     return res;
