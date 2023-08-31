@@ -6,13 +6,14 @@ part of 'storage_ref.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-StorageRef _$StorageRefFromJson(Map<String, dynamic> json) => StorageRef(
-      bucketName: json['bucketName'] as String,
+StorageRefModel _$StorageRefModelFromJson(Map<String, dynamic> json) =>
+    StorageRefModel(
+      bucketName: json['bucketName'] as String?,
       ref: json['ref'] as String,
       type: json['type'] as String,
     );
 
-Map<String, dynamic> _$StorageRefToJson(StorageRef instance) =>
+Map<String, dynamic> _$StorageRefModelToJson(StorageRefModel instance) =>
     <String, dynamic>{
       'bucketName': instance.bucketName,
       'ref': instance.ref,

@@ -7,6 +7,8 @@ import 'package:dart_verse_backend/errors/models/storage_errors.dart';
 import 'package:dart_verse_backend/layers/service_server/storage_server/repo/storage_server_handlers.dart';
 import 'package:dart_verse_backend/layers/services/storage_buckets/data/bucket_ref_creator.dart';
 import 'package:dart_verse_backend/layers/services/storage_buckets/models/storage_bucket_model.dart';
+import 'package:dart_verse_backend/layers/services/storage_service/data/models/storage_ref.dart';
+import 'package:dart_verse_backend/layers/services/storage_service/storage_service.dart';
 import 'package:dart_verse_backend/layers/settings/app/app.dart';
 import 'package:dart_verse_backend/layers/settings/server_settings/utils/send_response.dart';
 import 'package:dart_verse_backend/utils/storage_utils.dart';
@@ -19,12 +21,13 @@ import '../../../../errors/serverless_exception.dart';
 
 class DefaultStorageServerHandlers implements StorageServerHandlers {
   DefaultStorageServerHandlers({
-    required this.app,
+    required this.storageService,
   });
 
   @override
-  App app;
+  StorageService storageService;
 
+  App get app => storageService.app;
   FutureOr<PassedHttpEntity> _wrapper(
     RequestHolder request,
     ResponseHolder response,
@@ -190,22 +193,27 @@ class DefaultStorageServerHandlers implements StorageServerHandlers {
       return SendResponse.sendDataToUser(response, downloadLink);
     });
   }
+
+  @override
+  FutureOr<PassedHttpEntity> listChildren(
+    RequestHolder request,
+    ResponseHolder response,
+    Map<String, dynamic> pathArgs,
+  ) {
+    return _wrapper(request, response, pathArgs, () async {
+      StorageRefModel? storageRefModel;
+      try {
+        var body = await request.readAsJson() as Map<String, dynamic>;
+        storageRefModel = StorageRefModel.fromJson(body);
+      } catch (e) {
+        throw BadStorageBodyException(
+            'Please provide the right body or Read the documentation');
+      }
+
+      return SendResponse.sendDataToUser(
+        response,
+        'This should be the references',
+      );
+    });
+  }
 }
-
-      // List<ACMPermission>? _parseAllowed(HttpHeaders headers) {
-      //   String? allowedString = headers.value(HeaderFields.allowed);
-      //   if (allowedString == null) return null;
-      //   List<dynamic> allowed = json.decode(allowedString);
-      //   var res = allowed.map((e) => ACMPermission.fromJson(e)).toList();
-      //   return res;
-
-      //   /*
-      //   allowed should be on the format
-      //   {
-      //     'write':[users ids],
-      //     'read':[users ids],
-      //     'delete':[users ids],
-      //     'editPermissions':[users ids],
-      //   }
-      //   */
-      // }

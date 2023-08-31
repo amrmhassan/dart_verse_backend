@@ -22,6 +22,7 @@ class EndpointsConstants {
   static const String downloadFile =
       '/download/<${PathFields.bucketName}>/*<${PathFields.filePath}>';
   static const String deleteFile = '/delete';
+  static const String listChildren = '/listChildren';
 
   // db
   static const String getDbConnLink = '/getDbConnLink';

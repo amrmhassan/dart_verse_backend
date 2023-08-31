@@ -32,9 +32,11 @@ import 'constants.dart';
 // flutter packages pub run build_runner build --delete-conflicting-outputs
 // flutter pub run build_runner watch --delete-conflicting-outputs
 void main(List<String> arguments) async {
+  //? pre settings layer
   await DartVerse.initializeApp();
   MongoDBProvider mongoDBProvider = MongoDBProvider(localConnLink);
 
+  //? settings layer
   DBSettings dbSettings = DBSettings(mongoDBProvider: mongoDBProvider);
   UserDataSettings userDataSettings = UserDataSettings();
   AuthSettings authSettings = AuthSettings(
@@ -54,6 +56,7 @@ void main(List<String> arguments) async {
     backendHost: 'http://localhost:3000',
   );
 
+  //? service layer
   DbService dbService = DbService(app);
   AuthService authService = AuthService(
     MongoDbAuthProvider(app, dbService),
@@ -61,14 +64,17 @@ void main(List<String> arguments) async {
   await dbService.connectToDb();
   AuthServerSettings authServerSettings =
       DefaultAuthServerSettings(authService);
+  //? server layer
   ServerService serverService = ServerService(
     app,
     authServerSettings: authServerSettings,
   );
+  var storageService = StorageService(app);
+  //? service server layer
   var authServer = AuthServer(serverService, authServerSettings);
   var dbServer = DBServer(serverService, DefaultDbServerSettings(dbService));
-  var storageServer =
-      StorageServer(serverService, DefaultStorageServerSettings(app));
+  var storageServer = StorageServer(
+      serverService, DefaultStorageServerSettings(storageService));
   authServer.addRouters();
   dbServer.addRouters();
   storageServer.addRouters();
@@ -77,11 +83,10 @@ void main(List<String> arguments) async {
     ..get('/checkServerAlive',
         (request, response, pathArgs) => response.write('Yes i am a live'));
 
-  var storageService = StorageService();
   serverService.addRouter(router, appIdSecured: true);
   await storageService.init();
   await serverService.runServer();
 }
 
-// //? visit this google oauth playground https://developers.google.com/oauthplayground to get more info about how to access google services for a google account
-// //? and this link for google apis assess and manage https://developers.google.com/apis-explorer
+    // //? visit this google oauth playground https://developers.google.com/oauthplayground to get more info about how to access google services for a google account
+    // //? and this link for google apis assess and manage https://developers.google.com/apis-explorer
