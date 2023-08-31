@@ -26,10 +26,11 @@ extension BucketRefCreator on StorageBucket {
   //b -- path is main/stores/store1/images/image1.jpg
   // -- the bucket must be store1 and the subDirRef will be images
 
-  StorageBucket ref(String path) {
+  StorageBucket ref(String? path) {
+    path ??= '';
     List<String> iterations = path.strip('/').split('/');
     StorageBucket nearestSubBucket = this;
-    subDirRef = path;
+    subRef = path;
     String collector = '';
     int nearestBucketIndex = -1;
     // Iterate through the path components
@@ -52,7 +53,7 @@ extension BucketRefCreator on StorageBucket {
 
         // If it's the last iteration, set the subDirRef
         if (i == iterations.length - 1) {
-          nearestSubBucket.subDirRef = path
+          nearestSubBucket.subRef = path
               .substring(
                 path.indexOf(iteration) + iteration.length,
               )
@@ -61,9 +62,9 @@ extension BucketRefCreator on StorageBucket {
       } else {
         if (i == iterations.length - 1) {
           if (nearestBucketIndex == -1) {
-            nearestSubBucket.subDirRef = collector;
+            nearestSubBucket.subRef = collector;
           } else {
-            nearestSubBucket.subDirRef = collector
+            nearestSubBucket.subRef = collector
                 .strip('/')
                 .split('/')
                 .sublist(nearestBucketIndex + 1)

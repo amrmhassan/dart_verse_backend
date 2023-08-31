@@ -12,6 +12,7 @@ import '../../../features/storage_buckets/repo/bucket_controller_repo.dart';
 class StorageService {
   final App app;
   bool _initialized = false;
+  StorageService(this.app);
   final StorageDatasource _storageDatasource = StorageDatasource();
   final StorageBuckets _storageBuckets = StorageBuckets();
 
@@ -39,8 +40,6 @@ class StorageService {
     );
     return storageBucket;
   }
-
-  StorageService(this.app);
 
   Future<List<StorageRefModel>> listChildren(
     String? bucketId,
@@ -83,7 +82,7 @@ class StorageService {
     String ref,
   ) async {
     StorageBucket? storageBucket =
-        await _storageBuckets.getBucketById(bucketId, subDirRef: ref);
+        await _storageBuckets.getBucketById(bucketId, subRef: ref);
     if (storageBucket == null) {
       throw NoBucketException(bucketId);
     }

@@ -28,7 +28,7 @@ class StorageBucket {
 
   /// this will represent if this storage bucket targets a sub dir inside that bucket or if null this mean that this ref targets
   /// the bucket dir itself
-  String? subDirRef;
+  String? subRef;
 
   final String? creatorId;
 
@@ -37,7 +37,7 @@ class StorageBucket {
     String? parentFolderPath,
     this.maxAllowedSize,
     BucketControllerRepo? controller,
-    this.subDirRef,
+    this.subRef,
     this.creatorId,
   }) {
     _controller = controller ?? DefaultBucketController(this);
@@ -80,15 +80,10 @@ class StorageBucket {
 
   /// this will return the folder path that this storage bucket ref model targets
   String get targetRefPath {
-    return subDirRef == null
-        ? folderPath
-        : '${folderPath.strip('/')}/${subDirRef!}';
+    return subRef == null ? folderPath : '${folderPath.strip('/')}/${subRef!}';
   }
 
-  static StorageBucket? fromPath(
-    String path, {
-    String? subDirRef,
-  }) {
+  static StorageBucket? fromPath(String path) {
     String acmFileName = ACMPermissionController.acmFileName;
     String acmFilePath = '${path.strip('/')}/$acmFileName';
     var acm = ACMPermissionController.isAcmFileValid(acmFilePath);
@@ -103,7 +98,6 @@ class StorageBucket {
       creatorId: creatorId,
       maxAllowedSize: maxSize,
       parentFolderPath: directory.parent.path,
-      subDirRef: subDirRef,
     );
   }
 
