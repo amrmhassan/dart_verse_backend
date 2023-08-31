@@ -47,7 +47,7 @@ class StorageService {
     String ref,
   ) async {
     StorageBucket? storageBucket =
-        await _storageBuckets.getBucketById(bucketId);
+        await _storageBuckets.getBucketById(bucketId, subDirRef: ref);
     if (storageBucket == null) {
       throw NoBucketException(bucketId);
     }
@@ -58,16 +58,17 @@ class StorageService {
       bucketId: storageBucket.id,
       ref: ref,
     );
-    return children
-        .map(
-          (e) => StorageRefModel(
-            bucketId: bucketId,
-            ref: ref,
-            type: e.statSync().type == FileSystemEntityType.file
-                ? 'file'
-                : 'folder',
-          ),
-        )
-        .toList();
+    return children.map(
+      (e) {
+        var ref = storageBucket.getFileRef(e.path) ?? '';
+        return StorageRefModel(
+          bucketId: storageBucket.id,
+          ref: ref,
+          type: e.statSync().type == FileSystemEntityType.file
+              ? 'file'
+              : 'folder',
+        );
+      },
+    ).toList();
   }
 }

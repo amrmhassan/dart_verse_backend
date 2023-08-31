@@ -186,7 +186,7 @@ class DefaultStorageServerHandlers implements StorageServerHandlers {
 
       String downloadEndpoint =
           app.endpoints.storageEndpoints.download.split('/')[1];
-      String? fileRef = bucket.getFileRef(file);
+      String? fileRef = bucket.getFileRef(file.path);
       if (fileRef == null) {
         return SendResponse.sendDataToUser(
             response, 'file uploaded to: ${file.path}');

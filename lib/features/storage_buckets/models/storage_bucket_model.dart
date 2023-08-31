@@ -85,7 +85,10 @@ class StorageBucket {
         : '${folderPath.strip('/')}/${subDirRef!}';
   }
 
-  static StorageBucket? fromPath(String path) {
+  static StorageBucket? fromPath(
+    String path, {
+    String? subDirRef,
+  }) {
     String acmFileName = ACMPermissionController.acmFileName;
     String acmFilePath = '${path.strip('/')}/$acmFileName';
     var acm = ACMPermissionController.isAcmFileValid(acmFilePath);
@@ -100,10 +103,12 @@ class StorageBucket {
       creatorId: creatorId,
       maxAllowedSize: maxSize,
       parentFolderPath: directory.parent.path,
+      subDirRef: subDirRef,
     );
   }
 
   bool containFile(String path) {
+    path = path.replaceAll('\\', '/');
     String bucketPath = folderPath.strip('./');
     if (path.contains(bucketPath)) {
       return true;
@@ -111,13 +116,15 @@ class StorageBucket {
     return false;
   }
 
-  String? getFileRef(FileSystemEntity entity) {
-    if (!containFile(entity.path)) return null;
+  String? getFileRef(String entityPath) {
+    entityPath = entityPath.replaceAll('\\', '/');
+    if (!containFile(entityPath)) return null;
+
     String bucketPath = folderPath;
     // file path: /path/to/bucket/bucket_name/sub/dir/file.ext
     // bucket path: /path/to/bucket/bucket_name
     // desired output : sub/dir/file.ext
-    var parts = entity.path.split(bucketPath);
+    var parts = entityPath.split(bucketPath);
     if (parts.isEmpty) {
       return null;
     }
