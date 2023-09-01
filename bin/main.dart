@@ -29,6 +29,9 @@ import 'package:dart_webcore/dart_webcore.dart';
 
 import 'constants.dart';
 
+// flutter packages pub run build_runner build --delete-conflicting-outputs
+// flutter pub run build_runner watch --delete-conflicting-outputs
+
 // make all server storage operations pass through a single path, to hide the .acm permissions {folder}
 // save all bucket info inside a folder instead of a file (.acm)
 // hide this folder from the remote storage operations (list, getting, delete)

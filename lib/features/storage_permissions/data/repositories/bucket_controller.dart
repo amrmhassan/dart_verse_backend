@@ -1,14 +1,13 @@
-import 'dart:async';
 import 'dart:io';
 
 import 'package:dart_verse_backend/errors/models/storage_errors.dart';
 import 'package:dart_verse_backend/features/storage_buckets/models/storage_bucket_model.dart';
-import 'package:dart_verse_backend/features/storage_buckets/repo/bucket_controller_repo.dart';
 import 'package:dart_verse_backend/layers/services/storage_service/utils/buckets_store.dart';
 import 'package:dart_webcore/dart_webcore/server/impl/request_holder.dart';
 import 'package:path/path.dart';
 
 List<String> reservedBucketsName = ['null'];
+String _validChars = 'abcdefghijklmnopqrstuvwxyz0123456789';
 
 bool _valid(String name) {
   if (reservedBucketsName.contains(name)) {
@@ -23,20 +22,13 @@ bool _valid(String name) {
   return true;
 }
 
-String _validChars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+class BucketController {
+  final StorageBucket storageBucket;
 
-class DefaultBucketController implements BucketControllerRepo {
-  Directory _bucketDir() {
-    Directory directory = Directory(storageBucket.folderPath);
-    if (!directory.existsSync()) {
-      throw BucketNotCreatedException(' from DefaultBucketController');
-    }
-    return directory;
-  }
+  BucketController(this.storageBucket);
 
-  @override
-  void createBucket() {
-    validateBucketInfo();
+  Future<void> createBucket() async {
+    _validateBucketInfo();
 
     // validating bucket folder path
     Directory directory = Directory(storageBucket.folderPath);
@@ -44,7 +36,7 @@ class DefaultBucketController implements BucketControllerRepo {
       try {
         directory.createSync(recursive: true);
         // here just add the bucket id to the buckets data
-        saveBucketId();
+        _saveBucketId();
       } catch (e) {
         throw StorageBucketFolderPathException(
             'can\'t create the bucket folder, $e');
@@ -56,32 +48,7 @@ class DefaultBucketController implements BucketControllerRepo {
     }
   }
 
-  @override
-  Future<int> getBucketSize() {
-    Directory dir = _bucketDir();
-    int size = 0;
-    Completer<int> completer = Completer<int>();
-    var sub = dir.list(recursive: true).listen((event) async {
-      var fileStats = await event.stat();
-      if (fileStats.type == FileSystemEntityType.file) {
-        size += fileStats.size;
-      }
-    });
-
-    sub.onDone(() async {
-      completer.complete(size);
-      await sub.cancel();
-    });
-    return completer.future;
-  }
-
-  @override
-  StorageBucket storageBucket;
-
-  DefaultBucketController(this.storageBucket);
-
-  @override
-  void validateBucketInfo() {
+  void _validateBucketInfo() {
     // validating bucket name
     if (storageBucket.id.length > 50) {
       throw StorageBucketNameException('exceeded 50 letters');
@@ -95,13 +62,25 @@ class DefaultBucketController implements BucketControllerRepo {
     }
   }
 
-  @override
-  Future<void> deleteBucket() {
-    Directory dir = _bucketDir();
-    return dir.delete(recursive: true);
+  void _saveBucketId() {
+    String name = storageBucket.id;
+    String path = storageBucket.folderPath;
+    var bucketExist = BucketsStore.bucketsBox.get(name);
+    if (bucketExist != null) {
+      if (bucketExist != path) {
+        throw StorageBucketExistsException(name);
+      }
+    }
+
+    BucketsStore.putBucket(name, path);
   }
 
-  @override
+  Directory _bucketDir() {
+    Directory directory = Directory(storageBucket.folderPath);
+    return directory;
+  }
+
+  //? bucket operations
   Future<File> receiveFile(
     RequestHolder request, {
     bool throwErrorIfExist = false,
@@ -120,17 +99,12 @@ class DefaultBucketController implements BucketControllerRepo {
     return file;
   }
 
-  @override
-  void saveBucketId() {
+  Future<void> deleteBucket() async {
+    Directory dir = _bucketDir();
     String name = storageBucket.id;
-    String path = storageBucket.folderPath;
-    var bucketExist = BucketsStore.bucketsBox.get(name);
-    if (bucketExist != null) {
-      if (bucketExist != path) {
-        throw StorageBucketExistsException(name);
-      }
-    }
-
-    BucketsStore.putBucket(name, path);
+    // deleting the bucket from the buckets paths map
+    await BucketsStore.bucketsBox.delete(name);
+    // delete the bucket folder
+    await dir.delete(recursive: true);
   }
 }
