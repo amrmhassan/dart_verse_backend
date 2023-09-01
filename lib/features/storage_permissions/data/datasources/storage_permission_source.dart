@@ -1,18 +1,48 @@
-import 'package:dart_verse_backend/features/storage_buckets/models/storage_bucket_model.dart';
-import 'package:dart_verse_backend/features/storage_buckets/storage_buckets.dart';
+import 'dart:io';
+
+import 'package:dart_verse_backend/errors/models/storage_errors.dart';
+import 'package:dart_verse_backend/features/storage_permissions/data/constants/permissions_constants.dart';
+import 'package:dart_verse_backend/layers/services/storage_service/utils/buckets_store.dart';
+import 'package:dart_verse_backend/utils/string_utils.dart';
+import 'package:hive/hive.dart';
 
 class StoragePermissionSource {
-  final StorageBuckets storageBuckets;
+  late Directory _dataDir;
+  final String _bucketId;
+  StoragePermissionSource(this._bucketId) {
+    _dataDir = _handleInitDataDir();
+  }
 
-  const StoragePermissionSource(this.storageBuckets);
-  // i will first get the ref for that storage
-  void handle(String bucketId, String ref, String permissionName) async {
-    StorageBucket? bucket =
-        await storageBuckets.getBucketById(bucketId, subRef: ref);
-    if (bucket == null) {
-      //! throw an error
-      throw Exception();
+  Directory _handleInitDataDir() {
+    String? bucketPath = BucketsStore.getBucketPath(_bucketId);
+    if (bucketPath == null) {
+      throw NoBucketException(_bucketId);
     }
-    // here handle the permission
+    // here handle open the bucket box
+    Directory bucketDataDir = _checkBucketDataDir(bucketPath);
+    return bucketDataDir;
+  }
+
+  Directory _checkBucketDataDir(String bucketPath) {
+    Directory directory =
+        Directory('${bucketPath.strip('/')}/${SPConstants.bucketAcmFolder}');
+    if (!directory.existsSync()) {
+      directory.createSync(recursive: true);
+    }
+    return directory;
+  }
+
+//? this will return the box for the bucket info, permissions
+  Future<Box> bucketBox() async {
+    Box box = await Hive.openBox(SPConstants.bucketPermissionsBox,
+        path: _dataDir.path);
+    return box;
+  }
+
+//? this will return the box for the refs inside the bucket
+  Future<Box> refBox() async {
+    Box box =
+        await Hive.openBox(SPConstants.refPermissionsBox, path: _dataDir.path);
+    return box;
   }
 }
