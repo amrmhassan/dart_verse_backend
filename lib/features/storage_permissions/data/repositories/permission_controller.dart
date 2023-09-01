@@ -16,7 +16,7 @@ class StoragePermissionController {
 
   Future<void> init() async {
     // get info of the bucket from this box
-    var bucketInfo = _storageBucket.controller.bucketInfo;
+    // var bucketInfo = _storageBucket.controller.bucketInfo;
   }
 
   //? getting boxes
