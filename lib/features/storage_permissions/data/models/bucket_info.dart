@@ -16,4 +16,7 @@ class BucketInfo {
     required this.createdAt,
     required this.maxAllowedSize,
   });
+  factory BucketInfo.fromJson(Map<String, dynamic> json) =>
+      _$BucketInfoFromJson(json);
+  Map<String, dynamic> toJson() => _$BucketInfoToJson(this);
 }

@@ -2,7 +2,11 @@ import 'dart:io';
 
 import 'package:dart_verse_backend/errors/models/storage_errors.dart';
 import 'package:dart_verse_backend/features/storage_buckets/models/storage_bucket_model.dart';
+import 'package:dart_verse_backend/features/storage_permissions/data/constants/boxes_keys.dart';
+import 'package:dart_verse_backend/features/storage_permissions/data/datasources/storage_permission_source.dart';
+import 'package:dart_verse_backend/features/storage_permissions/data/models/bucket_info.dart';
 import 'package:dart_verse_backend/layers/services/storage_service/utils/buckets_store.dart';
+import 'package:dart_verse_backend/utils/string_utils.dart';
 import 'package:dart_webcore/dart_webcore/server/impl/request_holder.dart';
 import 'package:path/path.dart';
 
@@ -24,6 +28,13 @@ bool _valid(String name) {
 
 class BucketController {
   final StorageBucket storageBucket;
+  BucketInfo? _bucketInfo;
+  BucketInfo get bucketInfo {
+    if (_bucketInfo == null) {
+      throw BucketNotInitiated();
+    }
+    return _bucketInfo!;
+  }
 
   BucketController(this.storageBucket);
 
@@ -45,6 +56,39 @@ class BucketController {
     // check if the storage bucket is created or not
     if (!directory.existsSync()) {
       throw StorageBucketFolderPathException('bucket folder wasn\'t created');
+    }
+    await _createBucketInfoBox();
+  }
+
+  Future<void> _createBucketInfoBox() async {
+    SBBoxes sbBoxes = SBBoxes(storageBucket.id);
+    var infoBox = await sbBoxes.bucketBox();
+    var savedInfo = infoBox.get(BoxesKeys.info) as Map<dynamic, dynamic>?;
+    if (savedInfo != null) {
+      Map<String, dynamic> cloneObj = {};
+      for (var entry in savedInfo.entries) {
+        cloneObj[entry.key] = entry.value;
+      }
+      var infoModel = BucketInfo.fromJson(cloneObj);
+      await validateSavedBucketInfo(infoModel);
+      _bucketInfo = infoModel;
+      return;
+    }
+
+    BucketInfo info = BucketInfo(
+      id: storageBucket.id,
+      path: storageBucket.folderPath,
+      creatorId: storageBucket.creatorId,
+      createdAt: DateTime.now().toIso8601String(),
+      maxAllowedSize: storageBucket.maxAllowedSize,
+    );
+    await infoBox.put(BoxesKeys.info, info.toJson());
+    _bucketInfo = info;
+  }
+
+  Future<void> validateSavedBucketInfo(BucketInfo savedInfo) async {
+    if (storageBucket.folderPath.strip('/') != savedInfo.path.strip('/')) {
+      throw ProhebitedBucketEditException();
     }
   }
 

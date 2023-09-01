@@ -13,6 +13,12 @@ class StoragePermissionController {
   StoragePermissionController(this._storageBucket) {
     _sbBoxes = SBBoxes(_storageBucket.id);
   }
+
+  Future<void> init() async {
+    // get info of the bucket from this box
+    var bucketInfo = _storageBucket.controller.bucketInfo;
+  }
+
   //? getting boxes
   Future<Box> get _bucketBox async {
     if (_bucketBoxSource != null) {

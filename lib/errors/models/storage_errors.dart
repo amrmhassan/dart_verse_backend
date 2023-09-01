@@ -145,3 +145,19 @@ class RefNotEmpty extends StorageException {
           errorCode: HttpStatus.notAcceptable,
         );
 }
+
+class ProhebitedBucketEditException extends StorageException {
+  ProhebitedBucketEditException()
+      : super(
+          'This bucket is edited by a third party, so it\'t not valid',
+          ErrorCodes.invalidBucketEditing,
+        );
+}
+
+class BucketNotInitiated extends StorageException {
+  BucketNotInitiated()
+      : super(
+          'please run bucket.init() first',
+          ErrorCodes.bucketNotInitiated,
+        );
+}
