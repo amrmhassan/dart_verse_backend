@@ -7,6 +7,7 @@ import 'package:dart_verse_backend/utils/encryption.dart';
 
 class ACMPermissionController {
   final StorageBucket bucket;
+
   ACMPermissionController(this.bucket) {
     _init();
   }
