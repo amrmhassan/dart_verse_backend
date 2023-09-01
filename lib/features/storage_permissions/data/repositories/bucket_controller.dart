@@ -134,9 +134,13 @@ class BucketController {
   }
 
   static Future<BucketInfo?> fromPath(String bucketPath) async {
-    SBBoxes sbBoxes = SBBoxes.fromPath(bucketPath);
-    BucketInfo? info = await _fromBoxes(sbBoxes);
-    return info;
+    try {
+      SBBoxes sbBoxes = SBBoxes.fromPath(bucketPath);
+      BucketInfo? info = await _fromBoxes(sbBoxes);
+      return info;
+    } catch (e) {
+      return null;
+    }
   }
 
   //? bucket operations

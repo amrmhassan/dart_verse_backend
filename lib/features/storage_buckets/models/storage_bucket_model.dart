@@ -4,9 +4,8 @@ import 'package:dart_verse_backend/features/storage_permissions/data/models/buck
 import 'package:dart_verse_backend/features/storage_permissions/data/repositories/bucket_controller.dart';
 import 'package:dart_verse_backend/features/storage_permissions/data/repositories/permission_controller.dart';
 import 'package:dart_verse_backend/utils/string_utils.dart';
-import 'package:path/path.dart';
 
-String get defaultBucketsContainer => 'Buckets';
+const String defaultBucketsContainer = 'Buckets';
 
 class StorageBucket {
   /// this name is it's id, should be unique
@@ -91,12 +90,11 @@ class StorageBucket {
     BucketInfo? info = await BucketController.fromPath(path);
     if (info == null) return null;
     // here this means that the acm file is valid
-    var name = basename(path);
     String? creatorId = info.creatorId;
     int? maxSize = info.maxAllowedSize;
     Directory directory = Directory(path);
     return StorageBucket(
-      name,
+      info.id,
       creatorId: creatorId,
       maxAllowedSize: maxSize,
       parentFolderPath: directory.parent.path,
