@@ -60,19 +60,13 @@ class BucketController {
     await _createBucketInfoBox();
   }
 
-  Future<void> _createBucketInfoBox() async {
+  Future<BucketInfo> _createBucketInfoBox() async {
     SBBoxes sbBoxes = SBBoxes(storageBucket.id);
-    var infoBox = await sbBoxes.bucketBox();
-    var savedInfo = infoBox.get(BoxesKeys.info) as Map<dynamic, dynamic>?;
+    BucketInfo? savedInfo = await _fromBoxes(sbBoxes);
     if (savedInfo != null) {
-      Map<String, dynamic> cloneObj = {};
-      for (var entry in savedInfo.entries) {
-        cloneObj[entry.key] = entry.value;
-      }
-      var infoModel = BucketInfo.fromJson(cloneObj);
-      await validateSavedBucketInfo(infoModel);
-      _bucketInfo = infoModel;
-      return;
+      await _validateSavedBucketInfo(savedInfo);
+      _bucketInfo = savedInfo;
+      return savedInfo;
     }
 
     BucketInfo info = BucketInfo(
@@ -82,11 +76,26 @@ class BucketController {
       createdAt: DateTime.now().toIso8601String(),
       maxAllowedSize: storageBucket.maxAllowedSize,
     );
+    var infoBox = await sbBoxes.bucketBox();
     await infoBox.put(BoxesKeys.info, info.toJson());
-    _bucketInfo = info;
+    return info;
   }
 
-  Future<void> validateSavedBucketInfo(BucketInfo savedInfo) async {
+  static Future<BucketInfo?> _fromBoxes(SBBoxes sbBoxes) async {
+    var infoBox = await sbBoxes.bucketBox();
+    var savedInfo = infoBox.get(BoxesKeys.info) as Map<dynamic, dynamic>?;
+    if (savedInfo != null) {
+      Map<String, dynamic> cloneObj = {};
+      for (var entry in savedInfo.entries) {
+        cloneObj[entry.key] = entry.value;
+      }
+      var infoModel = BucketInfo.fromJson(cloneObj);
+      return infoModel;
+    }
+    return null;
+  }
+
+  Future<void> _validateSavedBucketInfo(BucketInfo savedInfo) async {
     if (storageBucket.folderPath.strip('/') != savedInfo.path.strip('/')) {
       throw ProhebitedBucketEditException();
     }
@@ -122,6 +131,12 @@ class BucketController {
   Directory _bucketDir() {
     Directory directory = Directory(storageBucket.folderPath);
     return directory;
+  }
+
+  static Future<BucketInfo?> fromPath(String bucketPath) async {
+    SBBoxes sbBoxes = SBBoxes.fromPath(bucketPath);
+    BucketInfo? info = await _fromBoxes(sbBoxes);
+    return info;
   }
 
   //? bucket operations

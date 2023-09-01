@@ -161,7 +161,7 @@ class DefaultStorageServerHandlers implements StorageServerHandlers {
       // but now i need a way to get the path of the file i want to save like
 
       String ref = request.headers.value(HeaderFields.ref) ?? '/';
-      StorageBucket refBucket = ref == '/' ? bucket : bucket.ref(ref);
+      StorageBucket refBucket = ref == '/' ? bucket : await bucket.ref(ref);
       //! here i should check if this permission is allowed from the refBucket and the operation write
 
       //? bucket permissions will be checked for the refBucket not the original bucket

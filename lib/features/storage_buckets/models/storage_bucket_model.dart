@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dart_verse_backend/features/storage_buckets/acm_permissions/controller/acm_permission_controller.dart';
+import 'package:dart_verse_backend/features/storage_permissions/data/models/bucket_info.dart';
 import 'package:dart_verse_backend/features/storage_permissions/data/repositories/bucket_controller.dart';
 import 'package:dart_verse_backend/features/storage_permissions/data/repositories/permission_controller.dart';
 import 'package:dart_verse_backend/utils/string_utils.dart';
@@ -73,7 +74,7 @@ class StorageBucket {
 //!
 //@ the creatorId will be stored in the bucket itself as a file containing the id of the creator
 // in this method parent i will know about a storage bucket by it's .acm file
-  StorageBucket? parent() {
+  Future<StorageBucket?> parent() async {
     try {
       String parentPath = Directory(folderPath).parent.path;
       return StorageBucket.fromPath(parentPath);
@@ -87,15 +88,13 @@ class StorageBucket {
     return subRef == null ? folderPath : '${folderPath.strip('/')}/${subRef!}';
   }
 
-  static StorageBucket? fromPath(String path) {
-    String acmFileName = ACMPermissionController.acmFileName;
-    String acmFilePath = '${path.strip('/')}/$acmFileName';
-    var acm = ACMPermissionController.isAcmFileValid(acmFilePath);
-    if (acm == null) return null;
+  static Future<StorageBucket?> fromPath(String path) async {
+    BucketInfo? info = await BucketController.fromPath(path);
+    if (info == null) return null;
     // here this means that the acm file is valid
     var name = basename(path);
-    String creatorId = acm['creator_id'];
-    int? maxSize = acm['max_size'];
+    String? creatorId = info.creatorId;
+    int? maxSize = info.maxAllowedSize;
     Directory directory = Directory(path);
     return StorageBucket(
       name,

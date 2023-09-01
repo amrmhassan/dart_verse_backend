@@ -26,7 +26,7 @@ extension BucketRefCreator on StorageBucket {
   //b -- path is main/stores/store1/images/image1.jpg
   // -- the bucket must be store1 and the subDirRef will be images
 
-  StorageBucket ref(String? path) {
+  Future<StorageBucket> ref(String? path) async {
     path ??= '';
     List<String> iterations = path.strip('/').split('/');
     StorageBucket nearestSubBucket = this;
@@ -37,7 +37,7 @@ extension BucketRefCreator on StorageBucket {
     for (int i = 0; i < iterations.length; i++) {
       String iteration = iterations[i];
       collector = '$collector$iteration/';
-      StorageBucket? currentBucket = StorageBucket.fromPath(collector);
+      StorageBucket? currentBucket = await StorageBucket.fromPath(collector);
       // StorageBucket? currentBucket = collector == 'stores/store1/'
       //     ? StorageBucket(
       //         'store1',
