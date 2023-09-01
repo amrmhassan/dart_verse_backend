@@ -6,10 +6,10 @@ import 'package:dart_verse_backend/layers/services/storage_service/utils/buckets
 import 'package:dart_verse_backend/utils/string_utils.dart';
 import 'package:hive/hive.dart';
 
-class StoragePermissionSource {
+class SBBoxes {
   late Directory _dataDir;
   final String _bucketId;
-  StoragePermissionSource(this._bucketId) {
+  SBBoxes(this._bucketId) {
     _dataDir = _handleInitDataDir();
   }
 
