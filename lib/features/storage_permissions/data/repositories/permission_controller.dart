@@ -23,11 +23,11 @@ class StoragePermissionController {
     return box;
   }
 
-  Future<Box> get _refBox async {
+  Future<Box> get _refMapBox async {
     if (_refBoxSource != null) {
       return _refBoxSource!;
     }
-    var box = await _sbBoxes.refBox();
+    var box = await _sbBoxes.refMapBox();
     _refBoxSource = box;
     return box;
   }

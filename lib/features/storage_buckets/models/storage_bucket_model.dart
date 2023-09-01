@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dart_verse_backend/features/storage_buckets/acm_permissions/controller/acm_permission_controller.dart';
 import 'package:dart_verse_backend/features/storage_permissions/data/repositories/bucket_controller.dart';
+import 'package:dart_verse_backend/features/storage_permissions/data/repositories/permission_controller.dart';
 import 'package:dart_verse_backend/utils/string_utils.dart';
 import 'package:path/path.dart';
 
@@ -23,7 +24,7 @@ class StorageBucket {
   /// this is the controller for bucket operations like creating validating and much more
   /// if null, this bucket controller will be assigned to a default bucket controller
   late BucketController _controller;
-  late ACMPermissionController _permissionsController;
+  late StoragePermissionController _permissionController;
 
   /// this will represent if this storage bucket targets a sub dir inside that bucket or if null this mean that this ref targets
   /// the bucket dir itself
@@ -44,13 +45,14 @@ class StorageBucket {
     _parentPath = _parentPath.replaceAll('\\', '/');
     _parentPath = _parentPath.strip('/');
     _controller.createBucket();
-    _permissionsController = ACMPermissionController(this);
+    _permissionController = StoragePermissionController(this);
   }
 
   String get folderPath => '$_parentPath/$id';
   String get parentPath => _parentPath;
   BucketController get controller => _controller;
-  ACMPermissionController get permissionsController => _permissionsController;
+  StoragePermissionController get permissionsController =>
+      _permissionController;
 
   StorageBucket child(String name) {
     return StorageBucket(
