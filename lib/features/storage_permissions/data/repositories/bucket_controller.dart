@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dart_verse_backend/errors/models/storage_errors.dart';
 import 'package:dart_verse_backend/features/storage_buckets/models/storage_bucket_model.dart';
 import 'package:dart_verse_backend/features/storage_permissions/data/constants/boxes_keys.dart';
+import 'package:dart_verse_backend/features/storage_permissions/data/datasources/permission_parser.dart';
 import 'package:dart_verse_backend/features/storage_permissions/data/datasources/storage_permission_source.dart';
 import 'package:dart_verse_backend/features/storage_permissions/data/models/bucket_info.dart';
 import 'package:dart_verse_backend/layers/services/storage_service/utils/buckets_store.dart';
@@ -83,16 +84,7 @@ class BucketController {
 
   static Future<BucketInfo?> _fromBoxes(SBBoxes sbBoxes) async {
     var infoBox = await sbBoxes.bucketBox();
-    var savedInfo = infoBox.get(BoxesKeys.info) as Map<dynamic, dynamic>?;
-    if (savedInfo != null) {
-      Map<String, dynamic> cloneObj = {};
-      for (var entry in savedInfo.entries) {
-        cloneObj[entry.key] = entry.value;
-      }
-      var infoModel = BucketInfo.fromJson(cloneObj);
-      return infoModel;
-    }
-    return null;
+    return PermissionParser.infoParser(infoBox);
   }
 
   Future<void> _validateSavedBucketInfo(BucketInfo savedInfo) async {

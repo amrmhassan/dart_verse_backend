@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dart_verse_backend/features/storage_permissions/data/models/bucket_info.dart';
 import 'package:dart_verse_backend/features/storage_permissions/data/repositories/bucket_controller.dart';
+import 'package:dart_verse_backend/features/storage_permissions/data/repositories/permission_checker.dart';
 import 'package:dart_verse_backend/features/storage_permissions/data/repositories/permission_controller.dart';
 import 'package:dart_verse_backend/utils/string_utils.dart';
 
@@ -24,6 +25,7 @@ class StorageBucket {
   /// if null, this bucket controller will be assigned to a default bucket controller
   late BucketController _controller;
   late StoragePermissionController _permissionController;
+  late PermissionChecker _permissionChecker;
 
   /// this will represent if this storage bucket targets a sub dir inside that bucket or if null this mean that this ref targets
   /// the bucket dir itself
@@ -43,6 +45,7 @@ class StorageBucket {
     _parentPath = _parentPath.replaceAll('//', '/');
     _parentPath = _parentPath.replaceAll('\\', '/');
     _parentPath = _parentPath.strip('/');
+    _permissionChecker = PermissionChecker(this);
   }
 
   Future<void> init() async {
@@ -56,6 +59,7 @@ class StorageBucket {
   BucketController get controller => _controller;
   StoragePermissionController get permissionsController =>
       _permissionController;
+  PermissionChecker get permissionChecker => _permissionChecker;
 
   StorageBucket child(String name) {
     return StorageBucket(

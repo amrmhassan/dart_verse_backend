@@ -4,21 +4,18 @@ import 'package:dart_verse_backend/features/storage_permissions/utils/path_utils
 import 'package:dart_verse_backend/features/storage_permissions/utils/permissions_utils.dart';
 import 'package:hive/hive.dart';
 
+//? the ref permissions is as it's bucket permissions as long as the ref doesn't have any permissions defined for it
+//? so if the bucket is all private but the ref permissions is public, this ref will be public
+
 class StoragePermissionController {
   late SBBoxes _sbBoxes;
 
   final StorageBucket _storageBucket;
   Box? _bucketBoxSource;
-  // Box? _refBoxSource;
 
   StoragePermissionController(this._storageBucket) {
     _sbBoxes = SBBoxes(_storageBucket.id);
   }
-
-  // Future<void> init() async {
-  // get info of the bucket from this box
-  // var bucketInfo = _storageBucket.controller.bucketInfo;
-  // }
 
   //? getting boxes
   Future<Box> get _bucketBox async {
@@ -29,15 +26,6 @@ class StoragePermissionController {
     _bucketBoxSource = box;
     return box;
   }
-
-  // Future<Box> get _refMapBox async {
-  //   if (_refBoxSource != null) {
-  //     return _refBoxSource!;
-  //   }
-  //   var box = await _sbBoxes.refMapBox();
-  //   _refBoxSource = box;
-  //   return box;
-  // }
 
   // if the user id starts with ^^ then block him and ends with ^^
   // if the user id doesn't start or end with ^^ then this user is allowed
