@@ -14,8 +14,11 @@ class SBBoxes {
   }
 
   factory SBBoxes.fromPath(String path) {
-    return SBBoxes('_bucketId', bucketPath: path);
+    //! make sure the _bucketId is not accessible as long as the constructor fromPath is depending on a false bucketId
+    var sbBoxes = SBBoxes('_bucketId', bucketPath: path);
+    return sbBoxes;
   }
+  Directory get dataDir => _dataDir;
 
   Directory _handleInitDataDir([String? passedBucketPath]) {
     if (passedBucketPath == null) {
@@ -45,10 +48,10 @@ class SBBoxes {
     return box;
   }
 
-//? this will return the box for the refs inside the bucket
-  Future<Box> refMapBox() async {
-    Box box =
-        await Hive.openBox(SPConstants.redMappingBox, path: _dataDir.path);
-    return box;
-  }
+// this will return the box for the refs inside the bucket
+//   Future<Box> refMapBox() async {
+//     Box box =
+//         await Hive.openBox(SPConstants.redMappingBox, path: _dataDir.path);
+//     return box;
+//   }
 }

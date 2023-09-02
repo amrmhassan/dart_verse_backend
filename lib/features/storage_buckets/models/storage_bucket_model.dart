@@ -48,7 +48,7 @@ class StorageBucket {
   Future<void> init() async {
     await _controller.createBucket();
     _permissionController = StoragePermissionController(this);
-    await _permissionController.init();
+    // await _permissionController.init();
   }
 
   String get folderPath => '$_parentPath/$id';
