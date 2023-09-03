@@ -8,8 +8,12 @@ import 'package:hive/hive.dart';
 class PermissionChecker {
   final StorageBucket _storageBucket;
   late SBBoxes _sbBoxes;
+  bool defaultValue;
 
-  PermissionChecker(this._storageBucket) {
+  PermissionChecker(
+    this._storageBucket, {
+    this.defaultValue = true,
+  }) {
     _sbBoxes = SBBoxes(_storageBucket.id);
   }
 
@@ -74,22 +78,22 @@ class PermissionChecker {
     );
   }
 
-  Future<bool> _allowedFromBox({
+  bool _allowedFromBox({
     required Box box,
     required String permissionName,
     required String userId,
     required Box bucketBox,
-  }) async {
+  }) {
     var permission = box.get(permissionName);
     if (permission == null) {
-      return true;
+      return defaultValue;
     }
     //
     var data = PermissionParser.boxParser(box);
     List<String>? users = data[permissionName];
     if (users == null) {
       //? here is the default value
-      return true;
+      return defaultValue;
     }
     // blocking blocked user
     String blockedUser = SPUtils.blockedIt(userId);
