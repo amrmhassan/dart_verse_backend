@@ -8,9 +8,11 @@ class ServerRunner {
   final App _app;
   final Pipeline _pipeline;
   late ServerHolder _serverHolder;
+  late ServerHolder _dashboardHolder;
 
   ServerRunner(this._app, this._pipeline) {
     _serverHolder = ServerHolder(_pipeline);
+    _dashboardHolder = ServerHolder(Pipeline());
   }
   ServerHolder get serverHolder => _serverHolder;
 
@@ -20,23 +22,29 @@ class ServerRunner {
         _app.serverSettings.mainServerSettings;
     HttpServerSetting dashboardServerSettings =
         _app.serverSettings.dashboardServerSettings;
-    await _runServer(mainServerSettings);
-    await _runServer(dashboardServerSettings);
+    await _runServer(mainServerSettings, _serverHolder);
+    await _runServer(dashboardServerSettings, _dashboardHolder);
   }
 
-  Future<HttpServer> _runServer(HttpServerSetting setting) async {
+  Future<HttpServer> _runServer(
+    HttpServerSetting setting,
+    ServerHolder serverHolder,
+  ) async {
     SecurityContext? context = setting.context;
     if (context == null) {
       // run the non secured server
-      return _runNonSecuredServer(setting);
+      return _runNonSecuredServer(setting, serverHolder);
     } else {
       // run the secured server
-      return _runSecuredServer(setting);
+      return _runSecuredServer(setting, serverHolder);
     }
   }
 
-  Future<HttpServer> _runSecuredServer(HttpServerSetting setting) async {
-    return _serverHolder.bindSecure(
+  Future<HttpServer> _runSecuredServer(
+    HttpServerSetting setting,
+    ServerHolder serverHolder,
+  ) async {
+    return serverHolder.bindSecure(
       setting.address,
       setting.port,
       setting.context!,
@@ -46,8 +54,11 @@ class ServerRunner {
     );
   }
 
-  Future<HttpServer> _runNonSecuredServer(HttpServerSetting setting) async {
-    return _serverHolder.bind(
+  Future<HttpServer> _runNonSecuredServer(
+    HttpServerSetting setting,
+    ServerHolder serverHolder,
+  ) async {
+    return serverHolder.bind(
       setting.address,
       setting.port,
       backlog: setting.backlog,
