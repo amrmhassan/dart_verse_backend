@@ -14,6 +14,8 @@ class ServerRunner {
     _serverHolder = ServerHolder(_pipeline);
     _dashboardHolder = ServerHolder(Pipeline());
   }
+
+  /// this is the main server helper
   ServerHolder get serverHolder => _serverHolder;
 
   /// this will return the mainServer instance only
