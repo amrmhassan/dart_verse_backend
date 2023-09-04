@@ -1,8 +1,7 @@
 import 'dart:async';
-import 'dart:io';
-
 import 'package:dart_verse_backend/constants/endpoints_constants.dart';
 import 'package:dart_verse_backend/layers/service_server/auth_server/repo/auth_server_settings.dart';
+import 'package:dart_verse_backend/layers/services/web_server/repo/server_runner.dart';
 import 'package:dart_verse_backend/layers/settings/app/app.dart';
 import 'package:dart_webcore/dart_webcore.dart';
 
@@ -18,20 +17,18 @@ class ServerService {
     required this.authServerSettings,
   }) {
     _pipeline = Pipeline();
+    serverRunner = ServerRunner(app, _pipeline);
   }
 
   late Pipeline _pipeline;
+  late ServerRunner serverRunner;
 
-  Future<HttpServer> runServer({
+  Future<void> runServers({
     bool log = false,
   }) async {
-    InternetAddress ip = app.serverSettings.ip;
-    int port = app.serverSettings.port;
     _addServicesEndpoints();
-    ServerHolder serverHolder = ServerHolder(_pipeline);
-    serverHolder.addGlobalMiddleware(logRequest);
-    var server = await serverHolder.bind(ip, port);
-    return server;
+    serverRunner.serverHolder.addGlobalMiddleware(logRequest);
+    return serverRunner.run();
   }
 
   //! data in this like idFieldName and role and their values will be checked from the jwt payload

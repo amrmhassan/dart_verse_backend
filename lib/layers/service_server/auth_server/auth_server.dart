@@ -7,6 +7,7 @@ import 'package:dart_webcore/dart_webcore.dart';
 
 class AuthServer implements ServiceServerLayer {
   final AuthServerSettings _authServerSettings;
+  @override
   ServerService serverService;
   AuthServer(this.serverService, this._authServerSettings);
 
@@ -34,7 +35,7 @@ class AuthServer implements ServiceServerLayer {
     // String forgetPassword = _app.endpoints.authEndpoints.forgetPassword;
 
     // other needed data
-    int port = app.serverSettings.port;
+    int port = app.serverSettings.mainServerSettings.port;
     String host = app.backendHost;
 
     // adding auth endpoints pipeline

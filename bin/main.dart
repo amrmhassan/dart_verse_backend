@@ -92,7 +92,7 @@ void main(List<String> arguments) async {
 
   serverService.addRouter(router, appIdSecured: true);
   await storageService.init();
-  await serverService.runServer();
+  await serverService.runServers();
 }
 
     // //? visit this google oauth playground https://developers.google.com/oauthplayground to get more info about how to access google services for a google account
