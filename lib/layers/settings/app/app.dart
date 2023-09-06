@@ -34,7 +34,7 @@ class App {
     EmailSettings? emailSettings,
     StorageSettings? storageSettings,
     EndpointsSettings? endpoints,
-    required String backendHost,
+    required String? backendHost,
   })  : _authSettings = authSettings,
         _dbSettings = dbSettings,
         _userDataSettings = userDataSettings,
@@ -42,7 +42,7 @@ class App {
         _emailSettings = emailSettings,
         _storageSettings = storageSettings {
     _endpoints = endpoints ?? defaultEndpoints;
-    _backendHost = backendHost.strip('/');
+    _backendHost = backendHost?.strip('/') ?? '';
   }
 
   //# getting difference settings instances
