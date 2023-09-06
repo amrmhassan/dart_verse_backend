@@ -6,15 +6,12 @@ import 'package:dart_webcore/dart_webcore.dart';
 class DashboardServer {
   final DashboardSettings dashboardSettings;
 
-  DashboardServer(this.dashboardSettings) {
-    dashboard = Dashboard(dashboardSettings);
-    dashboard.pipeline.addRouter(_router());
-  }
+  DashboardServer(this.dashboardSettings);
 
   late Dashboard dashboard;
   Pipeline get pipeline => dashboard.pipeline;
 
-  Router _router() {
+  Router router() {
     Router router = Router()
       ..get(DashboardEndpoints.login,
           (request, response, pathArgs) => response.write('object'));
