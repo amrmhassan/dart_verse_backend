@@ -1,3 +1,4 @@
+import 'package:dart_verse_backend/constants/logger.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 import '../../../../layers/settings/db_settings/repo/conn_link.dart';
@@ -9,13 +10,13 @@ class MongoDbConnect {
   Future<Db?> connect() async {
     String? uri = _connLink?.getConnLink;
     if (uri == null) {
-      print('no mongoDb Provider, skipping mongoDB connect');
+      logger.i('no mongoDb Provider, skipping mongoDB connect');
       return null;
     }
 
     late Db db;
 
-    print('trying to connect to mongo db...');
+    logger.i('trying to connect to mongo db...');
 
     if (_connLink is MongoDbDNSConnLink) {
       db = await _dnsConnect(uri);
@@ -23,7 +24,7 @@ class MongoDbConnect {
       db = await _normalConnect(uri);
     }
 
-    print('connected to mongo db.');
+    logger.i('connected to mongo db.');
 
     return db;
   }
