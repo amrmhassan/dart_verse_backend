@@ -18,10 +18,12 @@ import 'package:dart_verse_backend/layers/services/auth/auth_service.dart';
 import 'package:dart_verse_backend/layers/services/db_manager/db_providers/impl/mongo_db/mongo_db_provider.dart';
 import 'package:dart_verse_backend/layers/services/db_manager/db_service.dart';
 import 'package:dart_verse_backend/layers/services/storage_service/storage_service.dart';
+import 'package:dart_verse_backend/layers/services/web_server/models/router_info.dart';
 import 'package:dart_verse_backend/layers/services/web_server/server_service.dart';
 import 'package:dart_verse_backend/layers/settings/app/app.dart';
 import 'package:dart_verse_backend/layers/settings/auth_settings/auth_settings.dart';
 import 'package:dart_verse_backend/layers/settings/db_settings/db_settings.dart';
+import 'package:dart_verse_backend/layers/settings/server_settings/entities/dashboard_server_settings.dart';
 import 'package:dart_verse_backend/layers/settings/server_settings/entities/http_server_setting.dart';
 import 'package:dart_verse_backend/layers/settings/server_settings/server_settings.dart';
 import 'package:dart_verse_backend/layers/settings/storage_settings/storage_settings.dart';
@@ -54,6 +56,7 @@ void main(List<String> arguments) async {
   ServerSettings serverSettings = ServerSettings(
     mainServerSettings: HttpServerSetting(InternetAddress.anyIPv4, 3000),
     dashboardServerSettings: HttpServerSetting(InternetAddress.anyIPv4, 3001),
+    dashboardSettings: DashboardSettings(dashboardConnLink),
   );
 
   StorageSettings storageSettings = StorageSettings();
@@ -82,10 +85,10 @@ void main(List<String> arguments) async {
   );
   var storageService = StorageService(app);
   //? service server layer
-  var authServer = AuthServer(serverService, authServerSettings);
-  var dbServer = DBServer(serverService, DefaultDbServerSettings(dbService));
-  var storageServer = StorageServer(
-      serverService, DefaultStorageServerSettings(storageService));
+  var authServer = AuthServer(app, authServerSettings);
+  var dbServer = DBServer(app, DefaultDbServerSettings(dbService));
+  var storageServer =
+      StorageServer(app, DefaultStorageServerSettings(storageService));
   authServer.addRouters();
   dbServer.addRouters();
   storageServer.addRouters();
@@ -94,7 +97,7 @@ void main(List<String> arguments) async {
     ..get('/checkServerAlive',
         (request, response, pathArgs) => response.write('Yes i am a live'));
 
-  serverService.addRouter(router, appIdSecured: true);
+  serverService.addRouter(RouterInfo(router, appIdSecured: true));
   await storageService.init();
   await serverService.runServers();
 }
