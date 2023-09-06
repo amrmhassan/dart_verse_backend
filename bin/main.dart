@@ -22,6 +22,7 @@ import 'package:dart_verse_backend/layers/services/web_server/server_service.dar
 import 'package:dart_verse_backend/layers/settings/app/app.dart';
 import 'package:dart_verse_backend/layers/settings/auth_settings/auth_settings.dart';
 import 'package:dart_verse_backend/layers/settings/db_settings/db_settings.dart';
+import 'package:dart_verse_backend/layers/settings/server_settings/entities/dashboard_server_settings.dart';
 import 'package:dart_verse_backend/layers/settings/server_settings/entities/http_server_setting.dart';
 import 'package:dart_verse_backend/layers/settings/server_settings/server_settings.dart';
 import 'package:dart_verse_backend/layers/settings/storage_settings/storage_settings.dart';
@@ -54,6 +55,7 @@ void main(List<String> arguments) async {
   ServerSettings serverSettings = ServerSettings(
     mainServerSettings: HttpServerSetting(InternetAddress.anyIPv4, 3000),
     dashboardServerSettings: HttpServerSetting(InternetAddress.anyIPv4, 3001),
+    dashboardSettings: DashboardSettings(dashboardConnLink),
   );
 
   StorageSettings storageSettings = StorageSettings();
