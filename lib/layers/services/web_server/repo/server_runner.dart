@@ -8,13 +8,14 @@ class ServerRunner {
   final App _app;
   final Pipeline _pipeline;
   late ServerHolder _serverHolder;
-  late ServerHolder _dashboardHolder;
+  // late ServerHolder _dashboardHolder;
 
   ServerRunner(this._app, this._pipeline) {
     _serverHolder = ServerHolder(_pipeline);
     if (_app.dashboardSettings != null) {
       Dashboard dashboard = Dashboard(_app.dashboardSettings!, _app);
-      _dashboardHolder = ServerHolder(dashboard.pipeline);
+      dashboard.run();
+      // _dashboardHolder = ServerHolder(dashboard.pipeline);
     }
   }
 
@@ -25,11 +26,11 @@ class ServerRunner {
   Future<void> run() async {
     HttpServerSetting mainServerSettings = _app.mainServerSettings;
     await _runServer(mainServerSettings, _serverHolder);
-    if (_app.dashboardSettings != null) {
-      HttpServerSetting dashboardServerSettings =
-          _app.dashboardSettings!.dashboardServerSettings;
-      await _runServer(dashboardServerSettings, _dashboardHolder);
-    }
+    // if (_app.dashboardSettings != null) {
+    //   HttpServerSetting dashboardServerSettings =
+    //       _app.dashboardSettings!.dashboardServerSettings;
+    //   await _runServer(dashboardServerSettings, _dashboardHolder);
+    // }
   }
 
   Future<HttpServer> _runServer(

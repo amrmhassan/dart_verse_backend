@@ -41,7 +41,6 @@ class Dashboard {
 
     _dbService = DbService(_mainApp);
     _pipeline = Pipeline();
-    run();
   }
   Future<void> _handleServices() async {
     // server service
