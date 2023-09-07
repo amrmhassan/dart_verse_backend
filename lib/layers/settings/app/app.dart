@@ -6,7 +6,7 @@ import 'package:dart_verse_backend/layers/settings/auth_settings/auth_settings.d
 import 'package:dart_verse_backend/layers/settings/db_settings/db_settings.dart';
 import 'package:dart_verse_backend/layers/settings/email_settings/email_settings.dart';
 import 'package:dart_verse_backend/layers/settings/endpoints/endpoints.dart';
-import 'package:dart_verse_backend/layers/settings/server_settings/server_settings.dart';
+import 'package:dart_verse_backend/layers/settings/server_settings/entities/http_server_setting.dart';
 import 'package:dart_verse_backend/layers/settings/storage_settings/storage_settings.dart';
 import 'package:dart_verse_backend/layers/settings/user_data_settings/user_data_settings.dart';
 import 'package:dart_verse_backend/utils/string_utils.dart';
@@ -22,11 +22,11 @@ class App {
   final AuthSettings? _authSettings;
   final DBSettings? _dbSettings;
   final UserDataSettings? _userDataSettings;
-  final ServerSettings? _serverSettings;
   final EmailSettings? _emailSettings;
   final StorageSettings? _storageSettings;
   late EndpointsSettings _endpoints;
-  final DashboardSettings dashboardSettings;
+  final DashboardSettings? dashboardSettings;
+  final HttpServerSetting mainServerSettings;
 
   /// this is the host you want to send to users in responses or emails <br>
   /// include the port also <br>
@@ -36,16 +36,15 @@ class App {
     AuthSettings? authSettings,
     DBSettings? dbSettings,
     UserDataSettings? userDataSettings,
-    ServerSettings? serverSettings,
     EmailSettings? emailSettings,
     StorageSettings? storageSettings,
     EndpointsSettings? endpoints,
     required String? backendHost,
     required this.dashboardSettings,
+    required this.mainServerSettings,
   })  : _authSettings = authSettings,
         _dbSettings = dbSettings,
         _userDataSettings = userDataSettings,
-        _serverSettings = serverSettings,
         _emailSettings = emailSettings,
         _storageSettings = storageSettings {
     _endpoints = endpoints ?? defaultEndpoints;
@@ -72,13 +71,6 @@ class App {
       throw NoDbSettingsExceptions();
     }
     return _dbSettings!;
-  }
-
-  ServerSettings get serverSettings {
-    if (_serverSettings == null) {
-      throw NoServerSettingsExceptions();
-    }
-    return _serverSettings!;
   }
 
   EmailSettings get emailSettings {

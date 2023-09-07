@@ -24,7 +24,6 @@ import 'package:dart_verse_backend/layers/settings/auth_settings/auth_settings.d
 import 'package:dart_verse_backend/layers/settings/db_settings/db_settings.dart';
 import 'package:dart_verse_backend/layers/settings/server_settings/entities/dashboard_server_settings.dart';
 import 'package:dart_verse_backend/layers/settings/server_settings/entities/http_server_setting.dart';
-import 'package:dart_verse_backend/layers/settings/server_settings/server_settings.dart';
 import 'package:dart_verse_backend/layers/settings/storage_settings/storage_settings.dart';
 import 'package:dart_verse_backend/layers/settings/user_data_settings/user_data_settings.dart';
 import 'constants.dart';
@@ -50,10 +49,6 @@ void main(List<String> arguments) async {
     jwtSecretKey: SecretKey('jwtSecretKey'),
     allowedAppsIds: ['amrhassan'],
   );
-  ServerSettings serverSettings = ServerSettings(
-    mainServerSettings: HttpServerSetting(InternetAddress.anyIPv4, 3000),
-    dashboardServerSettings: HttpServerSetting(InternetAddress.anyIPv4, 3001),
-  );
 
   StorageSettings storageSettings = StorageSettings();
 
@@ -61,10 +56,13 @@ void main(List<String> arguments) async {
     dbSettings: dbSettings,
     authSettings: authSettings,
     userDataSettings: userDataSettings,
-    serverSettings: serverSettings,
     storageSettings: storageSettings,
     backendHost: 'http://localhost:3000',
-    dashboardSettings: DashboardSettings(dashboardConnLink),
+    dashboardSettings: DashboardSettings(
+      dashboardConnLink: dashboardConnLink,
+      dashboardServerSettings: HttpServerSetting(InternetAddress.anyIPv4, 3001),
+    ),
+    mainServerSettings: HttpServerSetting(InternetAddress.anyIPv4, 3000),
   );
 
   //? service layer

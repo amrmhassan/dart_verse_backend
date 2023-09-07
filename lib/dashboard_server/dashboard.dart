@@ -25,6 +25,7 @@ class Dashboard {
   late App _app;
 
   Dashboard(this._dashboardSettings, this._mainApp) {
+    if (_mainApp.dashboardSettings == null) return;
     _mongoDBProvider = MongoDBProvider(_dashboardSettings.dashboardConnLink);
     DBSettings dbSettings = DBSettings(mongoDBProvider: _mongoDBProvider);
     AuthSettings authSettings = AuthSettings(
@@ -33,8 +34,9 @@ class Dashboard {
     _app = App(
       backendHost: null,
       dbSettings: dbSettings,
-      dashboardSettings: _mainApp.dashboardSettings,
+      dashboardSettings: null,
       authSettings: authSettings,
+      mainServerSettings: _mainApp.dashboardSettings!.dashboardServerSettings,
     );
 
     _dbService = DbService(_mainApp);
