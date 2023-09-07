@@ -12,7 +12,7 @@ class ServerRunner {
 
   ServerRunner(this._app, this._pipeline) {
     _serverHolder = ServerHolder(_pipeline);
-    Dashboard dashboard = Dashboard(_app.serverSettings.dashboardSettings);
+    Dashboard dashboard = Dashboard(_app.dashboardSettings, _app);
     _dashboardHolder = ServerHolder(dashboard.pipeline);
   }
 

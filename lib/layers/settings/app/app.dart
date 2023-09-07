@@ -10,9 +10,14 @@ import 'package:dart_verse_backend/layers/settings/server_settings/server_settin
 import 'package:dart_verse_backend/layers/settings/storage_settings/storage_settings.dart';
 import 'package:dart_verse_backend/layers/settings/user_data_settings/user_data_settings.dart';
 import 'package:dart_verse_backend/utils/string_utils.dart';
+import 'package:dart_verse_backend/layers/settings/server_settings/entities/dashboard_server_settings.dart';
 
 //! i should keep track of collections and sub collections names in a string file or something
 
+//? separate the servers settings
+//? create a separate app for the dashboard
+//? only pass the dashboard settings to the app settings of the dashboard app
+//? separate the server settings
 class App {
   final AuthSettings? _authSettings;
   final DBSettings? _dbSettings;
@@ -21,6 +26,7 @@ class App {
   final EmailSettings? _emailSettings;
   final StorageSettings? _storageSettings;
   late EndpointsSettings _endpoints;
+  final DashboardSettings dashboardSettings;
 
   /// this is the host you want to send to users in responses or emails <br>
   /// include the port also <br>
@@ -35,6 +41,7 @@ class App {
     StorageSettings? storageSettings,
     EndpointsSettings? endpoints,
     required String? backendHost,
+    required this.dashboardSettings,
   })  : _authSettings = authSettings,
         _dbSettings = dbSettings,
         _userDataSettings = userDataSettings,

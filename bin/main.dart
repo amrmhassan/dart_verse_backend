@@ -53,7 +53,6 @@ void main(List<String> arguments) async {
   ServerSettings serverSettings = ServerSettings(
     mainServerSettings: HttpServerSetting(InternetAddress.anyIPv4, 3000),
     dashboardServerSettings: HttpServerSetting(InternetAddress.anyIPv4, 3001),
-    dashboardSettings: DashboardSettings(dashboardConnLink),
   );
 
   StorageSettings storageSettings = StorageSettings();
@@ -65,6 +64,7 @@ void main(List<String> arguments) async {
     serverSettings: serverSettings,
     storageSettings: storageSettings,
     backendHost: 'http://localhost:3000',
+    dashboardSettings: DashboardSettings(dashboardConnLink),
   );
 
   //? service layer
