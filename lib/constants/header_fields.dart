@@ -9,4 +9,6 @@ class HeaderFields {
   static const String fileName = 'fileName';
   static const String onFileExist = 'onFileExist';
   static const String forceDelete = 'forceDelete';
+  // app check
+  static const String apiHash = 'apiHash';
 }

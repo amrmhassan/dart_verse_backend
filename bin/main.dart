@@ -47,7 +47,6 @@ void main(List<String> arguments) async {
   UserDataSettings userDataSettings = UserDataSettings();
   AuthSettings authSettings = AuthSettings(
     jwtSecretKey: SecretKey('jwtSecretKey'),
-    allowedAppsIds: ['amrhassan'],
   );
 
   StorageSettings storageSettings = StorageSettings();
@@ -82,11 +81,15 @@ void main(List<String> arguments) async {
   //? service server layer
   var authServer = AuthServer(app, authServerSettings);
   var dbServer = DBServer(app, DefaultDbServerSettings(dbService));
-  var storageServer =
-      StorageServer(app, DefaultStorageServerSettings(storageService));
-  authServer.addRouters();
-  dbServer.addRouters();
-  storageServer.addRouters();
+  var storageServer = StorageServer(
+    app,
+    DefaultStorageServerSettings(storageService),
+  );
+  serverService.serverRunner.serverHolder
+      .addGlobalMiddleware((request, response, pathArgs) {
+    print(request.headers);
+    return request;
+  });
 
   await storageService.init();
   await serverService.runServers(
