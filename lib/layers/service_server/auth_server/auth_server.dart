@@ -46,9 +46,7 @@ class AuthServer implements ServiceServerLayer {
         _authServerSettings.authServerHandlers.verifyEmail,
       )
       //? will check for app id from here
-      ..addRouterMiddleware(
-        _authServerSettings.authServerMiddlewares.checkAppId,
-      )
+
       ..post(
         login,
         _authServerSettings.authServerHandlers.login,

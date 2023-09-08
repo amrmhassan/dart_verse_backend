@@ -48,7 +48,6 @@ class ServerService {
   ServerService addRouter(RouterInfo routerInfo) {
     bool jwtSecured = routerInfo.jwtSecured;
     bool emailMustBeVerified = routerInfo.emailMustBeVerified;
-    bool appIdSecured = routerInfo.appIdSecured;
     Router router = routerInfo.router;
 
     //? run checks here
@@ -59,13 +58,7 @@ class ServerService {
 
     //? adding middlewares here
     // checking for app id for every
-    if (appIdSecured) {
-      router.addUpperMiddleware(
-        null,
-        HttpMethods.all,
-        authServerSettings.authServerMiddlewares.checkAppId,
-      );
-    }
+
     // checking if jwt is added and user logged in
     if (jwtSecured) {
       router
