@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
-
 class ApiKeyModel {
   final String id;
   final String name;
   final String apiKey;
   final DateTime createdAt;
-  final DateTimeRange expiryDate;
+
+  /// this can be null, to add the option to lifetime api keys
+  final DateTime? expiryDate;
 
   const ApiKeyModel({
     required this.id,

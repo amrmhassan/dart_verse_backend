@@ -43,7 +43,7 @@ class ServerService {
       dbServer: dbServer,
       storageServer: storageServer,
     );
-
+    _addAppCheck();
     return serverRunner.run();
   }
 
@@ -118,7 +118,7 @@ class ServerService {
     }
   }
 
-  void addAppCheck() {
+  void _addAppCheck() {
     if (app.appCheck != null) {
       serverRunner.serverHolder.addGlobalMiddleware(_serverHandlers.checkApp);
     }

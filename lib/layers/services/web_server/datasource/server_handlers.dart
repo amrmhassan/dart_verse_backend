@@ -64,6 +64,10 @@ class ServerHandlers {
     Map<String, dynamic> pathArgs,
   ) async {
     return _wrapper(request, response, pathArgs, () async {
+      String path = request.uri.path;
+      if (path == EndpointsConstants.serverTime) {
+        return request;
+      }
       var appCheck = _app.appCheck;
       if (appCheck == null) {
         return request;
