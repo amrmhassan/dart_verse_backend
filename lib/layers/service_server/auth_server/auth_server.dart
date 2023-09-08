@@ -35,7 +35,7 @@ class AuthServer implements ServiceServerLayer {
     // String forgetPassword = _app.endpoints.authEndpoints.forgetPassword;
 
     // other needed data
-    int port = app.serverSettings.mainServerSettings.port;
+    int port = app.mainServerSettings.port;
     String host = app.backendHost;
 
     // adding auth endpoints pipeline

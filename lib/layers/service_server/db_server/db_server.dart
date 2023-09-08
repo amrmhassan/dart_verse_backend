@@ -6,6 +6,7 @@ import 'package:dart_webcore/dart_webcore/routing/impl/router.dart';
 
 class DBServer implements ServiceServerLayer {
   final DbServerSettings _dbServerSettings;
+  @override
   App app;
 
   DBServer(this.app, this._dbServerSettings);

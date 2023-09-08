@@ -319,8 +319,10 @@ class DefaultAuthServerHandlers implements AuthServerHandlers {
     ResponseHolder response,
     Map<String, dynamic> pathArgs,
   ) {
-    // TODO: implement logout
-    throw UnimplementedError();
+    return _wrapper(request, response, pathArgs, () async {
+      // TODO: implement logout
+      throw UnimplementedError();
+    });
   }
 
   //? this method will require the user to be logged in

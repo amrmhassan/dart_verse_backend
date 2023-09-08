@@ -8,12 +8,15 @@ class ServerRunner {
   final App _app;
   final Pipeline _pipeline;
   late ServerHolder _serverHolder;
-  late ServerHolder _dashboardHolder;
+  // late ServerHolder _dashboardHolder;
 
   ServerRunner(this._app, this._pipeline) {
     _serverHolder = ServerHolder(_pipeline);
-    Dashboard dashboard = Dashboard(_app.serverSettings.dashboardSettings);
-    _dashboardHolder = ServerHolder(dashboard.pipeline);
+    if (_app.dashboardSettings != null) {
+      Dashboard dashboard = Dashboard(_app.dashboardSettings!, _app);
+      dashboard.run();
+      // _dashboardHolder = ServerHolder(dashboard.pipeline);
+    }
   }
 
   /// this is the main server helper
@@ -21,12 +24,13 @@ class ServerRunner {
 
   /// this will return the mainServer instance only
   Future<void> run() async {
-    HttpServerSetting mainServerSettings =
-        _app.serverSettings.mainServerSettings;
-    HttpServerSetting dashboardServerSettings =
-        _app.serverSettings.dashboardServerSettings;
+    HttpServerSetting mainServerSettings = _app.mainServerSettings;
     await _runServer(mainServerSettings, _serverHolder);
-    await _runServer(dashboardServerSettings, _dashboardHolder);
+    // if (_app.dashboardSettings != null) {
+    //   HttpServerSetting dashboardServerSettings =
+    //       _app.dashboardSettings!.dashboardServerSettings;
+    //   await _runServer(dashboardServerSettings, _dashboardHolder);
+    // }
   }
 
   Future<HttpServer> _runServer(

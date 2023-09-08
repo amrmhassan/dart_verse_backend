@@ -50,6 +50,7 @@ class ServerService {
     bool emailMustBeVerified = routerInfo.emailMustBeVerified;
     bool appIdSecured = routerInfo.appIdSecured;
     Router router = routerInfo.router;
+
     //? run checks here
     if (!jwtSecured && emailMustBeVerified) {
       throw Exception(
@@ -106,9 +107,10 @@ class ServerService {
     DBServer? dbServer,
   }) {
     // adding server check router
-    RouterInfo routerInfo = RouterInfo(Router()
+    Router router = Router()
       ..get(EndpointsConstants.serverAlive,
-          (request, response, pathArgs) => response.write('server is live')));
+          (request, response, pathArgs) => response.write('server is live'));
+    RouterInfo routerInfo = RouterInfo(router, appIdSecured: false);
     addRouter(routerInfo);
 
     // adding services servers

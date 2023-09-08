@@ -1,14 +1,13 @@
-import 'package:dart_verse_backend/layers/settings/server_settings/entities/dashboard_server_settings.dart';
-import 'package:dart_verse_backend/layers/settings/server_settings/entities/http_server_setting.dart';
+// import 'package:dart_verse_backend/layers/settings/server_settings/entities/http_server_setting.dart';
 
-class ServerSettings {
-  final HttpServerSetting mainServerSettings;
-  final HttpServerSetting dashboardServerSettings;
-  final DashboardSettings dashboardSettings;
+// //? delete this server settings and pass each settings individually
+// //? make the dashboard settings to hold all dashboard settings including dashboardServerSettings
+// class ServerSettings {
+//   final HttpServerSetting mainServerSettings;
+//   final HttpServerSetting dashboardServerSettings;
 
-  ServerSettings({
-    required this.mainServerSettings,
-    required this.dashboardServerSettings,
-    required this.dashboardSettings,
-  });
-}
+//   ServerSettings({
+//     required this.mainServerSettings,
+//     required this.dashboardServerSettings,
+//   });
+// }

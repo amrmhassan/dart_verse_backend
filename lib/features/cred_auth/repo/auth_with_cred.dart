@@ -1,6 +1,7 @@
 // ignore_for_file: unused_local_variable
 
 import 'dart:convert';
+import 'package:dart_verse_backend/constants/logger.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:googleapis_auth/auth_io.dart';
@@ -34,14 +35,14 @@ class AuthWithGoogle {
       (uri) {},
     );
     String? refreshToken = credentials.refreshToken;
-    print(refreshToken);
+    logger.i(refreshToken);
   }
 
   void run() async {
     var res = await verifyGoogleAccessToken(testAcessToken);
     var encoded = json.encode(res);
-    print(encoded);
-    print(res);
+    logger.i(encoded);
+    logger.i(res);
   }
 
   void login(String accessToken) async {
