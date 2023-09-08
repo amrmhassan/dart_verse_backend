@@ -102,10 +102,12 @@ class DefaultAuthServerHandlers implements AuthServerHandlers {
 
         UserDataService userDataService = UserDataService(authService);
         var userData = await userDataService.getUserDataByEmail(email) ?? {};
+        String id = userData['_id'];
 
         Map<String, dynamic> resData = {
           BodyFields.userData: userData,
           ContextFields.jwt: jwt,
+          '_id': id,
         };
 
         return SendResponse.sendDataToUser(
@@ -319,8 +321,10 @@ class DefaultAuthServerHandlers implements AuthServerHandlers {
     ResponseHolder response,
     Map<String, dynamic> pathArgs,
   ) {
-    // TODO: implement logout
-    throw UnimplementedError();
+    return _wrapper(request, response, pathArgs, () async {
+      // TODO: implement logout
+      throw UnimplementedError();
+    });
   }
 
   //? this method will require the user to be logged in
