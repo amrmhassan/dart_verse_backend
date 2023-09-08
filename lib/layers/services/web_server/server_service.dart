@@ -1,10 +1,10 @@
 import 'dart:async';
-import 'package:dart_verse_backend/constants/endpoints_constants.dart';
 import 'package:dart_verse_backend/layers/service_server/auth_server/auth_server.dart';
 import 'package:dart_verse_backend/layers/service_server/auth_server/repo/auth_server_settings.dart';
 import 'package:dart_verse_backend/layers/service_server/db_server/db_server.dart';
 import 'package:dart_verse_backend/layers/service_server/service_server.dart';
 import 'package:dart_verse_backend/layers/service_server/storage_server/storage_server.dart';
+import 'package:dart_verse_backend/layers/services/web_server/datasource/server_handlers.dart';
 import 'package:dart_verse_backend/layers/services/web_server/models/router_info.dart';
 import 'package:dart_verse_backend/layers/services/web_server/repo/server_runner.dart';
 import 'package:dart_verse_backend/layers/settings/app/app.dart';
@@ -107,11 +107,8 @@ class ServerService {
     DBServer? dbServer,
   }) {
     // adding server check router
-    Router router = Router()
-      ..get(EndpointsConstants.serverAlive,
-          (request, response, pathArgs) => response.write('server is live'));
-    RouterInfo routerInfo = RouterInfo(router, appIdSecured: false);
-    addRouter(routerInfo);
+    ServerHandlers serverHandlers = ServerHandlers();
+    addRouter(serverHandlers.getServerRouter());
 
     // adding services servers
     _addServerService(authServer);
