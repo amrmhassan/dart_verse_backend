@@ -102,12 +102,10 @@ class DefaultAuthServerHandlers implements AuthServerHandlers {
 
         UserDataService userDataService = UserDataService(authService);
         var userData = await userDataService.getUserDataByEmail(email) ?? {};
-        String id = userData['_id'];
 
         Map<String, dynamic> resData = {
           BodyFields.userData: userData,
           ContextFields.jwt: jwt,
-          '_id': id,
         };
 
         return SendResponse.sendDataToUser(
