@@ -23,10 +23,12 @@ class ServerService {
   }) {
     _pipeline = Pipeline();
     serverRunner = ServerRunner(app, _pipeline);
+    _serverHandlers = ServerHandlers(app);
   }
 
   late Pipeline _pipeline;
   late ServerRunner serverRunner;
+  late ServerHandlers _serverHandlers;
 
   Future<void> runServers({
     bool log = false,
@@ -100,8 +102,7 @@ class ServerService {
     DBServer? dbServer,
   }) {
     // adding server check router
-    ServerHandlers serverHandlers = ServerHandlers();
-    addRouter(serverHandlers.getServerRouter());
+    addRouter(_serverHandlers.getServerRouter());
 
     // adding services servers
     _addServerService(authServer);
@@ -114,6 +115,12 @@ class ServerService {
     var routersInfo = layer.addRouters();
     for (var routerInfo in routersInfo) {
       addRouter(routerInfo);
+    }
+  }
+
+  void addAppCheck() {
+    if (app.appCheck != null) {
+      serverRunner.serverHolder.addGlobalMiddleware(_serverHandlers.checkApp);
     }
   }
 }

@@ -17,7 +17,7 @@ class ApiDecoder {
     _hmacHandler = HmacHandler(secretKey);
   }
 
-  String? getValidApi(String? base64Encoded) {
+  ApiKeyData? getValidApi(String? base64Encoded) {
     if (base64Encoded == null) return null;
     String? jsonObjString = _decryptString(base64Encoded);
     if (jsonObjString == null) return null;
@@ -30,6 +30,8 @@ class ApiDecoder {
       return null;
     }
 
+    DateTime createdAt =
+        DateTime.fromMillisecondsSinceEpoch(int.parse(timestamp));
     // here all  the data are available
     String message = '$timestamp$api$id';
     String generatedHmac = _hmacHandler.generateHmacSignature(message);
@@ -37,10 +39,23 @@ class ApiDecoder {
     if (!validHash) {
       return null;
     }
-    return api;
+    var apiData = ApiKeyData(api: api, createdAt: createdAt, id: id);
+    return apiData;
   }
 
   String? _decryptString(String base64Encoded) {
     return _encrypter.decrypt(base64Encoded);
   }
+}
+
+class ApiKeyData {
+  final String api;
+  final DateTime createdAt;
+  final String id;
+
+  const ApiKeyData({
+    required this.api,
+    required this.createdAt,
+    required this.id,
+  });
 }
