@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:dart_verse_backend/dashboard_server/dashboard.dart';
 import 'package:dart_verse_backend/layers/settings/app/app.dart';
 import 'package:dart_verse_backend/layers/settings/server_settings/entities/http_server_setting.dart';
 import 'package:dart_webcore/dart_webcore.dart';
@@ -11,11 +10,6 @@ class ServerRunner {
 
   ServerRunner(this._app, this._pipeline) {
     _serverHolder = ServerHolder(_pipeline);
-    if (_app.dashboardSettings != null) {
-      Dashboard dashboard = Dashboard(_app.dashboardSettings!, _app);
-      dashboard.run();
-      // _dashboardHolder = ServerHolder(dashboard.pipeline);
-    }
   }
 
   /// this is the main server helper

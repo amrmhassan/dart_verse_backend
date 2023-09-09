@@ -37,10 +37,20 @@ class CheckAppDatasource {
   /// this will throw an error if the api key is not valid
   /// other wise it will continue without any errors
   Future<void> validateApiHash(String? apiHash) async {
-    var data = _getApiFromHash(apiHash);
-    if (data == null || apiHash == null) {
+    if (apiHash == null) {
       throw NotAuthorizedApiKey();
     }
+    ApiKeyData? data;
+    try {
+      data = _getApiFromHash(apiHash);
+    } catch (e) {
+      throw NotValidApiKey();
+    }
+
+    if (data == null) {
+      throw NotAuthorizedApiKey();
+    }
+
     //! here i must validate this api key from the database to make sure that it not expired and it is allowed and stored in the database
     DateTime now = DateTime.now();
     Duration diff = now.difference(data.createdAt);
@@ -52,7 +62,7 @@ class CheckAppDatasource {
     }
     // get the api key from the database
     ApiHashModel? apiHashModel =
-        await _apiKeyInfoDatasource.getApiModel(apiHash);
+        await _apiKeyInfoDatasource.getApiModel(data.api);
     // check if the api key exist in the database
     if (apiHashModel == null) {
       throw NoApiKeyFound();

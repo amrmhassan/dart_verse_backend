@@ -49,15 +49,15 @@ class Dashboard {
   late App _app;
   late AuthServer _authServer;
   // services
-  late DbService _dbService;
+  late DbService dbService;
   late AuthService _authService;
   late ServerService _serverService;
   Future<void> _handleServices() async {
     // server service
     DashboardServer dashboardServer = DashboardServer(_dashboardSettings);
     _pipeline.addRouter(dashboardServer.router());
-    _dbService = DbService(_app);
-    MongoDbAuthProvider authProvider = MongoDbAuthProvider(_app, _dbService);
+    dbService = DbService(_app);
+    MongoDbAuthProvider authProvider = MongoDbAuthProvider(_app, dbService);
     _authService = AuthService(authProvider);
 
     AuthServerSettings authServerSettings =
@@ -66,11 +66,12 @@ class Dashboard {
     _serverService = ServerService(
       _app,
       authServerSettings: authServerSettings,
+      dbService: dbService,
     );
   }
 
   Future<void> _initData() async {
-    await _dbService.connectToDb();
+    await dbService.connectToDb();
     try {
       await _authService.registerUser(email: 'verse', password: 'verse');
     } catch (e) {
@@ -86,12 +87,12 @@ class Dashboard {
       return;
     }
     ApiKeyInfoDatasource apiKeyInfoDatasource =
-        ApiKeyInfoDatasource(_dbService, settings.encrypterSecretKey);
+        ApiKeyInfoDatasource(dbService, settings.encrypterSecretKey);
     ApiCRUDServer apiCheckServer = ApiCRUDServer(apiKeyInfoDatasource);
     _serverService.addRouter(apiCheckServer.getRouter());
   }
 
-  void run() async {
+  Future<void> run() async {
     await _handleServices();
     await _initData();
   }

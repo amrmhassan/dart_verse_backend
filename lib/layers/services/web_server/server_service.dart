@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'package:dart_verse_backend/dashboard_server/dashboard.dart';
 import 'package:dart_verse_backend/dashboard_server/features/app_check/server/app_check_middleware.dart';
 import 'package:dart_verse_backend/layers/service_server/auth_server/auth_server.dart';
 import 'package:dart_verse_backend/layers/service_server/auth_server/repo/auth_server_settings.dart';
 import 'package:dart_verse_backend/layers/service_server/db_server/db_server.dart';
 import 'package:dart_verse_backend/layers/service_server/service_server.dart';
 import 'package:dart_verse_backend/layers/service_server/storage_server/storage_server.dart';
+import 'package:dart_verse_backend/layers/services/db_manager/db_service.dart';
 import 'package:dart_verse_backend/layers/services/web_server/datasource/server_handlers.dart';
 import 'package:dart_verse_backend/layers/services/web_server/models/router_info.dart';
 import 'package:dart_verse_backend/layers/services/web_server/repo/server_runner.dart';
@@ -17,13 +19,19 @@ import 'package:dart_webcore/dart_webcore.dart';
 class ServerService {
   final App app;
   final AuthServerSettings authServerSettings;
+  final DbService dbService;
+  late Dashboard _dashboard;
 
   ServerService(
     this.app, {
     required this.authServerSettings,
+    required this.dbService,
   }) {
     _pipeline = Pipeline();
     serverRunner = ServerRunner(app, _pipeline);
+    if (app.dashboardSettings != null) {
+      _dashboard = Dashboard(app.dashboardSettings!, app);
+    }
   }
 
   late Pipeline _pipeline;
@@ -42,7 +50,7 @@ class ServerService {
       dbServer: dbServer,
       storageServer: storageServer,
     );
-    _addAppCheck();
+    await _addAppCheck();
     return serverRunner.run();
   }
 
@@ -118,9 +126,11 @@ class ServerService {
     }
   }
 
-  void _addAppCheck() {
+  Future<void> _addAppCheck() async {
     if (app.dashboardSettings?.appCheckSettings != null) {
-      AppCheckMiddleware middleware = AppCheckMiddleware(app);
+      await _dashboard.run();
+      AppCheckMiddleware middleware =
+          AppCheckMiddleware(app, _dashboard.dbService);
       serverRunner.serverHolder.addGlobalMiddleware(middleware.checkApp);
     }
   }

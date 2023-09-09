@@ -13,9 +13,10 @@ import 'package:dart_webcore/dart_webcore/server/impl/response_holder.dart';
 import 'package:dart_webcore/dart_webcore/server/repo/passed_http_entity.dart';
 
 class AppCheckMiddleware {
+  final DbService dbService;
   final App _app;
 
-  const AppCheckMiddleware(this._app);
+  const AppCheckMiddleware(this._app, this.dbService);
   FutureOr<PassedHttpEntity> _wrapper(
     RequestHolder request,
     ResponseHolder response,
@@ -57,7 +58,6 @@ class AppCheckMiddleware {
       if (appCheckSettings == null) {
         return request;
       }
-      DbService dbService = DbService(_app);
       AppCheck appCheck = AppCheck(
         secretKey: appCheckSettings.secretKey,
         encrypterSecretKey: appCheckSettings.encrypterSecretKey,

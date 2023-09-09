@@ -28,6 +28,11 @@ import 'package:dart_verse_backend/layers/settings/storage_settings/storage_sett
 import 'package:dart_verse_backend/layers/settings/user_data_settings/user_data_settings.dart';
 import 'constants.dart';
 
+//! i should add a separate secret key for every individual api key, to decode and encode it with it
+//! but never store this in plain text in the database
+//! encode it then save it in the data base
+//! and when trying to read it just decode it
+
 // flutter packages pub run build_runner build --delete-conflicting-outputs
 // flutter pub run build_runner watch --delete-conflicting-outputs
 
@@ -81,6 +86,7 @@ void main(List<String> arguments) async {
   ServerService serverService = ServerService(
     app,
     authServerSettings: authServerSettings,
+    dbService: dbService,
   );
   var storageService = StorageService(app);
   //? service server layer
