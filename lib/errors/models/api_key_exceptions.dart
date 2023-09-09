@@ -28,3 +28,19 @@ class NoApiKeyFound extends ApiKeyException {
           ErrorCodes.noApiKeyFound,
         );
 }
+
+class InactiveApiKey extends ApiKeyException {
+  InactiveApiKey()
+      : super(
+          'This api key is not active',
+          ErrorCodes.apiKeyNotActive,
+        );
+}
+
+class ExpiredApiKey extends ApiKeyException {
+  ExpiredApiKey()
+      : super(
+          'This api key is expired',
+          ErrorCodes.apiKeyNotActive,
+        );
+}

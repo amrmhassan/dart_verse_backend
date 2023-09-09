@@ -75,4 +75,6 @@ class ErrorCodes {
   static const String appCheckNotProvided = 'app-check-not-provided';
   //? api keys
   static const String noApiKeyFound = 'no-api-key-found';
+  static const String apiKeyNotActive = 'api-key-not-active';
+  static const String expiredApiKey = 'expired-api-key';
 }

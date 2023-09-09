@@ -30,6 +30,7 @@ class AppCheck {
       secretKey: _secretKey,
       encrypterSecretKey: _encrypterSecretKey,
       apiHashExpiryAfter: _clientApiAllowance,
+      dbService: _dbService,
     );
     _apiDatasource = ApiKeyInfoDatasource(_dbService, _encrypterSecretKey);
   }
