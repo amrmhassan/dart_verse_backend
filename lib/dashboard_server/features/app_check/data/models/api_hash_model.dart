@@ -8,7 +8,11 @@ part 'api_hash_model.g.dart';
 @DateConverter()
 class ApiHashModel {
   final String apiHash;
-  const ApiHashModel(this.apiHash);
+  final bool active;
+  const ApiHashModel(
+    this.apiHash, {
+    this.active = true,
+  });
 
   ApiKeyModel toApiKey(String encrypterSecretKey) {
     ApiKeyGenerator generator =
