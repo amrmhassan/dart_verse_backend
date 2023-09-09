@@ -1,24 +1,52 @@
+import 'package:dart_verse_backend/dashboard_server/features/app_check/data/datasources/api_key_info_datasource.dart';
 import 'package:dart_verse_backend/dashboard_server/features/app_check/data/datasources/check_app_datasource.dart';
+import 'package:dart_verse_backend/dashboard_server/features/app_check/data/models/api_hash_model.dart';
+import 'package:dart_verse_backend/layers/services/db_manager/db_service.dart';
 
 class AppCheck {
-  final String secretKey;
-  final String encrypterSecretKey;
-  final Duration apiHashExpiryAfter;
-  late CheckAppDatasource checkAppDatasource;
+  final String _secretKey;
+  final String _encrypterSecretKey;
+
+  /// this is the time to un validate the api hash generated on the client side
+  /// it has nothing to do with expiring the api hash from the database
+  /// it should be small, like 2 seconds or so, depending on the client-server internet speed
+  /// because after that period the request sent from the client will be invalid and will be rejected
+
+  final Duration _clientApiAllowance;
+  late ApiKeyInfoDatasource _apiDatasource;
+  late CheckAppDatasource _checkAppDatasource;
+  final DbService _dbService;
 
   AppCheck({
-    required this.secretKey,
-    required this.encrypterSecretKey,
-    required this.apiHashExpiryAfter,
-  }) {
-    checkAppDatasource = CheckAppDatasource(
-      secretKey: secretKey,
-      encrypterSecretKey: encrypterSecretKey,
-      apiHashExpiryAfter: apiHashExpiryAfter,
+    required String secretKey,
+    required String encrypterSecretKey,
+    required Duration clientApiAllowance,
+    required DbService dbService,
+  })  : _dbService = dbService,
+        _clientApiAllowance = clientApiAllowance,
+        _encrypterSecretKey = encrypterSecretKey,
+        _secretKey = secretKey {
+    _checkAppDatasource = CheckAppDatasource(
+      secretKey: _secretKey,
+      encrypterSecretKey: _encrypterSecretKey,
+      apiHashExpiryAfter: _clientApiAllowance,
     );
+    _apiDatasource = ApiKeyInfoDatasource(_dbService, _encrypterSecretKey);
   }
 
   Future<void> validateApiHash(String? apiHash) async {
-    await checkAppDatasource.validateApiHash(apiHash);
+    await _checkAppDatasource.validateApiHash(apiHash);
+  }
+
+  Future<ApiHashModel> generateAndSaveApiHash(
+    String name, {
+    Duration? expireAfter,
+  }) async {
+    ApiHashModel apiKey = await _apiDatasource.generateApiKey(
+      name,
+      expireAfter: expireAfter,
+    );
+    await _apiDatasource.saveHashModel(apiKey);
+    return apiKey;
   }
 }

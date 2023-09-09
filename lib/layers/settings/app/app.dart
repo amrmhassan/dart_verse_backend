@@ -1,6 +1,5 @@
 // this app is the starting point of the server
 // it will require settings for auth, database, realtime database, etc...
-import 'package:dart_verse_backend/dashboard_server/features/app_check/app_check.dart';
 import 'package:dart_verse_backend/errors/models/app_exceptions.dart';
 import 'package:dart_verse_backend/errors/models/storage_errors.dart';
 import 'package:dart_verse_backend/layers/settings/auth_settings/auth_settings.dart';
@@ -28,7 +27,6 @@ class App {
   late EndpointsSettings _endpoints;
   final DashboardSettings? dashboardSettings;
   final HttpServerSetting mainServerSettings;
-  final AppCheck? appCheck;
 
   /// this is the host you want to send to users in responses or emails <br>
   /// include the port also <br>
@@ -41,7 +39,6 @@ class App {
     EmailSettings? emailSettings,
     StorageSettings? storageSettings,
     EndpointsSettings? endpoints,
-    AppCheck? appCheck,
     required String? backendHost,
     required this.dashboardSettings,
     required this.mainServerSettings,
@@ -49,8 +46,7 @@ class App {
         _dbSettings = dbSettings,
         _userDataSettings = userDataSettings,
         _emailSettings = emailSettings,
-        _storageSettings = storageSettings,
-        appCheck = appCheck {
+        _storageSettings = storageSettings {
     _endpoints = endpoints ?? defaultEndpoints;
     _backendHost = backendHost?.strip('/') ?? '';
   }

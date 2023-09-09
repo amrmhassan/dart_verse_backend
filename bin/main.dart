@@ -6,7 +6,6 @@
 import 'dart:io';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:dart_verse_backend/dart_verse.dart';
-import 'package:dart_verse_backend/dashboard_server/features/app_check/app_check.dart';
 import 'package:dart_verse_backend/features/auth_db_provider/impl/mongo_db_auth_provider/mongo_db_auth_provider.dart';
 import 'package:dart_verse_backend/layers/service_server/auth_server/auth_server.dart';
 import 'package:dart_verse_backend/layers/service_server/auth_server/impl/default_auth_server_settings.dart';
@@ -51,23 +50,22 @@ void main(List<String> arguments) async {
   );
 
   StorageSettings storageSettings = StorageSettings();
-  AppCheck appCheck = AppCheck(
-    secretKey: 'This is the encrypter key',
-    encrypterSecretKey: 'This is the encrypter key',
-    apiHashExpiryAfter: Duration(seconds: 5),
-  );
 
   App app = App(
-    appCheck: appCheck,
     dbSettings: dbSettings,
     authSettings: authSettings,
     userDataSettings: userDataSettings,
     storageSettings: storageSettings,
     backendHost: 'http://localhost:3000',
     dashboardSettings: DashboardSettings(
-      dashboardConnLink: dashboardConnLink,
-      dashboardServerSettings: HttpServerSetting(InternetAddress.anyIPv4, 3001),
-    ),
+        dashboardConnLink: dashboardConnLink,
+        dashboardServerSettings:
+            HttpServerSetting(InternetAddress.anyIPv4, 3001),
+        appCheckSettings: AppCheckSettings(
+          clientApiAllowance: Duration(seconds: 2),
+          encrypterSecretKey: 'This is the encrypter key',
+          secretKey: 'This is the encrypter key',
+        )),
     mainServerSettings: HttpServerSetting(InternetAddress.anyIPv4, 3000),
   );
 

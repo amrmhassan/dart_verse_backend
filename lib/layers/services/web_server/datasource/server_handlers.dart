@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:dart_verse_backend/constants/endpoints_constants.dart';
 import 'package:dart_verse_backend/constants/header_fields.dart';
+import 'package:dart_verse_backend/dashboard_server/features/app_check/app_check.dart';
 import 'package:dart_verse_backend/errors/models/app_check_exceptions.dart';
 import 'package:dart_verse_backend/errors/serverless_exception.dart';
+import 'package:dart_verse_backend/layers/services/db_manager/db_service.dart';
 import 'package:dart_verse_backend/layers/services/web_server/models/router_info.dart';
 import 'package:dart_verse_backend/layers/settings/app/app.dart';
 import 'package:dart_verse_backend/layers/settings/server_settings/utils/send_response.dart';
@@ -68,10 +70,17 @@ class ServerHandlers {
       if (path == EndpointsConstants.serverTime) {
         return request;
       }
-      var appCheck = _app.appCheck;
-      if (appCheck == null) {
+      var appCheckSettings = _app.dashboardSettings?.appCheckSettings;
+      if (appCheckSettings == null) {
         return request;
       }
+      DbService dbService = DbService(_app);
+      AppCheck appCheck = AppCheck(
+        secretKey: appCheckSettings.secretKey,
+        encrypterSecretKey: appCheckSettings.encrypterSecretKey,
+        clientApiAllowance: appCheckSettings.clientApiAllowance,
+        dbService: dbService,
+      );
       String? apiHash = request.headers.value(HeaderFields.apiHash);
       await appCheck.validateApiHash(apiHash);
       return request;

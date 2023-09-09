@@ -5,7 +5,7 @@ void main(List<String> args) async {
   ApiKeyGenerator generator =
       ApiKeyGenerator(encrypterSecretKey: 'encrypterSecretKey');
   for (var i = 0; i < 1000; i++) {
-    String apiKey = generator.generateApiKey('Shiaka');
+    String apiKey = generator.generateApiKey('Shiaka', expireAfter: null);
     if (apiKeys.contains(apiKey)) {
       throw Exception('This api key already exists');
     }

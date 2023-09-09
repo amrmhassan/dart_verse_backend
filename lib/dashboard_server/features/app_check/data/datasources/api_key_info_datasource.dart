@@ -24,11 +24,14 @@ class ApiKeyInfoDatasource {
     return model;
   }
 
-  Future<ApiHashModel> generateApiKey(String name) async {
-    String apiHash = _generator.generateApiKey(name);
+  Future<ApiHashModel> generateApiKey(
+    String name, {
+    required Duration? expireAfter,
+  }) async {
+    String apiHash = _generator.generateApiKey(name, expireAfter: expireAfter);
     var existing = await getApiModel(apiHash);
     if (existing != null) {
-      return generateApiKey(name);
+      return generateApiKey(name, expireAfter: expireAfter);
     }
     ApiHashModel hashModel = ApiHashModel(apiHash);
     return hashModel;

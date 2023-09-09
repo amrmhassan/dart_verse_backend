@@ -17,7 +17,7 @@ class ApiKeyGenerator {
 
   String generateApiKey(
     String appName, {
-    Duration? expireAfter,
+    required Duration? expireAfter,
   }) {
     DateTime createdAt = DateTime.now();
     String random = _generateRandomString(10);

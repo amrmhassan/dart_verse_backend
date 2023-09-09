@@ -119,7 +119,7 @@ class ServerService {
   }
 
   void _addAppCheck() {
-    if (app.appCheck != null) {
+    if (app.dashboardSettings?.appCheckSettings != null) {
       serverRunner.serverHolder.addGlobalMiddleware(_serverHandlers.checkApp);
     }
   }
