@@ -73,7 +73,7 @@ class ApiKeyInfoDatasource {
     if (model == null) {
       throw NoApiKeyFound();
     }
-    model.active != model.active;
+    model.active = !model.active;
     return updateApiKey(model);
   }
 }

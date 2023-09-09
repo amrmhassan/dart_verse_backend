@@ -4,6 +4,7 @@ import 'package:dart_verse_backend/constants/body_fields.dart';
 import 'package:dart_verse_backend/dashboard_server/features/app_check/data/datasources/api_key_info_datasource.dart';
 import 'package:dart_verse_backend/dashboard_server/features/app_check/data/models/api_hash_model.dart';
 import 'package:dart_verse_backend/dashboard_server/features/app_check/data/models/api_key_model.dart';
+import 'package:dart_verse_backend/dashboard_server/features/app_check/data/models/api_user_model.dart';
 import 'package:dart_verse_backend/errors/models/api_key_exceptions.dart';
 import 'package:dart_verse_backend/errors/models/app_check_exceptions.dart';
 import 'package:dart_verse_backend/errors/models/server_errors.dart';
@@ -77,10 +78,13 @@ class ApiCrudHandlers {
   ) async {
     return _wrapper(request, response, pathArgs, () async {
       var res = await _apiKeyInfoDatasource.listApiKeys();
-      var converted = res
-          .map((e) =>
-              e.toApiKey(_apiKeyInfoDatasource.encrypterSecretKey).toJson())
-          .toList();
+      var converted = res.map(
+        (e) {
+          ApiUserModel apiUserModel = ApiUserModel.fromModels(
+              e.toApiKey(_apiKeyInfoDatasource.encrypterSecretKey), e);
+          return apiUserModel;
+        },
+      ).toList();
       return SendResponse.sendDataToUser(response, converted);
     });
   }
@@ -110,9 +114,10 @@ class ApiCrudHandlers {
       await _apiKeyInfoDatasource.saveHashModel(apiKey);
       ApiKeyModel apiKeyModel =
           apiKey.toApiKey(_apiKeyInfoDatasource.encrypterSecretKey);
+      ApiUserModel apiUserModel = ApiUserModel.fromModels(apiKeyModel, apiKey);
       return SendResponse.sendDataToUser(
         response,
-        apiKeyModel.toJson(),
+        apiUserModel.toJson(),
       );
     });
   }
@@ -151,7 +156,9 @@ class ApiCrudHandlers {
       }
 
       var res = await _apiKeyInfoDatasource.toggleApiKeyActiveness(apiHash);
-      return SendResponse.sendDataToUser(response, res.toJson());
+      ApiUserModel apiUserModel = ApiUserModel.fromModels(
+          res.toApiKey(_apiKeyInfoDatasource.encrypterSecretKey), res);
+      return SendResponse.sendDataToUser(response, apiUserModel.toJson());
     });
   }
 }
