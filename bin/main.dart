@@ -94,7 +94,7 @@ void main(List<String> arguments) async {
   );
   serverService.serverRunner.serverHolder
       .addGlobalMiddleware((request, response, pathArgs) {
-    print(request.headers);
+    // print(request.headers);
     return request;
   });
 
