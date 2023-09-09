@@ -25,3 +25,16 @@ class ApiHashModel {
       _$ApiHashModelFromJson(json);
   Map<String, dynamic> toJson() => _$ApiHashModelToJson(this);
 }
+
+class DateConverter extends JsonConverter<DateTime, String> {
+  const DateConverter();
+  @override
+  DateTime fromJson(String json) {
+    return DateTime.parse(json);
+  }
+
+  @override
+  String toJson(DateTime object) {
+    return object.toIso8601String();
+  }
+}

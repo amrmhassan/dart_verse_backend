@@ -1,5 +1,10 @@
+import 'package:dart_verse_backend/dashboard_server/features/app_check/data/models/api_hash_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+part 'api_key_model.g.dart';
+
+@JsonSerializable(explicitToJson: true)
+@DateConverter()
 class ApiKeyModel {
   final String name;
   final String apiKey;
@@ -55,17 +60,8 @@ class ApiKeyModel {
     bool expire = diffMicro > allowanceMicro;
     return expire;
   }
-}
 
-class DateConverter extends JsonConverter<DateTime, String> {
-  const DateConverter();
-  @override
-  DateTime fromJson(String json) {
-    return DateTime.parse(json);
-  }
-
-  @override
-  String toJson(DateTime object) {
-    return object.toIso8601String();
-  }
+  factory ApiKeyModel.fromJson(Map<String, dynamic> json) =>
+      _$ApiKeyModelFromJson(json);
+  Map<String, dynamic> toJson() => _$ApiKeyModelToJson(this);
 }

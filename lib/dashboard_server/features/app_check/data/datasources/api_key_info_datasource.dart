@@ -11,12 +11,12 @@ ApiKeysRepo _apiKeysRepo = ApiKeysRepo();
 
 class ApiKeyInfoDatasource {
   final DbService _dbService;
-  final String _encrypterSecretKey;
+  final String encrypterSecretKey;
   late ApiKeyGenerator _generator;
   late CollRefMongo _collection;
 
-  ApiKeyInfoDatasource(this._dbService, this._encrypterSecretKey) {
-    _generator = ApiKeyGenerator(encrypterSecretKey: _encrypterSecretKey);
+  ApiKeyInfoDatasource(this._dbService, this.encrypterSecretKey) {
+    _generator = ApiKeyGenerator(encrypterSecretKey: encrypterSecretKey);
     _collection =
         _dbService.mongoDbController.collection(DBCollections.apiKeys);
   }

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dart_verse_backend/constants/body_fields.dart';
 import 'package:dart_verse_backend/dashboard_server/features/app_check/data/datasources/api_key_info_datasource.dart';
 import 'package:dart_verse_backend/dashboard_server/features/app_check/data/models/api_hash_model.dart';
+import 'package:dart_verse_backend/dashboard_server/features/app_check/data/models/api_key_model.dart';
 import 'package:dart_verse_backend/errors/models/api_key_exceptions.dart';
 import 'package:dart_verse_backend/errors/models/app_check_exceptions.dart';
 import 'package:dart_verse_backend/errors/models/server_errors.dart';
@@ -57,7 +58,7 @@ class ApiCrudHandlers {
     }
   }
 
-  FutureOr<PassedHttpEntity> listApiKeys(
+  FutureOr<PassedHttpEntity> listApiHashes(
     RequestHolder request,
     ResponseHolder response,
     Map<String, dynamic> pathArgs,
@@ -65,6 +66,21 @@ class ApiCrudHandlers {
     return _wrapper(request, response, pathArgs, () async {
       var res = await _apiKeyInfoDatasource.listApiKeys();
       var converted = res.map((e) => e.toJson()).toList();
+      return SendResponse.sendDataToUser(response, converted);
+    });
+  }
+
+  FutureOr<PassedHttpEntity> listApiKeys(
+    RequestHolder request,
+    ResponseHolder response,
+    Map<String, dynamic> pathArgs,
+  ) async {
+    return _wrapper(request, response, pathArgs, () async {
+      var res = await _apiKeyInfoDatasource.listApiKeys();
+      var converted = res
+          .map((e) =>
+              e.toApiKey(_apiKeyInfoDatasource.encrypterSecretKey).toJson())
+          .toList();
       return SendResponse.sendDataToUser(response, converted);
     });
   }
@@ -92,11 +108,11 @@ class ApiCrudHandlers {
         expireAfter: expireAfter,
       );
       await _apiKeyInfoDatasource.saveHashModel(apiKey);
-      String apiHash = apiKey.apiHash;
+      ApiKeyModel apiKeyModel =
+          apiKey.toApiKey(_apiKeyInfoDatasource.encrypterSecretKey);
       return SendResponse.sendDataToUser(
         response,
-        apiHash,
-        dataFieldName: 'apiHash',
+        apiKeyModel.toJson(),
       );
     });
   }

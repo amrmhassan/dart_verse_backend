@@ -17,6 +17,10 @@ class ApiCRUDServer {
         EndpointsConstants.listApiKeys,
         _handlers.listApiKeys,
       )
+      ..get(
+        EndpointsConstants.listApiHashes,
+        _handlers.listApiHashes,
+      )
       ..post(
         EndpointsConstants.generateApiKey,
         _handlers.generateSaveApiKey,
