@@ -55,11 +55,12 @@ class ApiKeyInfoDatasource {
     return res;
   }
 
-  Future<void> updateApiKey(ApiHashModel newModel) async {
+  Future<ApiHashModel> updateApiKey(ApiHashModel newModel) async {
     var selector = where.eq('apiHash', newModel.apiHash);
     var update = modify.set('active', newModel.active);
     await _collection.updateOne(selector, update);
     _apiKeysRepo.updateSavedKeys(newModel);
+    return newModel;
   }
 
   Future<void> deleteApiKey(String hash) async {
@@ -67,11 +68,12 @@ class ApiKeyInfoDatasource {
     _apiKeysRepo.deleteSavedKey(hash);
   }
 
-  Future<void> toggleApiKeyActiveness(String apiHash) async {
+  Future<ApiHashModel> toggleApiKeyActiveness(String apiHash) async {
     ApiHashModel? model = await getApiModel(apiHash);
     if (model == null) {
       throw NoApiKeyFound();
     }
     model.active != model.active;
+    return updateApiKey(model);
   }
 }

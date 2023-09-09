@@ -17,7 +17,7 @@ class ApiKeyModel {
 
   String toQuery() {
     String createdAtString = createdAt.toIso8601String();
-    String? expiryDateString = expireAfter?.inMicroseconds.toString();
+    String? expiryDateString = expireAfter?.inSeconds.toString();
     String expiryDateFinal =
         expiryDateString == null ? '' : '|$expiryDateString';
     String fullQuery = '$name|$apiKey|$createdAtString$expiryDateFinal';
@@ -28,7 +28,7 @@ class ApiKeyModel {
     Duration? expiryDate;
     List<String> parts = query.split('|');
     if (parts.length == 4) {
-      expiryDate = Duration(microseconds: int.parse(parts[3]));
+      expiryDate = Duration(seconds: int.parse(parts[3]));
     }
     String name = parts[0];
     String apiKey = parts[1];
@@ -50,8 +50,8 @@ class ApiKeyModel {
     // checking for expiration
     DateTime now = DateTime.now();
     Duration diff = now.difference(createdAt);
-    int diffMicro = diff.inMicroseconds;
-    int allowanceMicro = date.inMicroseconds;
+    int diffMicro = diff.inSeconds;
+    int allowanceMicro = date.inSeconds;
     bool expire = diffMicro > allowanceMicro;
     return expire;
   }

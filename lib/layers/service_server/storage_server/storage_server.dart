@@ -17,7 +17,6 @@ class StorageServer implements ServiceServerLayer {
     var handlers = _storageServerSettings.storageServerHandlers;
     bool jwtSecured = false;
     bool emailMustBeVerified = false;
-    bool appIdSecured = false;
     // paths
     String upload = app.endpoints.storageEndpoints.upload;
     String download = app.endpoints.storageEndpoints.download;
@@ -31,15 +30,13 @@ class StorageServer implements ServiceServerLayer {
 
     RouterInfo routerInfo = RouterInfo(
       router,
-      appIdSecured: appIdSecured,
       emailMustBeVerified: emailMustBeVerified,
       jwtSecured: jwtSecured,
     );
     Router downloadRouter = Router()
       ..get(download, _storageServerSettings.storageServerHandlers.download);
 
-    RouterInfo downloadRouterInfo =
-        RouterInfo(downloadRouter, appIdSecured: false);
+    RouterInfo downloadRouterInfo = RouterInfo(downloadRouter);
     return [routerInfo, downloadRouterInfo];
   }
 }

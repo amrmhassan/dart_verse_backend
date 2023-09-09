@@ -1,6 +1,4 @@
-import 'package:dart_verse_backend/dashboard_server/features/app_check/data/datasources/api_key_info_datasource.dart';
 import 'package:dart_verse_backend/dashboard_server/features/app_check/data/datasources/check_app_datasource.dart';
-import 'package:dart_verse_backend/dashboard_server/features/app_check/data/models/api_hash_model.dart';
 import 'package:dart_verse_backend/layers/services/db_manager/db_service.dart';
 
 class AppCheck {
@@ -13,7 +11,6 @@ class AppCheck {
   /// because after that period the request sent from the client will be invalid and will be rejected
 
   final Duration _clientApiAllowance;
-  late ApiKeyInfoDatasource _apiDatasource;
   late CheckAppDatasource _checkAppDatasource;
   final DbService _dbService;
 
@@ -32,26 +29,9 @@ class AppCheck {
       apiHashExpiryAfter: _clientApiAllowance,
       dbService: _dbService,
     );
-    _apiDatasource = ApiKeyInfoDatasource(_dbService, _encrypterSecretKey);
   }
 
   Future<void> validateApiHash(String? apiHash) async {
     await _checkAppDatasource.validateApiHash(apiHash);
-  }
-
-  Future<ApiHashModel> generateAndSaveApiHash(
-    String name, {
-    Duration? expireAfter,
-  }) async {
-    ApiHashModel apiKey = await _apiDatasource.generateApiKey(
-      name,
-      expireAfter: expireAfter,
-    );
-    await _apiDatasource.saveHashModel(apiKey);
-    return apiKey;
-  }
-
-  Future<List<ApiHashModel>> listAllApiHashes() async {
-    return _apiDatasource.listApiKeys();
   }
 }

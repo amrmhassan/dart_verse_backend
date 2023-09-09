@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:dart_verse_backend/dashboard_server/features/app_check/server/app_check_middleware.dart';
 import 'package:dart_verse_backend/layers/service_server/auth_server/auth_server.dart';
 import 'package:dart_verse_backend/layers/service_server/auth_server/repo/auth_server_settings.dart';
 import 'package:dart_verse_backend/layers/service_server/db_server/db_server.dart';
@@ -23,12 +24,10 @@ class ServerService {
   }) {
     _pipeline = Pipeline();
     serverRunner = ServerRunner(app, _pipeline);
-    _serverHandlers = ServerHandlers(app);
   }
 
   late Pipeline _pipeline;
   late ServerRunner serverRunner;
-  late ServerHandlers _serverHandlers;
 
   Future<void> runServers({
     bool log = false,
@@ -101,8 +100,9 @@ class ServerService {
     StorageServer? storageServer,
     DBServer? dbServer,
   }) {
+    ServerHandlers serverHandlers = ServerHandlers();
     // adding server check router
-    addRouter(_serverHandlers.getServerRouter());
+    addRouter(serverHandlers.getServerRouter());
 
     // adding services servers
     _addServerService(authServer);
@@ -120,7 +120,8 @@ class ServerService {
 
   void _addAppCheck() {
     if (app.dashboardSettings?.appCheckSettings != null) {
-      serverRunner.serverHolder.addGlobalMiddleware(_serverHandlers.checkApp);
+      AppCheckMiddleware middleware = AppCheckMiddleware(app);
+      serverRunner.serverHolder.addGlobalMiddleware(middleware.checkApp);
     }
   }
 }

@@ -1,3 +1,5 @@
+import 'package:dart_verse_backend/dashboard_server/features/app_check/data/datasources/api_key_info_datasource.dart';
+import 'package:dart_verse_backend/dashboard_server/features/app_check/server/api_crud_server.dart';
 import 'package:dart_verse_backend/dashboard_server/features/server/data/datasources/dashboard_server.dart';
 import 'package:dart_verse_backend/features/auth_db_provider/impl/mongo_db_auth_provider/mongo_db_auth_provider.dart';
 import 'package:dart_verse_backend/layers/service_server/auth_server/auth_server.dart';
@@ -74,7 +76,19 @@ class Dashboard {
     } catch (e) {
       //
     }
+    _addHandlers();
     await _serverService.runServers(authServer: _authServer);
+  }
+
+  void _addHandlers() {
+    AppCheckSettings? settings = _mainApp.dashboardSettings?.appCheckSettings;
+    if (settings == null) {
+      return;
+    }
+    ApiKeyInfoDatasource apiKeyInfoDatasource =
+        ApiKeyInfoDatasource(_dbService, settings.encrypterSecretKey);
+    ApiCRUDServer apiCheckServer = ApiCRUDServer(apiKeyInfoDatasource);
+    _serverService.addRouter(apiCheckServer.getRouter());
   }
 
   void run() async {
