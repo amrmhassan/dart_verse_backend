@@ -8,8 +8,8 @@ part 'api_hash_model.g.dart';
 @DateConverter()
 class ApiHashModel {
   final String apiHash;
-  final bool active;
-  const ApiHashModel(
+  bool active;
+  ApiHashModel(
     this.apiHash, {
     this.active = true,
   });

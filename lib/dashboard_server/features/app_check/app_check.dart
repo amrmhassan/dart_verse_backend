@@ -49,4 +49,8 @@ class AppCheck {
     await _apiDatasource.saveHashModel(apiKey);
     return apiKey;
   }
+
+  Future<List<ApiHashModel>> listAllApiHashes() async {
+    return _apiDatasource.listApiKeys();
+  }
 }
