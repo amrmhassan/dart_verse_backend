@@ -2,8 +2,8 @@ import 'package:dart_verse_backend/dashboard_server/features/app_check/data/data
 
 List<String> apiKeys = [];
 void main(List<String> args) async {
-  ApiKeyGenerator generator = ApiKeyGenerator(
-      datasource: null, encrypterSecretKey: 'encrypterSecretKey');
+  ApiKeyGenerator generator =
+      ApiKeyGenerator(encrypterSecretKey: 'encrypterSecretKey');
   for (var i = 0; i < 1000; i++) {
     String apiKey = generator.generateApiKey('Shiaka');
     if (apiKeys.contains(apiKey)) {

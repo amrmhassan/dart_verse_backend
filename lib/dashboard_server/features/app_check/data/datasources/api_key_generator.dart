@@ -2,25 +2,22 @@
 
 import 'dart:math';
 
-import 'package:dart_verse_backend/dashboard_server/features/app_check/data/datasources/api_key_info_datasource.dart';
 import 'package:dart_verse_backend/dashboard_server/features/app_check/data/datasources/checker/base64_encrypter.dart';
 import 'package:dart_verse_backend/dashboard_server/features/app_check/data/models/api_key_model.dart';
 import 'package:dart_verse_backend/errors/models/encryption_exceptions.dart';
 
 class ApiKeyGenerator {
-  final ApiKeyInfoDatasource? datasource;
-  final String encrypterSecretKey;
-  late Base64Encrypter encrypter;
+  final String _encrypterSecretKey;
+  late Base64Encrypter _encrypter;
   ApiKeyGenerator({
-    required this.datasource,
-    required this.encrypterSecretKey,
-  }) {
-    encrypter = Base64Encrypter(encrypterSecretKey);
+    required String encrypterSecretKey,
+  }) : _encrypterSecretKey = encrypterSecretKey {
+    _encrypter = Base64Encrypter(_encrypterSecretKey);
   }
 
   String generateApiKey(
     String appName, {
-    DateTime? expiryDate,
+    Duration? expireAfter,
   }) {
     DateTime createdAt = DateTime.now();
     String random = _generateRandomString(10);
@@ -28,10 +25,10 @@ class ApiKeyGenerator {
       name: appName,
       apiKey: random,
       createdAt: createdAt,
-      expiryDate: expiryDate,
+      expireAfter: expireAfter,
     );
     String fullQuery = model.toQuery();
-    String? encrypted = encrypter.encrypt(fullQuery);
+    String? encrypted = _encrypter.encrypt(fullQuery);
     if (encrypted == null) {
       throw EncryptionException('Can\'t create the encrypted String');
     }
@@ -39,7 +36,7 @@ class ApiKeyGenerator {
   }
 
   ApiKeyModel parseApiHash(String base64String) {
-    String? query = encrypter.decrypt(base64String);
+    String? query = _encrypter.decrypt(base64String);
     if (query == null) {
       throw DecryptionException('Can\'t create the decrypted String');
     }
