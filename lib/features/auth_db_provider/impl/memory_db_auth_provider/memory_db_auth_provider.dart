@@ -4,6 +4,7 @@ import 'package:dart_verse_backend/features/auth_db_provider/auth_db_provider.da
 import 'package:dart_verse_backend/features/auth_db_provider/repo/memory_db_repo_provider.dart';
 import 'package:dart_verse_backend/layers/services/auth/controllers/jwt_controller.dart';
 import 'package:dart_verse_backend/layers/services/auth/models/auth_model.dart';
+import 'package:dart_verse_backend/layers/services/auth/models/jwt_payload.dart';
 import 'package:dart_verse_backend/layers/services/db_manager/db_service.dart';
 
 import '../../../../constants/model_fields.dart';
@@ -178,7 +179,7 @@ class MemoryDbAuthProvider extends AuthDbProvider
   }
 
   @override
-  Future<bool> checkIfJwtIsActive(String jwt, String id) {
+  Future<bool> checkIfJwtIsActive(JWTPayloadModel jwt) {
     // TODO: implement checkIfJwtIsActive
     throw UnimplementedError();
   }
