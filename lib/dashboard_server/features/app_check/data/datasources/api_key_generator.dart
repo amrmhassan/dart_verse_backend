@@ -1,8 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'dart:math';
-
 import 'package:dart_verse_backend/dashboard_server/features/app_check/data/datasources/checker/base64_encrypter.dart';
+import 'package:dart_verse_backend/dashboard_server/features/app_check/data/datasources/random_generator.dart';
 import 'package:dart_verse_backend/dashboard_server/features/app_check/data/models/api_key_model.dart';
 import 'package:dart_verse_backend/errors/models/encryption_exceptions.dart';
 
@@ -20,7 +19,7 @@ class ApiKeyGenerator {
     required Duration? expireAfter,
   }) {
     DateTime createdAt = DateTime.now();
-    String random = _generateRandomString(10);
+    String random = RandomGenerator().generate(10);
     ApiKeyModel model = ApiKeyModel(
       name: appName,
       apiKey: random,
@@ -42,20 +41,5 @@ class ApiKeyGenerator {
     }
     ApiKeyModel model = ApiKeyModel.fromQuery(query);
     return model;
-  }
-
-  String _generateRandomString(int length) {
-    final random = Random.secure();
-    const charset =
-        'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-
-    String apiKey = '';
-
-    for (int i = 0; i < length; i++) {
-      final randomIndex = random.nextInt(charset.length);
-      apiKey += charset[randomIndex];
-    }
-
-    return apiKey;
   }
 }

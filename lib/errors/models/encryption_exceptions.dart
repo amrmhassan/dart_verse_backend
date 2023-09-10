@@ -22,7 +22,7 @@ class AppExceptions extends ServerLessException {
 }
 
 class EncryptionException extends AppExceptions {
-  EncryptionException(String message)
+  EncryptionException([String? message])
       : super(
           'An error happened while encryption: $message',
           ErrorCodes.notAuthorizedApiKey,
