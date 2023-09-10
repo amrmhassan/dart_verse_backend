@@ -29,13 +29,12 @@ class CheckAppDatasource {
   ApiKeyData? _getApiFromHash(
     String? apiHash, {
     required String apiSecretKey,
-    required String encrypterSecretKey,
   }) {
     // i should get that secret key from the apiHash model
 
     ApiDecoder decoder = ApiDecoder(
       secretKey: apiSecretKey,
-      encrypterSecretKey: encrypterSecretKey,
+      encrypterSecretKey: apiSecretKey,
     );
     ApiKeyData? validApi = decoder.getValidApi(apiHash);
     return validApi;
@@ -64,7 +63,6 @@ class CheckAppDatasource {
       data = _getApiFromHash(
         apiHash,
         apiSecretKey: apiSecretKey,
-        encrypterSecretKey: apiSecretKey,
       );
     } catch (e) {
       throw NotValidApiKey();

@@ -29,7 +29,7 @@ class ApiKeyGenerator {
     String fullQuery = model.toQuery();
     String? encrypted = _encrypter.encrypt(fullQuery);
     if (encrypted == null) {
-      throw EncryptionException('Can\'t create the encrypted String');
+      throw EncryptionException();
     }
     return encrypted;
   }
@@ -37,7 +37,7 @@ class ApiKeyGenerator {
   ApiKeyModel parseApiHash(String base64String) {
     String? query = _encrypter.decrypt(base64String);
     if (query == null) {
-      throw DecryptionException('Can\'t create the decrypted String');
+      throw DecryptionException();
     }
     ApiKeyModel model = ApiKeyModel.fromQuery(query);
     return model;
