@@ -27,7 +27,7 @@ class AppCheck {
     );
   }
 
-  Future<void> validateApiHash(String? apiHash) async {
-    await _checkAppDatasource.validateApiHash(apiHash);
+  Future<void> validateApiHash(String apiKey, String? apiHash) async {
+    await _checkAppDatasource.validateApiHash(apiKey, apiHash);
   }
 }

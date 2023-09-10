@@ -14,12 +14,10 @@ class DashboardSettings {
 }
 
 class AppCheckSettings {
-  final String secretKey;
   final String encrypterSecretKey;
   final Duration clientApiAllowance;
   const AppCheckSettings({
     required this.clientApiAllowance,
     required this.encrypterSecretKey,
-    required this.secretKey,
   });
 }

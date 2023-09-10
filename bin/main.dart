@@ -62,14 +62,13 @@ void main(List<String> arguments) async {
     storageSettings: storageSettings,
     backendHost: 'http://localhost:3000',
     dashboardSettings: DashboardSettings(
-        dashboardConnLink: dashboardConnLink,
-        dashboardServerSettings:
-            HttpServerSetting(InternetAddress.anyIPv4, 3001),
-        appCheckSettings: AppCheckSettings(
-          clientApiAllowance: Duration(seconds: 2),
-          encrypterSecretKey: 'This is the encrypter key',
-          secretKey: 'This is the encrypter key',
-        )),
+      dashboardConnLink: dashboardConnLink,
+      dashboardServerSettings: HttpServerSetting(InternetAddress.anyIPv4, 3001),
+      appCheckSettings: AppCheckSettings(
+        clientApiAllowance: Duration(seconds: 2),
+        encrypterSecretKey: 'This is the encrypter key',
+      ),
+    ),
     mainServerSettings: HttpServerSetting(InternetAddress.anyIPv4, 3000),
   );
 

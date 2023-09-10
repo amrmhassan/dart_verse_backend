@@ -42,12 +42,12 @@ class CheckAppDatasource {
 
   /// this will throw an error if the api key is not valid
   /// other wise it will continue without any errors
-  Future<void> validateApiHash(String? apiHash) async {
+  Future<void> validateApiHash(String apiKey, String? apiHash) async {
     if (apiHash == null) {
       throw NotAuthorizedApiKey();
     }
     ApiHashModel? apiHashModel =
-        await _apiKeyInfoDatasource.getApiModel(apiHash);
+        await _apiKeyInfoDatasource.getApiModel(apiKey);
     // get the api key from the database
     // check if the api key exist in the database
     if (apiHashModel == null) {

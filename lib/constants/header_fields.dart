@@ -10,4 +10,5 @@ class HeaderFields {
   static const String forceDelete = 'forceDelete';
   // app check
   static const String apiHash = 'apiHash';
+  static const String apiKey = 'apiKey';
 }
