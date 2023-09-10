@@ -29,7 +29,6 @@ class MongoDbAuthProvider extends AuthDbProvider
     return jwtController.createJwtAndSave(
       id: id,
       email: email,
-      saveJwt: saveJwt,
     );
   }
 
@@ -82,81 +81,12 @@ class MongoDbAuthProvider extends AuthDbProvider
   }
 
   @override
-  Future<void> saveJwt({required String id, required String jwt}) async {
-    //? first checks for saved jwts
-    var collection = dbService.mongoDbController
-        .collection(app.authSettings.activeJWTCollName);
-
-    // Check if the active JWTs count has exceeded the limit of 5
-    var countQuery =
-        where.eq(DBRKeys.id, id).fields([ModelFields.activeTokens]);
-    var countResult = await collection.findOne(countQuery);
-
-    var fetchedTokens = (countResult?[ModelFields.activeTokens] as List?) ?? [];
-    int activeTokensLength = 0;
-    for (var token in fetchedTokens) {
-      try {
-        JWT.verify(token, app.authSettings.jwtSecretKey);
-        activeTokensLength++;
-      } catch (e) {
-        continue;
-      }
-    }
-    if (activeTokensLength >= app.authSettings.maximumActiveJwts) {
-      throw LoginExceedException();
-    }
-    // i just want to add the jwt to the user collection
-    // var data = await dbService.mongoDbController
-    //     //! here instead of getting the data from the remote db
-    //     //! just make modification query to the db to add the new jwt to the list
-    //     .collection(app.authSettings.activeJWTCollName)
-    //     .findOne(where.eq(DBRKeys.id, id));
-
-    // List<String> jwts =
-    //     ((data?[ModelFields.activeTokens] ?? []) as List).cast();
-    // // checking if saved jwts list contains the new jwt to skip adding it
-    // if (jwts.any((element) => element == jwt)) {
-    //   return;
-    // }
-
-    var pushQuery = where.eq(DBRKeys.id, id);
-    var pushUpdate = modify.push(ModelFields.activeTokens, jwt);
-
-    await dbService.mongoDbController
-        .collection(app.authSettings.activeJWTCollName)
-        .update(pushQuery, pushUpdate, upsert: true);
-
-    // jwts.add(jwt);
-    // await dbService.mongoDbController
-    //     .collection(app.authSettings.activeJWTCollName)
-    //     .doc(id)
-    //     .set({
-    //   ModelFields.activeTokens: jwts,
-    // });
-  }
-
-  @override
-  Future<bool> checkIfJwtIsActive(String jwt, String id) async {
-    var data = await dbService.mongoDbController
-        .collection(app.authSettings.activeJWTCollName)
-        .findOne(where.eq(DBRKeys.id, id));
-
-    List<String> jwts =
-        ((data?[ModelFields.activeTokens] ?? []) as List).cast();
-    // checking if saved jwts list contains the new jwt to skip adding it
-    if (jwts.any((element) => element == jwt)) {
-      return true;
-    }
-    return false;
-  }
-
-  @override
   Future<void> deleteAuthData(String id) async {
-    await logoutFromAllDevices(id);
-    var userAuthRes = await dbService.mongoDbController
+    var userAuthDoc = dbService.mongoDbController
         .collection(app.authSettings.collectionName)
-        .doc(id)
-        .delete();
+        .doc(id);
+    await logoutFromAllDevices(id);
+    var userAuthRes = await userAuthDoc.delete();
     if (userAuthRes.failure) {
       throw Exception('cant delete user auth data for the user');
     }
@@ -307,7 +237,7 @@ class MongoDbAuthProvider extends AuthDbProvider
     required String newPassword,
 
     /// this will prevent others from using the same jwt to log in after the password gets changed
-    bool logoutFromAllDevices = true,
+    bool doLogoutFromAllDevices = true,
   }) async {
     //? if old password is the same as new password
     if (oldPassword == newPassword) {
@@ -326,15 +256,9 @@ class MongoDbAuthProvider extends AuthDbProvider
     // if reached here this means that the user email and password are right
     // the user doesn't need to be logged in to do this
 
-    //? checking if i need to log out from all other devices
-    if (logoutFromAllDevices) {
-      var activeJWTS = dbService.mongoDbController
-          .collection(app.authSettings.activeJWTCollName);
-      var res = await activeJWTS.doc(authModel.id).delete();
-      if (res.failure) {
-        throw Exception(
-            'can\'t log out from other devices, password didn\'t change');
-      }
+    // //? checking if i need to log out from all other devices
+    if (doLogoutFromAllDevices) {
+      await logoutFromAllDevices(authModel.id);
     }
     //? changing the password
     String passwordHash = SecurePassword(newPassword).getPasswordHash();
@@ -377,7 +301,7 @@ class MongoDbAuthProvider extends AuthDbProvider
     // delete user data
     await deleteUserData(id);
     // logout from all devices
-    await logoutFromAllDevices(email);
+    await logoutFromAllDevices(id);
     // delete user auth data
     await deleteAuthData(id);
   }
@@ -399,13 +323,21 @@ class MongoDbAuthProvider extends AuthDbProvider
 
   @override
   Future<void> logoutFromAllDevices(String id) async {
-    var activeJwts = dbService.mongoDbController
-        .collection(app.authSettings.activeJWTCollName);
-    var res = await activeJwts.doc(id).delete();
+    // var activeJwts = dbService.mongoDbController
+    //     .collection(app.authSettings.activeJWTCollName);
+    // var res = await activeJwts.doc(id).delete();
 
+    // if (res.failure) {
+    //   throw Exception('can\'t logout from all devices');
+    // }
+    var authUpdates = dbService.mongoDbController
+        .collection(app.authSettings.authUpdatesCollName);
+    var res = await authUpdates.doc(id).delete();
     if (res.failure) {
-      throw Exception('can\'t logout from all devices');
+      throw Exception(
+          'can\'t log out from other devices, password didn\'t change');
     }
+    throw UnimplementedError();
   }
 
   @override
@@ -419,5 +351,11 @@ class MongoDbAuthProvider extends AuthDbProvider
     if (res.failure) {
       throw Exception('can\'t update user data');
     }
+  }
+
+  @override
+  Future<bool> checkIfJwtIsActive(String jwt, String id) {
+    // TODO: implement checkIfJwtIsActive
+    throw UnimplementedError();
   }
 }

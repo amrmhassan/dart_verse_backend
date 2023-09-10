@@ -11,7 +11,6 @@ class JWTController {
   Future<String> createJwtAndSave({
     required String id,
     required String email,
-    required Function({required String id, required String jwt}) saveJwt,
   }) async {
     var key = _app.authSettings.jwtSecretKey;
     JWTPayloadModel jwtPayload = JWTPayloadModel(
@@ -27,7 +26,6 @@ class JWTController {
       expiresIn: _app.authSettings.authExpireAfter,
       algorithm: _app.authSettings.jwtAlgorithm,
     );
-    await saveJwt(id: id, jwt: signedJWT);
     return signedJWT;
   }
 

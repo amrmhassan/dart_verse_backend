@@ -23,7 +23,6 @@ class MemoryDbAuthProvider extends AuthDbProvider
     return jwtController.createJwtAndSave(
       id: id,
       email: email,
-      saveJwt: saveJwt,
     );
   }
 
@@ -68,40 +67,40 @@ class MemoryDbAuthProvider extends AuthDbProvider
     }
   }
 
-  @override
-  Future<void> saveJwt({required String id, required String jwt}) async {
-    // i just want to add the jwt to the user collection
-    var data = dbService.memoryDbController
-        .collection(app.authSettings.activeJWTCollName)
-        .getDocRefById(id)
-        ?.getData();
-    List<String> jwts = data?[ModelFields.activeTokens] ?? [];
-    // checking if saved jwts list contains the new jwt to skip adding it
-    if (jwts.any((element) => element == jwt)) {
-      return;
-    }
-    jwts.add(jwt);
-    dbService.memoryDbController
-        .collection(app.authSettings.activeJWTCollName)
-        .doc(id)
-        .set({
-      ModelFields.activeTokens: jwts,
-    });
-  }
+  // @override
+  // Future<void> saveJwt({required String id, required String jwt}) async {
+  //   // i just want to add the jwt to the user collection
+  //   var data = dbService.memoryDbController
+  //       .collection(app.authSettings.activeJWTCollName)
+  //       .getDocRefById(id)
+  //       ?.getData();
+  //   List<String> jwts = data?[ModelFields.activeTokens] ?? [];
+  //   // checking if saved jwts list contains the new jwt to skip adding it
+  //   if (jwts.any((element) => element == jwt)) {
+  //     return;
+  //   }
+  //   jwts.add(jwt);
+  //   dbService.memoryDbController
+  //       .collection(app.authSettings.activeJWTCollName)
+  //       .doc(id)
+  //       .set({
+  //     ModelFields.activeTokens: jwts,
+  //   });
+  // }
 
-  @override
-  Future<bool> checkIfJwtIsActive(String jwt, String id) async {
-    var data = dbService.memoryDbController
-        .collection(app.authSettings.activeJWTCollName)
-        .getDocRefById(id)
-        ?.getData();
-    List<String> jwts = data?[ModelFields.activeTokens] ?? [];
-    // checking if saved jwts list contains the new jwt to skip adding it
-    if (jwts.any((element) => element == jwt)) {
-      return true;
-    }
-    return false;
-  }
+  // @override
+  // Future<bool> checkIfJwtIsActive(String jwt, String id) async {
+  //   var data = dbService.memoryDbController
+  //       .collection(app.authSettings.activeJWTCollName)
+  //       .getDocRefById(id)
+  //       ?.getData();
+  //   List<String> jwts = data?[ModelFields.activeTokens] ?? [];
+  //   // checking if saved jwts list contains the new jwt to skip adding it
+  //   if (jwts.any((element) => element == jwt)) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
 
   @override
   Future<void> deleteAuthData(String id) {
@@ -175,6 +174,12 @@ class MemoryDbAuthProvider extends AuthDbProvider
   @override
   Future<void> updateUserData(String id, Map<String, dynamic> updateDoc) {
     // TODO: implement updateUserData
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> checkIfJwtIsActive(String jwt, String id) {
+    // TODO: implement checkIfJwtIsActive
     throw UnimplementedError();
   }
 }
