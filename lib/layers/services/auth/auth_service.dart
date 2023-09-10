@@ -132,11 +132,11 @@ class AuthService implements DVService {
   }
 
   Future<void> changePassword(
-    String email, {
+    String id, {
     required String oldPassword,
     required String newPassword,
   }) {
-    return authDbProvider.changePassword(email,
+    return authDbProvider.changePassword(id,
         oldPassword: oldPassword, newPassword: newPassword);
   }
 

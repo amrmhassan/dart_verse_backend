@@ -234,7 +234,7 @@ class MongoDbAuthProvider extends AuthDbProvider
 
   @override
   Future<void> changePassword(
-    String email, {
+    String id, {
     required String oldPassword,
     required String newPassword,
 
@@ -246,7 +246,7 @@ class MongoDbAuthProvider extends AuthDbProvider
       throw Exception('oldPassword must be different from newPassword');
     }
     //? checking for the user password if it's right
-    AuthModel? authModel = await getUserByEmail(email);
+    AuthModel? authModel = await getUserById(id);
     if (authModel == null) {
       throw NoUserRegisteredException();
     }
@@ -271,7 +271,7 @@ class MongoDbAuthProvider extends AuthDbProvider
     String passwordHash = SecurePassword(newPassword).getPasswordHash();
     var collection =
         dbService.mongoDbController.collection(app.authSettings.collectionName);
-    var selector = where.eq(ModelFields.email, email);
+    var selector = where.eq(ModelFields.id, id);
 
     var updateQuery = modify.set(ModelFields.passwordHash, passwordHash);
     var res = await collection.updateOne(selector, updateQuery);
@@ -337,7 +337,6 @@ class MongoDbAuthProvider extends AuthDbProvider
       throw Exception(
           'can\'t log out from other devices, password didn\'t change');
     }
-    throw UnimplementedError();
   }
 
   @override

@@ -127,11 +127,13 @@ class ServerService {
   }
 
   Future<void> _addAppCheck() async {
-    if (app.dashboardSettings?.appCheckSettings != null) {
+    if (app.dashboardSettings != null) {
       await _dashboard.run();
-      AppCheckMiddleware middleware =
-          AppCheckMiddleware(app, _dashboard.dbService);
-      serverRunner.serverHolder.addGlobalMiddleware(middleware.checkApp);
+      if (app.dashboardSettings?.appCheckSettings != null) {
+        AppCheckMiddleware middleware =
+            AppCheckMiddleware(app, _dashboard.dbService);
+        serverRunner.serverHolder.addGlobalMiddleware(middleware.checkApp);
+      }
     }
   }
 }

@@ -26,7 +26,6 @@ class AuthSettings {
   /// this will restrict the usage of your endpoints on some apps
   /// that will provide app id in all request headers
   /// on the format headerKey = appid, and with value of the app id
-  final List<String>? allowedAppsIds;
 
   const AuthSettings({
     required this.jwtSecretKey,
@@ -35,6 +34,5 @@ class AuthSettings {
     this.authExpireAfter = DefaultAuthSettings.authExpireAfter,
     this.authUpdatesCollName = DefaultAuthSettings.authUpdatesCollName,
     this.jwtAlgorithm = JWTAlgorithm.HS256,
-    this.allowedAppsIds,
   });
 }
