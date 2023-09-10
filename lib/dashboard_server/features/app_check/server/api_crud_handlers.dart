@@ -171,7 +171,7 @@ class ApiCrudHandlers {
       String apiHash;
       try {
         Map<String, dynamic> body = await request.readAsJson();
-        apiHash = body[BodyFields.apiHash];
+        apiHash = body[BodyFields.secretHash];
       } catch (e) {
         throw RequestBodyError();
       }

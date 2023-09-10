@@ -12,5 +12,6 @@ class BodyFields {
   static const String connLink = 'connLink';
   static const String name = 'name';
   static const String apiHash = 'apiHash';
+  static const String secretHash = 'secretHash';
   static const String expirySeconds = 'expirySeconds';
 }

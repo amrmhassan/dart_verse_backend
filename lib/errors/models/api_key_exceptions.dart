@@ -1,5 +1,7 @@
 // ignore_for_file: overridden_fields
 
+import 'dart:io';
+
 import 'package:dart_verse_backend/errors/serverless_exception.dart';
 import 'package:dart_verse_backend/constants/error_codes.dart';
 
@@ -14,7 +16,7 @@ class ApiKeyException extends ServerLessException {
   ApiKeyException(
     this.message,
     this.code, {
-    this.errorCode = 500,
+    this.errorCode = HttpStatus.unauthorized,
   }) : super(
           code,
           errorCode: errorCode,
