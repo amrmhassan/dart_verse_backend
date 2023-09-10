@@ -12,7 +12,7 @@ class CheckAppDatasource {
   final Duration _apiHashExpiryAfter;
   final DbService _dbService;
   late ApiKeyInfoDatasource _apiKeyInfoDatasource;
-  late Base64Encrypter encrypter;
+  late Base64Encrypter _encrypter;
 
   CheckAppDatasource({
     required String encrypterSecretKey,
@@ -23,18 +23,19 @@ class CheckAppDatasource {
         _dbService = dbService {
     _apiKeyInfoDatasource =
         ApiKeyInfoDatasource(_dbService, _encrypterSecretKey);
-    encrypter = Base64Encrypter(encrypterSecretKey);
+    _encrypter = Base64Encrypter(encrypterSecretKey);
   }
 
   ApiKeyData? _getApiFromHash(
     String? apiHash, {
     required String apiSecretKey,
+    required String encrypterSecretKey,
   }) {
     // i should get that secret key from the apiHash model
 
     ApiDecoder decoder = ApiDecoder(
       secretKey: apiSecretKey,
-      encrypterSecretKey: _encrypterSecretKey,
+      encrypterSecretKey: encrypterSecretKey,
     );
     ApiKeyData? validApi = decoder.getValidApi(apiHash);
     return validApi;
@@ -54,13 +55,17 @@ class CheckAppDatasource {
       throw NoApiKeyFound();
     }
     String secretKeyEncrypted = apiHashModel.apiSecretEncrypted;
-    String? apiSecretKey = encrypter.decrypt(secretKeyEncrypted);
+    String? apiSecretKey = _encrypter.decrypt(secretKeyEncrypted);
     if (apiSecretKey == null) {
       throw EncryptionException();
     }
     ApiKeyData? data;
     try {
-      data = _getApiFromHash(apiHash, apiSecretKey: apiSecretKey);
+      data = _getApiFromHash(
+        apiHash,
+        apiSecretKey: apiSecretKey,
+        encrypterSecretKey: apiSecretKey,
+      );
     } catch (e) {
       throw NotValidApiKey();
     }

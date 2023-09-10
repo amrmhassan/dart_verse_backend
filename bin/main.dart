@@ -28,10 +28,9 @@ import 'package:dart_verse_backend/layers/settings/storage_settings/storage_sett
 import 'package:dart_verse_backend/layers/settings/user_data_settings/user_data_settings.dart';
 import 'constants.dart';
 
-//! i should add a separate secret key for every individual api key, to decode and encode it with it
-//! but never store this in plain text in the database
-//! encode it then save it in the data base
-//! and when trying to read it just decode it
+//! don't save active jwts in the data base
+//! instead to log out from all devices, save a value of the datetime when the user asked to logout from all devices in the database
+//! then invalidate all jwts that are created before that datetime, but never save the active jwts in the database
 
 // flutter packages pub run build_runner build --delete-conflicting-outputs
 // flutter pub run build_runner watch --delete-conflicting-outputs
@@ -108,5 +107,5 @@ void main(List<String> arguments) async {
   );
 }
 
-    // //? visit this google oauth playground https://developers.google.com/oauthplayground to get more info about how to access google services for a google account
-    // //? and this link for google apis assess and manage https://developers.google.com/apis-explorer
+// //? visit this google oauth playground https://developers.google.com/oauthplayground to get more info about how to access google services for a google account
+// //? and this link for google apis assess and manage https://developers.google.com/apis-explorer
