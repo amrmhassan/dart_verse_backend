@@ -28,18 +28,16 @@ import 'package:dart_verse_backend/layers/settings/storage_settings/storage_sett
 import 'package:dart_verse_backend/layers/settings/user_data_settings/user_data_settings.dart';
 import 'constants.dart';
 
-//! don't save active jwts in the data base
-//! instead to log out from all devices, save a value of the datetime when the user asked to logout from all devices in the database
-//! then invalidate all jwts that are created before that datetime, but never save the active jwts in the database
-
 // flutter packages pub run build_runner build --delete-conflicting-outputs
 // flutter pub run build_runner watch --delete-conflicting-outputs
+
 // make all server storage operations pass through a single path, to hide the .acm permissions {folder}
 // save all bucket info inside a folder instead of a file (.acm)
 // hide this folder from the remote storage operations (list, getting, delete)
 // save in this folder the permissions with the hive boxes
 // flutter packages pub run build_runner build --delete-conflicting-outputs
 // flutter pub run build_runner watch --delete-conflicting-outputs
+
 void main(List<String> arguments) async {
   //? pre settings layer
   await DartVerse.initializeApp();
