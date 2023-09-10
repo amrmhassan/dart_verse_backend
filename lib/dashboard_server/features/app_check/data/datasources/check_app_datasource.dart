@@ -1,33 +1,39 @@
 import 'package:dart_verse_backend/dashboard_server/features/app_check/data/datasources/api_key_info_datasource.dart';
 import 'package:dart_verse_backend/dashboard_server/features/app_check/data/datasources/checker/api_decoder.dart';
+import 'package:dart_verse_backend/dashboard_server/features/app_check/data/datasources/checker/base64_encrypter.dart';
 import 'package:dart_verse_backend/dashboard_server/features/app_check/data/models/api_hash_model.dart';
 import 'package:dart_verse_backend/errors/models/api_key_exceptions.dart';
 import 'package:dart_verse_backend/errors/models/app_check_exceptions.dart';
+import 'package:dart_verse_backend/errors/models/encryption_exceptions.dart';
 import 'package:dart_verse_backend/layers/services/db_manager/db_service.dart';
 
 class CheckAppDatasource {
-  final String _secretKey;
   final String _encrypterSecretKey;
   final Duration _apiHashExpiryAfter;
   final DbService _dbService;
   late ApiKeyInfoDatasource _apiKeyInfoDatasource;
+  late Base64Encrypter encrypter;
 
   CheckAppDatasource({
-    required String secretKey,
     required String encrypterSecretKey,
     required Duration apiHashExpiryAfter,
     required DbService dbService,
   })  : _apiHashExpiryAfter = apiHashExpiryAfter,
         _encrypterSecretKey = encrypterSecretKey,
-        _secretKey = secretKey,
         _dbService = dbService {
     _apiKeyInfoDatasource =
         ApiKeyInfoDatasource(_dbService, _encrypterSecretKey);
+    encrypter = Base64Encrypter(encrypterSecretKey);
   }
 
-  ApiKeyData? _getApiFromHash(String? apiHash) {
+  ApiKeyData? _getApiFromHash(
+    String? apiHash, {
+    required String apiSecretKey,
+  }) {
+    // i should get that secret key from the apiHash model
+
     ApiDecoder decoder = ApiDecoder(
-      secretKey: _secretKey,
+      secretKey: apiSecretKey,
       encrypterSecretKey: _encrypterSecretKey,
     );
     ApiKeyData? validApi = decoder.getValidApi(apiHash);
@@ -40,9 +46,21 @@ class CheckAppDatasource {
     if (apiHash == null) {
       throw NotAuthorizedApiKey();
     }
+    ApiHashModel? apiHashModel =
+        await _apiKeyInfoDatasource.getApiModel(apiHash);
+    // get the api key from the database
+    // check if the api key exist in the database
+    if (apiHashModel == null) {
+      throw NoApiKeyFound();
+    }
+    String secretKeyEncrypted = apiHashModel.apiSecretEncrypted;
+    String? apiSecretKey = encrypter.decrypt(secretKeyEncrypted);
+    if (apiSecretKey == null) {
+      throw EncryptionException();
+    }
     ApiKeyData? data;
     try {
-      data = _getApiFromHash(apiHash);
+      data = _getApiFromHash(apiHash, apiSecretKey: apiSecretKey);
     } catch (e) {
       throw NotValidApiKey();
     }
@@ -60,13 +78,7 @@ class CheckAppDatasource {
     if (diff.inMicroseconds > _apiHashExpiryAfter.inMicroseconds) {
       throw NotValidApiKey();
     }
-    // get the api key from the database
-    ApiHashModel? apiHashModel =
-        await _apiKeyInfoDatasource.getApiModel(data.api);
-    // check if the api key exist in the database
-    if (apiHashModel == null) {
-      throw NoApiKeyFound();
-    }
+
     // check if the api key is active
     if (!apiHashModel.active) {
       throw InactiveApiKey();

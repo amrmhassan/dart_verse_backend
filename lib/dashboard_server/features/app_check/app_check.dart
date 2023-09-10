@@ -2,7 +2,6 @@ import 'package:dart_verse_backend/dashboard_server/features/app_check/data/data
 import 'package:dart_verse_backend/layers/services/db_manager/db_service.dart';
 
 class AppCheck {
-  final String _secretKey;
   final String _encrypterSecretKey;
 
   /// this is the time to un validate the api hash generated on the client side
@@ -15,16 +14,13 @@ class AppCheck {
   final DbService _dbService;
 
   AppCheck({
-    required String secretKey,
     required String encrypterSecretKey,
     required Duration clientApiAllowance,
     required DbService dbService,
   })  : _dbService = dbService,
         _clientApiAllowance = clientApiAllowance,
-        _encrypterSecretKey = encrypterSecretKey,
-        _secretKey = secretKey {
+        _encrypterSecretKey = encrypterSecretKey {
     _checkAppDatasource = CheckAppDatasource(
-      secretKey: _secretKey,
       encrypterSecretKey: _encrypterSecretKey,
       apiHashExpiryAfter: _clientApiAllowance,
       dbService: _dbService,

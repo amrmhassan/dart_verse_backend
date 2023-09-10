@@ -59,7 +59,6 @@ class AppCheckMiddleware {
         return request;
       }
       AppCheck appCheck = AppCheck(
-        secretKey: appCheckSettings.secretKey,
         encrypterSecretKey: appCheckSettings.encrypterSecretKey,
         clientApiAllowance: appCheckSettings.clientApiAllowance,
         dbService: dbService,

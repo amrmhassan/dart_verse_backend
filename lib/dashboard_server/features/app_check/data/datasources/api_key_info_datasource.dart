@@ -1,5 +1,7 @@
 import 'package:dart_verse_backend/constants/collections.dart';
 import 'package:dart_verse_backend/dashboard_server/features/app_check/data/datasources/api_key_generator.dart';
+import 'package:dart_verse_backend/dashboard_server/features/app_check/data/datasources/api_secret_generator.dart';
+import 'package:dart_verse_backend/dashboard_server/features/app_check/data/models/api_secret_model.dart';
 import 'package:dart_verse_backend/dashboard_server/features/app_check/data/repositories/api_keys_repo.dart';
 import 'package:dart_verse_backend/dashboard_server/features/app_check/data/models/api_hash_model.dart';
 import 'package:dart_verse_backend/errors/models/api_key_exceptions.dart';
@@ -39,7 +41,12 @@ class ApiKeyInfoDatasource {
     if (existing != null) {
       return generateApiKey(name, expireAfter: expireAfter);
     }
-    ApiHashModel hashModel = ApiHashModel(apiHash);
+    ApiSecretGenerator secretGenerator = ApiSecretGenerator(encrypterSecretKey);
+    ApiSecretModel model = secretGenerator.generate(apiHash);
+    ApiHashModel hashModel = ApiHashModel(
+      apiHash,
+      apiSecretEncrypted: model.secretEncrypted,
+    );
     return hashModel;
   }
 

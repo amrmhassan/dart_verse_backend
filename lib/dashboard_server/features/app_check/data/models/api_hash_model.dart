@@ -9,9 +9,11 @@ part 'api_hash_model.g.dart';
 class ApiHashModel {
   final String apiHash;
   bool active;
+  final String apiSecretEncrypted;
   ApiHashModel(
     this.apiHash, {
     this.active = true,
+    required this.apiSecretEncrypted,
   });
 
   ApiKeyModel toApiKey(String encrypterSecretKey) {
