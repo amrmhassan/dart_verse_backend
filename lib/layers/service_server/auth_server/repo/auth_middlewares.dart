@@ -18,11 +18,7 @@ abstract class AuthServerMiddlewares {
     ResponseHolder response,
     Map<String, dynamic> pathArgs,
   );
-  FutureOr<PassedHttpEntity> checkAppId(
-    RequestHolder request,
-    ResponseHolder response,
-    Map<String, dynamic> pathArgs,
-  );
+
   FutureOr<PassedHttpEntity> checkUserEmailVerified(
     RequestHolder request,
     ResponseHolder response,

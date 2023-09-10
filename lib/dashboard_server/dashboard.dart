@@ -1,3 +1,5 @@
+import 'package:dart_verse_backend/dashboard_server/features/app_check/data/datasources/api_key_info_datasource.dart';
+import 'package:dart_verse_backend/dashboard_server/features/app_check/server/api_crud_server.dart';
 import 'package:dart_verse_backend/dashboard_server/features/server/data/datasources/dashboard_server.dart';
 import 'package:dart_verse_backend/features/auth_db_provider/impl/mongo_db_auth_provider/mongo_db_auth_provider.dart';
 import 'package:dart_verse_backend/layers/service_server/auth_server/auth_server.dart';
@@ -47,15 +49,15 @@ class Dashboard {
   late App _app;
   late AuthServer _authServer;
   // services
-  late DbService _dbService;
+  late DbService dbService;
   late AuthService _authService;
   late ServerService _serverService;
   Future<void> _handleServices() async {
     // server service
     DashboardServer dashboardServer = DashboardServer(_dashboardSettings);
     _pipeline.addRouter(dashboardServer.router());
-    _dbService = DbService(_app);
-    MongoDbAuthProvider authProvider = MongoDbAuthProvider(_app, _dbService);
+    dbService = DbService(_app);
+    MongoDbAuthProvider authProvider = MongoDbAuthProvider(_app, dbService);
     _authService = AuthService(authProvider);
 
     AuthServerSettings authServerSettings =
@@ -64,20 +66,33 @@ class Dashboard {
     _serverService = ServerService(
       _app,
       authServerSettings: authServerSettings,
+      dbService: dbService,
     );
   }
 
   Future<void> _initData() async {
-    await _dbService.connectToDb();
+    await dbService.connectToDb();
     try {
       await _authService.registerUser(email: 'verse', password: 'verse');
     } catch (e) {
       //
     }
+    _addHandlers();
     await _serverService.runServers(authServer: _authServer);
   }
 
-  void run() async {
+  void _addHandlers() {
+    AppCheckSettings? settings = _mainApp.dashboardSettings?.appCheckSettings;
+    if (settings == null) {
+      return;
+    }
+    ApiKeyInfoDatasource apiKeyInfoDatasource =
+        ApiKeyInfoDatasource(dbService, settings.encrypterSecretKey);
+    ApiCRUDServer apiCheckServer = ApiCRUDServer(apiKeyInfoDatasource);
+    _serverService.addRouter(apiCheckServer.getRouter());
+  }
+
+  Future<void> run() async {
     await _handleServices();
     await _initData();
   }

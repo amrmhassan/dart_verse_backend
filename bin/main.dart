@@ -28,9 +28,12 @@ import 'package:dart_verse_backend/layers/settings/storage_settings/storage_sett
 import 'package:dart_verse_backend/layers/settings/user_data_settings/user_data_settings.dart';
 import 'constants.dart';
 
+//! don't save active jwts in the data base
+//! instead to log out from all devices, save a value of the datetime when the user asked to logout from all devices in the database
+//! then invalidate all jwts that are created before that datetime, but never save the active jwts in the database
+
 // flutter packages pub run build_runner build --delete-conflicting-outputs
 // flutter pub run build_runner watch --delete-conflicting-outputs
-
 // make all server storage operations pass through a single path, to hide the .acm permissions {folder}
 // save all bucket info inside a folder instead of a file (.acm)
 // hide this folder from the remote storage operations (list, getting, delete)
@@ -47,7 +50,6 @@ void main(List<String> arguments) async {
   UserDataSettings userDataSettings = UserDataSettings();
   AuthSettings authSettings = AuthSettings(
     jwtSecretKey: SecretKey('jwtSecretKey'),
-    allowedAppsIds: ['amrhassan'],
   );
 
   StorageSettings storageSettings = StorageSettings();
@@ -61,6 +63,10 @@ void main(List<String> arguments) async {
     dashboardSettings: DashboardSettings(
       dashboardConnLink: dashboardConnLink,
       dashboardServerSettings: HttpServerSetting(InternetAddress.anyIPv4, 3001),
+      appCheckSettings: AppCheckSettings(
+        clientApiAllowance: Duration(seconds: 2),
+        encrypterSecretKey: 'This is the encrypter key',
+      ),
     ),
     mainServerSettings: HttpServerSetting(InternetAddress.anyIPv4, 3000),
   );
@@ -77,16 +83,21 @@ void main(List<String> arguments) async {
   ServerService serverService = ServerService(
     app,
     authServerSettings: authServerSettings,
+    dbService: dbService,
   );
   var storageService = StorageService(app);
   //? service server layer
   var authServer = AuthServer(app, authServerSettings);
   var dbServer = DBServer(app, DefaultDbServerSettings(dbService));
-  var storageServer =
-      StorageServer(app, DefaultStorageServerSettings(storageService));
-  authServer.addRouters();
-  dbServer.addRouters();
-  storageServer.addRouters();
+  var storageServer = StorageServer(
+    app,
+    DefaultStorageServerSettings(storageService),
+  );
+  serverService.serverRunner.serverHolder
+      .addGlobalMiddleware((request, response, pathArgs) {
+    // print(request.headers);
+    return request;
+  });
 
   await storageService.init();
   await serverService.runServers(
@@ -96,5 +107,5 @@ void main(List<String> arguments) async {
   );
 }
 
-    // //? visit this google oauth playground https://developers.google.com/oauthplayground to get more info about how to access google services for a google account
-    // //? and this link for google apis assess and manage https://developers.google.com/apis-explorer
+// //? visit this google oauth playground https://developers.google.com/oauthplayground to get more info about how to access google services for a google account
+// //? and this link for google apis assess and manage https://developers.google.com/apis-explorer

@@ -69,4 +69,12 @@ class ErrorCodes {
   static const String noAuthServerProvided = 'no-auth-server-provided';
   //? db server errors
   static const String noDbServerProvided = 'no-db-server-provided';
+  //? app check
+  static const String notAuthorizedApiKey = 'not-authorized-api-key';
+  static const String notValidApiKey = 'not-valid-api-key';
+  static const String appCheckNotProvided = 'app-check-not-provided';
+  //? api keys
+  static const String noApiKeyFound = 'no-api-key-found';
+  static const String apiKeyNotActive = 'api-key-not-active';
+  static const String expiredApiKey = 'expired-api-key';
 }

@@ -1,13 +1,16 @@
-import 'package:dart_verse_backend/features/cred_auth/repo/auth_with_cred.dart';
+import 'package:dart_verse_backend/dashboard_server/features/app_check/data/datasources/api_key_generator.dart';
 
-String clientID =
-    '584766071015-iu6e6lq65rji5a140ptbiib7lt0187qj.apps.googleusercontent.com';
-String clientSecret = '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';
+List<String> apiKeys = [];
 void main(List<String> args) async {
-  AuthWithGoogle authWithGoogle = AuthWithGoogle(
-    clientId: clientID,
-    clientSecret: clientSecret,
-    redirectUrl: 'http://localhost:3000',
-  );
-  authWithGoogle.run();
+  ApiKeyGenerator generator =
+      ApiKeyGenerator(encrypterSecretKey: 'encrypterSecretKey');
+  for (var i = 0; i < 1000; i++) {
+    String apiKey = generator.generateApiKey('Shiaka', expireAfter: null);
+    if (apiKeys.contains(apiKey)) {
+      throw Exception('This api key already exists');
+    }
+    apiKeys.add(apiKey);
+    print(apiKey);
+  }
+  print(apiKeys.length);
 }

@@ -1,10 +1,13 @@
 import 'dart:async';
-import 'package:dart_verse_backend/constants/endpoints_constants.dart';
+import 'package:dart_verse_backend/dashboard_server/dashboard.dart';
+import 'package:dart_verse_backend/dashboard_server/features/app_check/server/app_check_middleware.dart';
 import 'package:dart_verse_backend/layers/service_server/auth_server/auth_server.dart';
 import 'package:dart_verse_backend/layers/service_server/auth_server/repo/auth_server_settings.dart';
 import 'package:dart_verse_backend/layers/service_server/db_server/db_server.dart';
 import 'package:dart_verse_backend/layers/service_server/service_server.dart';
 import 'package:dart_verse_backend/layers/service_server/storage_server/storage_server.dart';
+import 'package:dart_verse_backend/layers/services/db_manager/db_service.dart';
+import 'package:dart_verse_backend/layers/services/web_server/datasource/server_handlers.dart';
 import 'package:dart_verse_backend/layers/services/web_server/models/router_info.dart';
 import 'package:dart_verse_backend/layers/services/web_server/repo/server_runner.dart';
 import 'package:dart_verse_backend/layers/settings/app/app.dart';
@@ -16,13 +19,19 @@ import 'package:dart_webcore/dart_webcore.dart';
 class ServerService {
   final App app;
   final AuthServerSettings authServerSettings;
+  final DbService dbService;
+  late Dashboard _dashboard;
 
   ServerService(
     this.app, {
     required this.authServerSettings,
+    required this.dbService,
   }) {
     _pipeline = Pipeline();
     serverRunner = ServerRunner(app, _pipeline);
+    if (app.dashboardSettings != null) {
+      _dashboard = Dashboard(app.dashboardSettings!, app);
+    }
   }
 
   late Pipeline _pipeline;
@@ -41,14 +50,13 @@ class ServerService {
       dbServer: dbServer,
       storageServer: storageServer,
     );
-
+    await _addAppCheck();
     return serverRunner.run();
   }
 
   ServerService addRouter(RouterInfo routerInfo) {
     bool jwtSecured = routerInfo.jwtSecured;
     bool emailMustBeVerified = routerInfo.emailMustBeVerified;
-    bool appIdSecured = routerInfo.appIdSecured;
     Router router = routerInfo.router;
 
     //? run checks here
@@ -59,13 +67,7 @@ class ServerService {
 
     //? adding middlewares here
     // checking for app id for every
-    if (appIdSecured) {
-      router.addUpperMiddleware(
-        null,
-        HttpMethods.all,
-        authServerSettings.authServerMiddlewares.checkAppId,
-      );
-    }
+
     // checking if jwt is added and user logged in
     if (jwtSecured) {
       router
@@ -106,12 +108,9 @@ class ServerService {
     StorageServer? storageServer,
     DBServer? dbServer,
   }) {
+    ServerHandlers serverHandlers = ServerHandlers();
     // adding server check router
-    Router router = Router()
-      ..get(EndpointsConstants.serverAlive,
-          (request, response, pathArgs) => response.write('server is live'));
-    RouterInfo routerInfo = RouterInfo(router, appIdSecured: false);
-    addRouter(routerInfo);
+    addRouter(serverHandlers.getServerRouter());
 
     // adding services servers
     _addServerService(authServer);
@@ -124,6 +123,15 @@ class ServerService {
     var routersInfo = layer.addRouters();
     for (var routerInfo in routersInfo) {
       addRouter(routerInfo);
+    }
+  }
+
+  Future<void> _addAppCheck() async {
+    if (app.dashboardSettings?.appCheckSettings != null) {
+      await _dashboard.run();
+      AppCheckMiddleware middleware =
+          AppCheckMiddleware(app, _dashboard.dbService);
+      serverRunner.serverHolder.addGlobalMiddleware(middleware.checkApp);
     }
   }
 }

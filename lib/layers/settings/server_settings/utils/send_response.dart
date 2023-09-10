@@ -78,7 +78,7 @@ class SendResponse {
   }) {
     return response.writeJson(
       {
-        'msg': message,
+        'error': message,
         'code': code,
       },
       code: errorCode,
