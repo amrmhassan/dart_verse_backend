@@ -161,4 +161,23 @@ class ApiCrudHandlers {
       return SendResponse.sendDataToUser(response, apiUserModel.toJson());
     });
   }
+
+  FutureOr<PassedHttpEntity> requestApiSecretDecryption(
+    RequestHolder request,
+    ResponseHolder response,
+    Map<String, dynamic> pathArgs,
+  ) async {
+    return _wrapper(request, response, pathArgs, () async {
+      String apiHash;
+      try {
+        Map<String, dynamic> body = await request.readAsJson();
+        apiHash = body[BodyFields.apiHash];
+      } catch (e) {
+        throw RequestBodyError();
+      }
+
+      var res = await _apiKeyInfoDatasource.decryptApiSecret(apiHash);
+      return SendResponse.sendDataToUser(response, res);
+    });
+  }
 }

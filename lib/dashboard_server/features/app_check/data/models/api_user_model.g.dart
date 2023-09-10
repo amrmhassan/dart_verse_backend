@@ -15,6 +15,7 @@ ApiUserModel _$ApiUserModelFromJson(Map<String, dynamic> json) => ApiUserModel(
           : Duration(microseconds: json['expireAfter'] as int),
       hash: json['hash'] as String,
       active: json['active'] as bool,
+      secretKeyEncrypted: json['secretKeyEncrypted'] as String,
     );
 
 Map<String, dynamic> _$ApiUserModelToJson(ApiUserModel instance) =>
@@ -24,5 +25,6 @@ Map<String, dynamic> _$ApiUserModelToJson(ApiUserModel instance) =>
       'createdAt': const DateConverter().toJson(instance.createdAt),
       'hash': instance.hash,
       'active': instance.active,
+      'secretKeyEncrypted': instance.secretKeyEncrypted,
       'expireAfter': instance.expireAfter?.inMicroseconds,
     };

@@ -21,6 +21,10 @@ class ApiCRUDServer {
         EndpointsConstants.listApiHashes,
         _handlers.listApiHashes,
       )
+      ..get(
+        EndpointsConstants.apiSecretDecryption,
+        _handlers.requestApiSecretDecryption,
+      )
       ..post(
         EndpointsConstants.generateApiKey,
         _handlers.generateSaveApiKey,

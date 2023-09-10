@@ -12,6 +12,7 @@ class ApiUserModel {
   final DateTime createdAt;
   final String hash;
   final bool active;
+  final String secretKeyEncrypted;
 
   /// this can be null, to add the option to lifetime api keys
   final Duration? expireAfter;
@@ -23,9 +24,12 @@ class ApiUserModel {
     required this.expireAfter,
     required this.hash,
     required this.active,
+    required this.secretKeyEncrypted,
   });
   static ApiUserModel fromModels(
-      ApiKeyModel apiKeyModel, ApiHashModel apiHashModel) {
+    ApiKeyModel apiKeyModel,
+    ApiHashModel apiHashModel,
+  ) {
     return ApiUserModel(
       name: apiKeyModel.name,
       apiKey: apiKeyModel.apiKey,
@@ -33,6 +37,7 @@ class ApiUserModel {
       expireAfter: apiKeyModel.expireAfter,
       hash: apiHashModel.apiHash,
       active: apiHashModel.active,
+      secretKeyEncrypted: apiHashModel.apiSecretEncrypted,
     );
   }
 

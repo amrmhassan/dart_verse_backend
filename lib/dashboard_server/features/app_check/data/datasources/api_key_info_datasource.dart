@@ -1,10 +1,12 @@
 import 'package:dart_verse_backend/constants/collections.dart';
 import 'package:dart_verse_backend/dashboard_server/features/app_check/data/datasources/api_key_generator.dart';
 import 'package:dart_verse_backend/dashboard_server/features/app_check/data/datasources/api_secret_generator.dart';
+import 'package:dart_verse_backend/dashboard_server/features/app_check/data/datasources/checker/base64_encrypter.dart';
 import 'package:dart_verse_backend/dashboard_server/features/app_check/data/models/api_secret_model.dart';
 import 'package:dart_verse_backend/dashboard_server/features/app_check/data/repositories/api_keys_repo.dart';
 import 'package:dart_verse_backend/dashboard_server/features/app_check/data/models/api_hash_model.dart';
 import 'package:dart_verse_backend/errors/models/api_key_exceptions.dart';
+import 'package:dart_verse_backend/errors/models/encryption_exceptions.dart';
 import 'package:dart_verse_backend/layers/services/db_manager/data/repositories/mongo_ref/coll_ref_mongo.dart';
 import 'package:dart_verse_backend/layers/services/db_manager/db_service.dart';
 import 'package:mongo_dart/mongo_dart.dart';
@@ -16,11 +18,13 @@ class ApiKeyInfoDatasource {
   final String encrypterSecretKey;
   late ApiKeyGenerator _generator;
   late CollRefMongo _collection;
+  late Base64Encrypter _encrypter;
 
   ApiKeyInfoDatasource(this._dbService, this.encrypterSecretKey) {
     _generator = ApiKeyGenerator(encrypterSecretKey: encrypterSecretKey);
     _collection =
         _dbService.mongoDbController.collection(DBCollections.apiKeys);
+    _encrypter = Base64Encrypter(encrypterSecretKey);
   }
 
   Future<ApiHashModel?> getApiModel(String apiHash) async {
@@ -82,5 +86,17 @@ class ApiKeyInfoDatasource {
     }
     model.active = !model.active;
     return updateApiKey(model);
+  }
+
+  Future<String> decryptApiSecret(String apiHash) async {
+    ApiHashModel? model = await getApiModel(apiHash);
+    if (model == null) {
+      throw NoApiKeyFound();
+    }
+    String? decrypted = _encrypter.decrypt(model.apiSecretEncrypted);
+    if (decrypted == null) {
+      throw DecryptionException();
+    }
+    return decrypted;
   }
 }

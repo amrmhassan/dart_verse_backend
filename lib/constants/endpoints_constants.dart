@@ -33,4 +33,5 @@ class EndpointsConstants {
   static const String generateApiKey = '/generateApiKey';
   static const String deleteApiKey = '/deleteApiKey';
   static const String toggleApiKeyActiveness = '/toggleApiKeyActiveness';
+  static const String apiSecretDecryption = '/apiSecretDecryption';
 }

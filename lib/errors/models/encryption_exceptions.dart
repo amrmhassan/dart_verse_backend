@@ -30,7 +30,7 @@ class EncryptionException extends AppExceptions {
 }
 
 class DecryptionException extends AppExceptions {
-  DecryptionException(String message)
+  DecryptionException([String? message])
       : super(
           'An error happened while decryption: $message',
           ErrorCodes.notValidApiKey,
