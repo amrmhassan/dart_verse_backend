@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:dart_verse_backend/constants/error_codes.dart';
+import 'package:dart_verse_backend/constants/header_fields.dart';
 
 import '../serverless_exception.dart';
 
@@ -74,9 +75,9 @@ class NoStorageSettingsProvided extends StorageException {
 }
 
 class NoBucketException extends StorageException {
-  NoBucketException(String? name)
+  NoBucketException(String? id)
       : super(
-          'please provide a valid bucket name or don\'t provide any name for using the default bucket: $name',
+          'please provide a valid bucket id or don\'t provide any ids for using the default bucket: $id',
           ErrorCodes.noBucketFound,
           errorCode: 404,
         );
@@ -95,15 +96,24 @@ class FileNotFound extends StorageException {
   FileNotFound(String msg)
       : super(
           'file not found: $msg',
-          ErrorCodes.noBucketFound,
+          ErrorCodes.fileNotFound,
+          errorCode: HttpStatus.notFound,
+        );
+}
+
+class FolderNotFound extends StorageException {
+  FolderNotFound(String msg)
+      : super(
+          'folder not found: $msg',
+          ErrorCodes.folderNotFound,
           errorCode: HttpStatus.notFound,
         );
 }
 
 class RefNotFound extends StorageException {
-  RefNotFound(String bucketName, String ref)
+  RefNotFound(String bucketName, String ref, [String? msg])
       : super(
-          'path not found for this ref:BucketName: $bucketName\nRef: $ref',
+          'path not found for this ref:BucketName: $bucketName\nRef: $ref, $msg',
           ErrorCodes.refNotFound,
           errorCode: HttpStatus.notFound,
         );
@@ -124,5 +134,30 @@ class StorageBucketExistsException extends StorageException {
           'storage bucket ($name) already exists with different path',
           ErrorCodes.storageBucketPathChange,
           errorCode: HttpStatus.internalServerError,
+        );
+}
+
+class RefNotEmpty extends StorageException {
+  RefNotEmpty()
+      : super(
+          'the ref you requested to delete is not empty, try ${HeaderFields.forceDelete}:true in the request body',
+          ErrorCodes.refNotEmpty,
+          errorCode: HttpStatus.notAcceptable,
+        );
+}
+
+class ProhebitedBucketEditException extends StorageException {
+  ProhebitedBucketEditException()
+      : super(
+          'This bucket is edited by a third party, so it\'t not valid',
+          ErrorCodes.invalidBucketEditing,
+        );
+}
+
+class BucketNotInitiated extends StorageException {
+  BucketNotInitiated()
+      : super(
+          'please run bucket.init() first',
+          ErrorCodes.bucketNotInitiated,
         );
 }

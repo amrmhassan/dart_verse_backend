@@ -14,11 +14,14 @@ MongoDbConnLink cloudsConnLink = IpPortWithAuthConnLink(
 MongoDbConnLink atlasConnLink = DNSHostFullLink(
   connLink: env['REMOTECONNLINK'].toString(),
 );
-MongoDbConnLink localConnLinkReplica = DNSHostFullLink(
+MongoDbConnLink localConnLinkReplica = const DNSHostFullLink(
   connLink: 'mongodb://localhost:27017/?replicaSet=rs0',
 );
-MongoDbConnLink localConnLink = DNSHostFullLink(
+MongoDbConnLink localConnLink = const DNSHostFullLink(
   connLink: 'mongodb://localhost:27017',
+);
+MongoDbConnLink dashboardConnLink = const DNSHostFullLink(
+  connLink: 'mongodb://localhost:27017/dashboard',
 );
 
 const String clientId =

@@ -4,12 +4,14 @@ import 'dart:io';
 import 'package:dart_verse_backend/constants/header_fields.dart';
 import 'package:dart_verse_backend/constants/path_fields.dart';
 import 'package:dart_verse_backend/errors/models/storage_errors.dart';
+import 'package:dart_verse_backend/features/storage_buckets/storage_buckets.dart';
 import 'package:dart_verse_backend/layers/service_server/storage_server/repo/storage_server_handlers.dart';
-import 'package:dart_verse_backend/layers/services/storage_buckets/data/bucket_ref_creator.dart';
-import 'package:dart_verse_backend/layers/services/storage_buckets/models/storage_bucket_model.dart';
+import 'package:dart_verse_backend/features/storage_buckets/data/bucket_ref_creator.dart';
+import 'package:dart_verse_backend/features/storage_buckets/models/storage_bucket_model.dart';
+import 'package:dart_verse_backend/layers/services/storage_service/data/models/storage_ref.dart';
+import 'package:dart_verse_backend/layers/services/storage_service/storage_service.dart';
 import 'package:dart_verse_backend/layers/settings/app/app.dart';
 import 'package:dart_verse_backend/layers/settings/server_settings/utils/send_response.dart';
-import 'package:dart_verse_backend/utils/storage_utils.dart';
 import 'package:dart_webcore/dart_webcore/server/impl/request_holder.dart';
 import 'package:dart_webcore/dart_webcore/server/impl/response_holder.dart';
 import 'package:dart_webcore/dart_webcore/server/repo/passed_http_entity.dart';
@@ -18,13 +20,15 @@ import '../../../../errors/models/server_errors.dart';
 import '../../../../errors/serverless_exception.dart';
 
 class DefaultStorageServerHandlers implements StorageServerHandlers {
+  final StorageBuckets _storageBuckets = StorageBuckets();
   DefaultStorageServerHandlers({
-    required this.app,
+    required this.storageService,
   });
 
   @override
-  App app;
+  StorageService storageService;
 
+  App get app => storageService.app;
   FutureOr<PassedHttpEntity> _wrapper(
     RequestHolder request,
     ResponseHolder response,
@@ -66,27 +70,18 @@ class DefaultStorageServerHandlers implements StorageServerHandlers {
     Map<String, dynamic> pathArgs,
   ) {
     return _wrapper(request, response, pathArgs, () async {
-      String? bucketName = request.headers.value(HeaderFields.bucketName);
-      StorageBucket? bucket = app.storageSettings.getBucket(bucketName);
-      if (bucket == null) {
-        throw NoBucketException(bucketName);
+      StorageRefModel? storageRefModel;
+      Map<String, dynamic> body;
+      try {
+        body = await request.readAsJson() as Map<String, dynamic>;
+        storageRefModel = StorageRefModel.fromJson(body);
+      } catch (e) {
+        throw BadStorageBodyException(
+            'Please provide the right body or Read the documentation');
       }
-
-      String ref = request.headers.value(HeaderFields.ref) ?? '/';
-      StorageBucket refBucket = ref == '/' ? bucket : bucket.ref(ref);
-      //! here i should check if this permission is allowed from the refBucket and the operation delete
-      // here if allowed just delete the ref
-      String? path = refBucket.getRefAbsPath(ref);
-      if (path == null) {
-        throw RefNotFound(refBucket.name, ref);
-      }
-      StorageUtils.deleteRef(
-        path,
-        bucketName: refBucket.name,
-        ref: ref,
-      );
-
-      return SendResponse.sendDataToUser(response, 'deleted');
+      bool forceDelete = body[HeaderFields.forceDelete] ?? false;
+      await storageService.delete(storageRefModel, forceDelete);
+      return SendResponse.sendDataToUser(response, 'deleted', httpCode: 204);
     });
   }
 
@@ -104,7 +99,8 @@ class DefaultStorageServerHandlers implements StorageServerHandlers {
       String? bucketName = pathArgs[PathFields.bucketName] == 'null'
           ? null
           : pathArgs[PathFields.bucketName];
-      StorageBucket? storageBucket = app.storageSettings.getBucket(bucketName);
+      StorageBucket? storageBucket =
+          await _storageBuckets.getBucketById(bucketName);
       if (storageBucket == null) {
         throw NoBucketException(bucketName);
       }
@@ -134,7 +130,7 @@ class DefaultStorageServerHandlers implements StorageServerHandlers {
       // if the bucket name is null or not sent then the user will upload or deal with the default bucket
       // if the user user sent bucket not found an error will be returned to the user
       String? bucketName = request.headers.value(HeaderFields.bucketName);
-      StorageBucket? bucket = app.storageSettings.getBucket(bucketName);
+      StorageBucket? bucket = await _storageBuckets.getBucketById(bucketName);
       String? onFileExist = request.headers.value(HeaderFields.onFileExist);
       String? fileName = request.headers.value(HeaderFields.fileName);
       //! add this file name to the receive file on the dart_webcore
@@ -165,7 +161,7 @@ class DefaultStorageServerHandlers implements StorageServerHandlers {
       // but now i need a way to get the path of the file i want to save like
 
       String ref = request.headers.value(HeaderFields.ref) ?? '/';
-      StorageBucket refBucket = ref == '/' ? bucket : bucket.ref(ref);
+      StorageBucket refBucket = ref == '/' ? bucket : await bucket.ref(ref);
       //! here i should check if this permission is allowed from the refBucket and the operation write
 
       //? bucket permissions will be checked for the refBucket not the original bucket
@@ -180,32 +176,40 @@ class DefaultStorageServerHandlers implements StorageServerHandlers {
 
       String downloadEndpoint =
           app.endpoints.storageEndpoints.download.split('/')[1];
-      String? fileRef = bucket.getFileRef(file);
+      String? fileRef = bucket.getFileRef(file.path);
       if (fileRef == null) {
         return SendResponse.sendDataToUser(
             response, 'file uploaded to: ${file.path}');
       }
       String downloadLink =
-          '${app.backendHost}/$downloadEndpoint/${bucket.name}/$fileRef';
+          '${app.backendHost}/$downloadEndpoint/${bucket.id}/$fileRef';
       return SendResponse.sendDataToUser(response, downloadLink);
     });
   }
+
+  @override
+  FutureOr<PassedHttpEntity> listChildren(
+    RequestHolder request,
+    ResponseHolder response,
+    Map<String, dynamic> pathArgs,
+  ) {
+    return _wrapper(request, response, pathArgs, () async {
+      StorageRefModel? storageRefModel;
+      try {
+        var body = await request.readAsJson() as Map<String, dynamic>;
+        storageRefModel = StorageRefModel.fromJson(body);
+      } catch (e) {
+        throw BadStorageBodyException(
+            'Please provide the right body or Read the documentation');
+      }
+      var res = await storageService.listChildren(
+        storageRefModel.bucketId,
+        storageRefModel.ref,
+      );
+      return SendResponse.sendDataToUser(
+        response,
+        res,
+      );
+    });
+  }
 }
-
-      // List<ACMPermission>? _parseAllowed(HttpHeaders headers) {
-      //   String? allowedString = headers.value(HeaderFields.allowed);
-      //   if (allowedString == null) return null;
-      //   List<dynamic> allowed = json.decode(allowedString);
-      //   var res = allowed.map((e) => ACMPermission.fromJson(e)).toList();
-      //   return res;
-
-      //   /*
-      //   allowed should be on the format
-      //   {
-      //     'write':[users ids],
-      //     'read':[users ids],
-      //     'delete':[users ids],
-      //     'editPermissions':[users ids],
-      //   }
-      //   */
-      // }

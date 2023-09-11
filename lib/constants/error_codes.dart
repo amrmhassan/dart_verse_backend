@@ -9,6 +9,7 @@ class ErrorCodes {
   static const String noServerSettings = 'no-server-settings-provided';
   static const String noUserDataSettings = 'no-user-data-settings-provided';
   static const String noEmailSettings = 'no-email-settings-provided';
+  static const String invalidDateValue = 'invalid-date-value';
   //? server error codes
   static const String noRouterSet = 'no-router-set';
   static const String requestBoyError = 'bad-body-provided';
@@ -41,6 +42,7 @@ class ErrorCodes {
   static const String noAppIdProvided = 'no-app-id-provided';
   static const String notAuthorizedAppId = 'not-authorized-appid';
   static const String userEmailNotVerified = 'user-email-not-verified';
+  static const String passwordChanged = 'password-changed';
 
   //? email errors
   static const String emailTemplateFileNotFound =
@@ -57,12 +59,24 @@ class ErrorCodes {
   static const String noBucketFound = 'no-bucket-found';
   static const String refNotFound = 'ref-not-found';
   static const String fileNotFound = 'file-not-found';
+  static const String folderNotFound = 'folder-not-found';
   static const String storageServiceNotInit = 'storage-service-not-init';
   static const String storageBucketPathChange =
       'storage-bucket-exists-with-different-path';
+  static const String refNotEmpty = 'ref-not-empty';
+  static const String invalidBucketEditing = 'invalid-bucket-editing';
+  static const String bucketNotInitiated = 'bucket-not-initiated';
 
   //? auth server errors
   static const String noAuthServerProvided = 'no-auth-server-provided';
   //? db server errors
   static const String noDbServerProvided = 'no-db-server-provided';
+  //? app check
+  static const String notAuthorizedApiKey = 'not-authorized-api-key';
+  static const String notValidApiKey = 'not-valid-api-key';
+  static const String appCheckNotProvided = 'app-check-not-provided';
+  //? api keys
+  static const String noApiKeyFound = 'no-api-key-found';
+  static const String apiKeyNotActive = 'api-key-not-active';
+  static const String expiredApiKey = 'expired-api-key';
 }

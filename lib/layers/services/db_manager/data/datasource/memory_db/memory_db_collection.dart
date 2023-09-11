@@ -35,7 +35,7 @@ class MemoryDbCollection {
     }
 
     // create the doc id
-    String docId = doc[DBRKeys.id] ?? Uuid().v4();
+    String docId = doc[DBRKeys.id] ?? const Uuid().v4();
     // validating the doc
     DocValidation docValidation = DocValidation(docId, doc);
     doc = docValidation.validate();

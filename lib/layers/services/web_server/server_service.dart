@@ -1,10 +1,15 @@
 import 'dart:async';
-import 'dart:io';
-
-import 'package:dart_verse_backend/constants/endpoints_constants.dart';
-import 'package:dart_verse_backend/errors/models/auth_server_exceptions.dart';
+import 'package:dart_verse_backend/dashboard_server/dashboard.dart';
+import 'package:dart_verse_backend/dashboard_server/features/app_check/server/app_check_middleware.dart';
 import 'package:dart_verse_backend/layers/service_server/auth_server/auth_server.dart';
+import 'package:dart_verse_backend/layers/service_server/auth_server/repo/auth_server_settings.dart';
 import 'package:dart_verse_backend/layers/service_server/db_server/db_server.dart';
+import 'package:dart_verse_backend/layers/service_server/service_server.dart';
+import 'package:dart_verse_backend/layers/service_server/storage_server/storage_server.dart';
+import 'package:dart_verse_backend/layers/services/db_manager/db_service.dart';
+import 'package:dart_verse_backend/layers/services/web_server/datasource/server_handlers.dart';
+import 'package:dart_verse_backend/layers/services/web_server/models/router_info.dart';
+import 'package:dart_verse_backend/layers/services/web_server/repo/server_runner.dart';
 import 'package:dart_verse_backend/layers/settings/app/app.dart';
 import 'package:dart_webcore/dart_webcore.dart';
 
@@ -12,54 +17,48 @@ import 'package:dart_webcore/dart_webcore.dart';
 //! you can call this step serverAuth
 //! and for the storage service you can add a step called serverStorage
 class ServerService {
-  final App _app;
-  final AuthServer? _authServer;
-  final DBServer? _dbServer;
+  final App app;
+  final AuthServerSettings authServerSettings;
+  final DbService dbService;
+  late Dashboard _dashboard;
 
   ServerService(
-    this._app, {
-    AuthServer? authServer,
-    DBServer? dbServer,
-  })  : _authServer = authServer,
-        _dbServer = dbServer {
+    this.app, {
+    required this.authServerSettings,
+    required this.dbService,
+  }) {
     _pipeline = Pipeline();
+    serverRunner = ServerRunner(app, _pipeline);
+    if (app.dashboardSettings != null) {
+      _dashboard = Dashboard(app.dashboardSettings!, app);
+    }
   }
 
   late Pipeline _pipeline;
+  late ServerRunner serverRunner;
 
-  Future<HttpServer> runServer({
+  Future<void> runServers({
     bool log = false,
+    AuthServer? authServer,
+    StorageServer? storageServer,
+    DBServer? dbServer,
   }) async {
-    InternetAddress ip = _app.serverSettings.ip;
-    int port = _app.serverSettings.port;
-    _addServicesEndpoints();
-    ServerHolder serverHolder = ServerHolder(_pipeline);
-    serverHolder.addGlobalMiddleware(logRequest);
-    var server = await serverHolder.bind(ip, port);
-    return server;
+    serverRunner.serverHolder.addGlobalMiddleware(logRequest);
+
+    _addServicesEndpoints(
+      authServer: authServer,
+      dbServer: dbServer,
+      storageServer: storageServer,
+    );
+    await _addAppCheck();
+    return serverRunner.run();
   }
 
-  //! data in this like idFieldName and role and their values will be checked from the jwt payload
-  //! try to combine the addRouter and addPipeline
-  //! i want to create use it like this
-  /*
-              the addRouter method should be provided with the place of the provided user id
-              whether it should be in body or as authorization in headers bearer
-              and the user id key name where it will be '_id' or 'id' or whatever
-              addRouter(put parameters here).secure(bool userAuth = true, bool userData = false,(map allUserDataWillBeHere(Auth And User Data)){
-                if userAuth is true the map allUserDataWillBeHere will contain userAuth, and the same for userData
-                return bool;
-              })
+  ServerService addRouter(RouterInfo routerInfo) {
+    bool jwtSecured = routerInfo.jwtSecured;
+    bool emailMustBeVerified = routerInfo.emailMustBeVerified;
+    Router router = routerInfo.router;
 
-              and the add Router method should return a secure object or SecureHandler Object
-              this secure handler class i don't know yet what to add in it but 
-              */
-  ServerService addRouter(
-    Router router, {
-    bool jwtSecured = false,
-    bool emailMustBeVerified = false,
-    bool appIdSecured = true,
-  }) {
     //? run checks here
     if (!jwtSecured && emailMustBeVerified) {
       throw Exception(
@@ -68,28 +67,20 @@ class ServerService {
 
     //? adding middlewares here
     // checking for app id for every
-    if (appIdSecured) {
-      router.addUpperMiddleware(
-        null,
-        HttpMethods.all,
-        authServer.authServerSettings.authServerMiddlewares.checkAppId,
-      );
-    }
+
     // checking if jwt is added and user logged in
     if (jwtSecured) {
       router
           .addUpperMiddleware(
             null,
             HttpMethods.all,
-            authServer
-                .authServerSettings.authServerMiddlewares.checkJwtInHeaders,
+            authServerSettings.authServerMiddlewares.checkJwtInHeaders,
             signature: 'checkJwtInHeadersFromUserCustomRoutes',
           )
           .addUpperMiddleware(
             null,
             HttpMethods.all,
-            authServer
-                .authServerSettings.authServerMiddlewares.checkJwtForUserId,
+            authServerSettings.authServerMiddlewares.checkJwtForUserId,
             signature: 'checkJwtForUserId',
           );
     }
@@ -98,8 +89,7 @@ class ServerService {
       router.addUpperMiddleware(
         null,
         HttpMethods.all,
-        authServer
-            .authServerSettings.authServerMiddlewares.checkUserEmailVerified,
+        authServerSettings.authServerMiddlewares.checkUserEmailVerified,
       );
     }
 
@@ -113,34 +103,37 @@ class ServerService {
     return _pipeline;
   }
 
-  AuthServer get authServer {
-    if (_authServer == null) {
-      throw NoAuthServerSettings();
-    }
-    return _authServer!;
-  }
-
-  DBServer get dbServer {
-    if (_dbServer == null) {
-      throw NoAuthServerSettings();
-    }
-    return _dbServer!;
-  }
-
-  void _addServicesEndpoints() {
+  void _addServicesEndpoints({
+    AuthServer? authServer,
+    StorageServer? storageServer,
+    DBServer? dbServer,
+  }) {
+    ServerHandlers serverHandlers = ServerHandlers();
     // adding server check router
-    addRouter(Router()
-      ..get(EndpointsConstants.serverAlive,
-          (request, response, pathArgs) => response.write('server is live')));
+    addRouter(serverHandlers.getServerRouter());
 
-    // adding routers for auth service
-    if (_authServer != null) {
-      addRouter(_authServer!.getRouter());
+    // adding services servers
+    _addServerService(authServer);
+    _addServerService(storageServer);
+    _addServerService(dbServer);
+  }
+
+  void _addServerService(ServiceServerLayer? layer) {
+    if (layer == null) return;
+    var routersInfo = layer.addRouters();
+    for (var routerInfo in routersInfo) {
+      addRouter(routerInfo);
     }
+  }
 
-    // adding routers for db service
-    if (_dbServer != null) {
-      addRouter(_dbServer!.getRouter());
+  Future<void> _addAppCheck() async {
+    if (app.dashboardSettings != null) {
+      await _dashboard.run();
+      if (app.dashboardSettings?.appCheckSettings != null) {
+        AppCheckMiddleware middleware =
+            AppCheckMiddleware(app, _dashboard.dbService);
+        serverRunner.serverHolder.addGlobalMiddleware(middleware.checkApp);
+      }
     }
   }
 }

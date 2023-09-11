@@ -62,6 +62,8 @@ class MongoDbUserDataProvider extends UserDataDbProvider
         .collection(app.userDataSettings.collectionName)
         .doc(userId)
         .getData();
+    res ??= {};
+    res['_id'] = userId;
     return res;
   }
 

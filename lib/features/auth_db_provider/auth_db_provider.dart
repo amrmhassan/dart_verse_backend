@@ -1,4 +1,5 @@
 import 'package:dart_verse_backend/layers/services/auth/models/auth_model.dart';
+import 'package:dart_verse_backend/layers/services/auth/models/jwt_payload.dart';
 import 'package:dart_verse_backend/layers/services/db_manager/db_service.dart';
 
 import '../../layers/settings/app/app.dart';
@@ -14,8 +15,8 @@ abstract class AuthDbProvider {
   Future<bool> saveUserAuth(AuthModel authModel);
   Future<bool> saveUserData(Map<String, dynamic> userData);
   Future<String> createJwtAndSave(String id, String email);
-  Future<void> saveJwt({required String id, required String jwt});
-  Future<bool> checkIfJwtIsActive(String jwt, String id);
+  // Future<void> saveJwt({required String id, required String jwt});
+  Future<bool> checkIfJwtIsActive(JWTPayloadModel jwt);
   Future<void> deleteAuthData(String id);
 
   // new
@@ -28,7 +29,7 @@ abstract class AuthDbProvider {
 
   Future<bool?> checkUserVerified(String userId);
   Future<void> changePassword(
-    String email, {
+    String id, {
     required String oldPassword,
     required String newPassword,
   });

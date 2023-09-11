@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
+import 'package:dart_verse_backend/constants/logger.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 class SecurePassword {
@@ -9,7 +10,7 @@ class SecurePassword {
 
   String getPasswordHash() {
     // creating a random salt
-    List<int> saltBytes = utf8.encode(Uuid().v4());
+    List<int> saltBytes = utf8.encode(const Uuid().v4());
     // concatenating the salt with the password bytes
     final saltedPasswordBytes = utf8.encode(_password) + saltBytes;
     // hashing the salted password
@@ -61,7 +62,7 @@ class SecurePassword {
       return true;
     } catch (e) {
       // Handle any other exceptions that may occur during the password verification process
-      print('Error occurred during password verification: $e');
+      logger.e('Error occurred during password verification: $e');
       return false;
     }
   }

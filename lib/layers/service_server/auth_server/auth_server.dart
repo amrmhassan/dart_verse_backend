@@ -1,39 +1,42 @@
 import 'package:dart_verse_backend/constants/path_fields.dart';
-import 'package:dart_verse_backend/layers/service_server/service_server.dart';
 import 'package:dart_verse_backend/layers/settings/app/app.dart';
+import 'package:dart_verse_backend/layers/service_server/service_server.dart';
+import 'package:dart_verse_backend/layers/services/web_server/models/router_info.dart';
 import 'package:dart_verse_backend/layers/service_server/auth_server/repo/auth_server_settings.dart';
 import 'package:dart_webcore/dart_webcore.dart';
 
 class AuthServer implements ServiceServerLayer {
-  final App _app;
   final AuthServerSettings _authServerSettings;
-  const AuthServer(this._app, this._authServerSettings);
+
+  @override
+  App app;
+  AuthServer(this.app, this._authServerSettings);
 
   AuthServerSettings get authServerSettings {
     return _authServerSettings;
   }
 
   @override
-  Router getRouter() {
-    String login = _app.endpoints.authEndpoints.login;
-    String register = _app.endpoints.authEndpoints.register;
+  List<RouterInfo> addRouters() {
+    String login = app.endpoints.authEndpoints.login;
+    String register = app.endpoints.authEndpoints.register;
     String getVerificationEmail =
-        _app.endpoints.authEndpoints.getVerificationEmail;
-    String verifyEmail = _app.endpoints.authEndpoints.verifyEmail;
-    String changePassword = _app.endpoints.authEndpoints.changePassword;
-    String forgetPassword = _app.endpoints.authEndpoints.forgetPassword;
+        app.endpoints.authEndpoints.getVerificationEmail;
+    String verifyEmail = app.endpoints.authEndpoints.verifyEmail;
+    String changePassword = app.endpoints.authEndpoints.changePassword;
+    String forgetPassword = app.endpoints.authEndpoints.forgetPassword;
     String logoutFromAllDevices =
-        _app.endpoints.authEndpoints.logoutFromAllDevices;
-    String logout = _app.endpoints.authEndpoints.logout;
-    String updateUserData = _app.endpoints.authEndpoints.updateUserData;
-    String deleteUserData = _app.endpoints.authEndpoints.deleteUserData;
-    String fullyDeleteUser = _app.endpoints.authEndpoints.fullyDeleteUser;
+        app.endpoints.authEndpoints.logoutFromAllDevices;
+    String logout = app.endpoints.authEndpoints.logout;
+    String updateUserData = app.endpoints.authEndpoints.updateUserData;
+    String deleteUserData = app.endpoints.authEndpoints.deleteUserData;
+    String fullyDeleteUser = app.endpoints.authEndpoints.fullyDeleteUser;
 
     // String forgetPassword = _app.endpoints.authEndpoints.forgetPassword;
 
     // other needed data
-    int port = _app.serverSettings.port;
-    String host = _app.backendHost;
+    int port = app.mainServerSettings.port;
+    String host = app.backendHost;
 
     // adding auth endpoints pipeline
     var authRouter = Router()
@@ -43,9 +46,7 @@ class AuthServer implements ServiceServerLayer {
         _authServerSettings.authServerHandlers.verifyEmail,
       )
       //? will check for app id from here
-      ..addRouterMiddleware(
-        _authServerSettings.authServerMiddlewares.checkAppId,
-      )
+
       ..post(
         login,
         _authServerSettings.authServerHandlers.login,
@@ -102,7 +103,7 @@ class AuthServer implements ServiceServerLayer {
         fullyDeleteUser,
         _authServerSettings.authServerHandlers.fullyDeleteUser,
       );
-
-    return authRouter;
+    RouterInfo authRouterInfo = RouterInfo(authRouter);
+    return [authRouterInfo];
   }
 }

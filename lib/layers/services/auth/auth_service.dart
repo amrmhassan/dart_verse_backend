@@ -72,7 +72,6 @@ class AuthService implements DVService {
     if (!rightPassword) {
       throw InvalidPassword();
     }
-    // check maximum number of jwts reached or not
 
     // create and send the new jwt for the user
     String jwtToken =
@@ -94,9 +93,9 @@ class AuthService implements DVService {
     JWTPayloadModel model = JWTPayloadModel.fromJson(res.payload);
 
     // check for the jwt in the allowed jwt tokens and active
-    bool jwtIsActive = await authDbProvider.checkIfJwtIsActive(jwt, model.id);
+    bool jwtIsActive = await authDbProvider.checkIfJwtIsActive(model);
     if (!jwtIsActive) {
-      return null;
+      throw PasswordChangedException();
     }
     // check for the user id if it is a valid user
     AuthModel? authModel = await authDbProvider.getUserByEmail(model.email);
@@ -133,11 +132,11 @@ class AuthService implements DVService {
   }
 
   Future<void> changePassword(
-    String email, {
+    String id, {
     required String oldPassword,
     required String newPassword,
   }) {
-    return authDbProvider.changePassword(email,
+    return authDbProvider.changePassword(id,
         oldPassword: oldPassword, newPassword: newPassword);
   }
 
