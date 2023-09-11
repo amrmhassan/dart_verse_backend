@@ -11,8 +11,8 @@ class BucketsStore {
 
   static Box get bucketsBox => _bucketsBox;
 
-  static void putBucket(String id, String path) {
-    _bucketsBox.put(id, path);
+  static Future<void> putBucket(String id, String path) async {
+    await _bucketsBox.put(id, path);
   }
 
   static String? getBucketPath(String id) {

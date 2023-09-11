@@ -8,7 +8,7 @@ import 'package:dart_verse_backend/utils/string_utils.dart';
 
 const String defaultBucketsContainer = 'Buckets';
 
-class StorageBucket {
+class StorageBucketModel {
   /// this name is it's id, should be unique
   /// must only contain numbers and letters and not exceed 50 letters
   final String id;
@@ -33,7 +33,7 @@ class StorageBucket {
 
   final String? creatorId;
 
-  StorageBucket(
+  StorageBucketModel(
     this.id, {
     String? parentFolderPath,
     this.maxAllowedSize,
@@ -60,8 +60,8 @@ class StorageBucket {
       _permissionController;
   PermissionChecker get permissionChecker => _permissionChecker;
 
-  StorageBucket child(String name) {
-    return StorageBucket(
+  StorageBucketModel child(String name) {
+    return StorageBucketModel(
       name,
       parentFolderPath: folderPath,
       creatorId: creatorId,
@@ -75,10 +75,10 @@ class StorageBucket {
 //!
 //@ the creatorId will be stored in the bucket itself as a file containing the id of the creator
 // in this method parent i will know about a storage bucket by it's .acm file
-  Future<StorageBucket?> parent() async {
+  Future<StorageBucketModel?> parent() async {
     try {
       String parentPath = Directory(folderPath).parent.path;
-      return StorageBucket.fromPath(parentPath);
+      return StorageBucketModel.fromPath(parentPath);
     } catch (e) {
       return null;
     }
@@ -89,22 +89,24 @@ class StorageBucket {
     return subRef == null ? folderPath : '${folderPath.strip('/')}/${subRef!}';
   }
 
-  static Future<StorageBucket?> fromPath(String path) async {
+  static Future<StorageBucketModel?> fromPath(String path) async {
     BucketInfo? info = await BucketController.fromPath(path);
     if (info == null) return null;
     // here this means that the acm file is valid
     String? creatorId = info.creatorId;
     int? maxSize = info.maxAllowedSize;
-    Directory directory = Directory(path);
-    return StorageBucket(
+    Directory directory = Directory(info.path);
+    var bucket = StorageBucketModel(
       info.id,
       creatorId: creatorId,
       maxAllowedSize: maxSize,
       parentFolderPath: directory.parent.path,
     );
+    // await bucket.init();
+    return bucket;
   }
 
-  bool containFile(String path) {
+  bool _containFile(String path) {
     path = path.replaceAll('\\', '/');
     String bucketPath = folderPath.strip('./');
     if (path.contains(bucketPath)) {
@@ -115,7 +117,7 @@ class StorageBucket {
 
   String? getFileRef(String entityPath) {
     entityPath = entityPath.replaceAll('\\', '/');
-    if (!containFile(entityPath)) return null;
+    if (!_containFile(entityPath)) return null;
 
     String bucketPath = folderPath;
     // file path: /path/to/bucket/bucket_name/sub/dir/file.ext
@@ -133,7 +135,7 @@ class StorageBucket {
     FileSystemEntity? entity = _entity(entityPath);
     if (entity == null) return null;
 
-    if (!containFile(entityPath)) return null;
+    if (!_containFile(entityPath)) return null;
     return entity.path;
   }
 }

@@ -17,12 +17,12 @@ class StorageService {
 
   Future<void> init() async {
     await BucketsStore().init();
-    // var defaultBucket = StorageBuckets.defaultBucket;
-    // await defaultBucket.init();
+    var defaultBucket = StorageBuckets.defaultBucket;
+    await defaultBucket.init();
     _initialized = true;
   }
 
-  Future<StorageBucket> createBucket(
+  Future<StorageBucketModel> createBucket(
     String id, {
     String? parentFolderPath,
     int? maxAllowedSize,
@@ -31,7 +31,7 @@ class StorageService {
     if (!_initialized) {
       throw StorageServiceNotInitializedException();
     }
-    StorageBucket storageBucket = StorageBucket(
+    StorageBucketModel storageBucket = StorageBucketModel(
       id,
       creatorId: creatorId,
       maxAllowedSize: maxAllowedSize,
@@ -44,7 +44,8 @@ class StorageService {
     String? bucketId,
     String ref,
   ) async {
-    StorageBucket storageBucket = await _getTargetStorageBucket(bucketId, ref);
+    StorageBucketModel storageBucket =
+        await _getTargetStorageBucket(bucketId, ref);
     String path = storageBucket.targetRefPath;
     var children = await _storageDatasource.getChildren(
       path,
@@ -66,7 +67,7 @@ class StorageService {
   }
 
   Future<void> delete(StorageRefModel refModel, bool forceDelete) async {
-    StorageBucket storageBucket =
+    StorageBucketModel storageBucket =
         await _getTargetStorageBucket(refModel.bucketId, refModel.ref);
     String path = storageBucket.targetRefPath;
     return _storageDatasource.delete(
@@ -76,11 +77,11 @@ class StorageService {
     );
   }
 
-  Future<StorageBucket> _getTargetStorageBucket(
+  Future<StorageBucketModel> _getTargetStorageBucket(
     String? bucketId,
     String ref,
   ) async {
-    StorageBucket? storageBucket =
+    StorageBucketModel? storageBucket =
         await _storageBuckets.getBucketById(bucketId, subRef: ref);
     if (storageBucket == null) {
       throw NoBucketException(bucketId);

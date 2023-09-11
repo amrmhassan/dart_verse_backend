@@ -10,7 +10,7 @@ import 'package:hive/hive.dart';
 class StoragePermissionController {
   late SBBoxes _sbBoxes;
 
-  final StorageBucket _storageBucket;
+  final StorageBucketModel _storageBucket;
   Box? _bucketBoxSource;
 
   StoragePermissionController(this._storageBucket) {

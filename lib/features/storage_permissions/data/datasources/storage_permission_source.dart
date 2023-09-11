@@ -9,22 +9,31 @@ import 'package:hive/hive.dart';
 class SBBoxes {
   late Directory _dataDir;
   final String _bucketId;
-  SBBoxes(this._bucketId, {String? bucketPath}) {
+
+  SBBoxes(String bucketId, {String? bucketPath}) : _bucketId = bucketId {
     _dataDir = _handleInitDataDir(bucketPath);
+  }
+  bool _falseId = false;
+  String get bucketId {
+    if (_falseId) {
+      throw Exception('You can\'t access the bucket id if it was false');
+    }
+    return _bucketId;
   }
 
   factory SBBoxes.fromPath(String path) {
-    //! make sure the _bucketId is not accessible as long as the constructor fromPath is depending on a false bucketId
+    //! make sure the bucketId is not accessible as long as the constructor fromPath is depending on a false bucketId
     var sbBoxes = SBBoxes('_bucketId', bucketPath: path);
+    sbBoxes._falseId = true;
     return sbBoxes;
   }
   Directory get dataDir => _dataDir;
 
   Directory _handleInitDataDir([String? passedBucketPath]) {
     if (passedBucketPath == null) {
-      passedBucketPath = BucketsStore.getBucketPath(_bucketId);
+      passedBucketPath = BucketsStore.getBucketPath(bucketId);
       if (passedBucketPath == null) {
-        throw NoBucketException(_bucketId);
+        throw NoBucketException(bucketId);
       }
     }
     // here handle open the bucket box
@@ -36,7 +45,7 @@ class SBBoxes {
     Directory directory =
         Directory('${bucketPath.strip('/')}/${SPConstants.bucketAcmFolder}');
     if (!directory.existsSync()) {
-      directory.createSync(recursive: true);
+      directory.createSync();
     }
     return directory;
   }

@@ -6,7 +6,7 @@ import 'package:dart_verse_backend/features/storage_permissions/utils/permission
 import 'package:hive/hive.dart';
 
 class PermissionChecker {
-  final StorageBucket _storageBucket;
+  final StorageBucketModel _storageBucket;
   late SBBoxes _sbBoxes;
   bool defaultValue;
 
