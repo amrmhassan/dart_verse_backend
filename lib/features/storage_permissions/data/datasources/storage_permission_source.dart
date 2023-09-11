@@ -9,8 +9,13 @@ import 'package:hive/hive.dart';
 class SBBoxes {
   late Directory _dataDir;
   final String _bucketId;
+  final bool create;
 
-  SBBoxes(String bucketId, {String? bucketPath}) : _bucketId = bucketId {
+  SBBoxes(
+    String bucketId, {
+    String? bucketPath,
+    this.create = false,
+  }) : _bucketId = bucketId {
     _dataDir = _handleInitDataDir(bucketPath);
   }
   bool _falseId = false;
@@ -45,7 +50,11 @@ class SBBoxes {
     Directory directory =
         Directory('${bucketPath.strip('/')}/${SPConstants.bucketAcmFolder}');
     if (!directory.existsSync()) {
-      directory.createSync();
+      if (create) {
+        directory.createSync();
+      } else {
+        throw NoBucketException('bucketPath');
+      }
     }
     return directory;
   }

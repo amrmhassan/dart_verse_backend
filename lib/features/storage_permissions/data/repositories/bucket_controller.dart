@@ -62,7 +62,10 @@ class BucketController {
   }
 
   Future<BucketInfo> _createBucketInfoBox() async {
-    SBBoxes sbBoxes = SBBoxes(storageBucket.id);
+    SBBoxes sbBoxes = SBBoxes(
+      storageBucket.id,
+      create: true,
+    );
     BucketInfo? savedInfo = await _fromBoxes(sbBoxes, storageBucket.folderPath);
     if (savedInfo != null) {
       _validateSavedBucketInfo(savedInfo);
@@ -83,7 +86,9 @@ class BucketController {
   }
 
   static Future<BucketInfo?> _fromBoxes(
-      SBBoxes sbBoxes, String bucketPath) async {
+    SBBoxes sbBoxes,
+    String bucketPath,
+  ) async {
     var infoBox = await sbBoxes.bucketBox();
     var info = PermissionParser.infoParser(infoBox);
     return info;
@@ -131,9 +136,10 @@ class BucketController {
     try {
       SBBoxes sbBoxes = SBBoxes.fromPath(bucketPath);
       BucketInfo? info = await _fromBoxes(sbBoxes, bucketPath);
-      if (info == null) {
-        // here i will create and initialize the bucket and return it's info
-      }
+      // if (info == null) {
+      // here i will create and initialize the bucket and return it's info
+      // don't do that
+      // }
       return info;
     } catch (e) {
       return null;

@@ -47,6 +47,7 @@ class StorageBucketModel {
     _parentPath = _parentPath.strip('/');
   }
 
+// a bucket must be initiated at least once it is created
   Future<void> init() async {
     await _controller.createBucket();
     _permissionController = StoragePermissionController(this);
@@ -102,7 +103,7 @@ class StorageBucketModel {
       maxAllowedSize: maxSize,
       parentFolderPath: directory.parent.path,
     );
-    // await bucket.init();
+
     return bucket;
   }
 
