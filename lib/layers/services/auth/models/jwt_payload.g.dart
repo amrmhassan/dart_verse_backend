@@ -11,7 +11,7 @@ JWTPayloadModel _$JWTPayloadModelFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String,
       email: json['email'] as String,
       ip: json['ip'] as String?,
-      createdAt: json['createdAt'] as String?,
+      createdAt: json['createdAt'] as String,
       other: json['other'] as Map<String, dynamic>,
     );
 

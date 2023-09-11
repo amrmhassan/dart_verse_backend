@@ -3,12 +3,14 @@
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:dart_verse_backend/constants/model_fields.dart';
 import 'package:dart_verse_backend/constants/reserved_keys.dart';
+import 'package:dart_verse_backend/errors/models/app_exceptions.dart';
 import 'package:dart_verse_backend/errors/models/email_verification_error.dart';
 import 'package:dart_verse_backend/features/auth_db_provider/auth_db_provider.dart';
 import 'package:dart_verse_backend/features/auth_db_provider/repo/mongo_db_repo_provider.dart';
 import 'package:dart_verse_backend/layers/services/auth/controllers/jwt_controller.dart';
 import 'package:dart_verse_backend/layers/services/auth/controllers/secure_password.dart';
 import 'package:dart_verse_backend/layers/services/auth/models/auth_model.dart';
+import 'package:dart_verse_backend/layers/services/auth/models/jwt_payload.dart';
 import 'package:dart_verse_backend/layers/services/db_manager/db_service.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
@@ -29,7 +31,6 @@ class MongoDbAuthProvider extends AuthDbProvider
     return jwtController.createJwtAndSave(
       id: id,
       email: email,
-      saveJwt: saveJwt,
     );
   }
 
@@ -82,81 +83,12 @@ class MongoDbAuthProvider extends AuthDbProvider
   }
 
   @override
-  Future<void> saveJwt({required String id, required String jwt}) async {
-    //? first checks for saved jwts
-    var collection = dbService.mongoDbController
-        .collection(app.authSettings.activeJWTCollName);
-
-    // Check if the active JWTs count has exceeded the limit of 5
-    var countQuery =
-        where.eq(DBRKeys.id, id).fields([ModelFields.activeTokens]);
-    var countResult = await collection.findOne(countQuery);
-
-    var fetchedTokens = (countResult?[ModelFields.activeTokens] as List?) ?? [];
-    int activeTokensLength = 0;
-    for (var token in fetchedTokens) {
-      try {
-        JWT.verify(token, app.authSettings.jwtSecretKey);
-        activeTokensLength++;
-      } catch (e) {
-        continue;
-      }
-    }
-    if (activeTokensLength >= app.authSettings.maximumActiveJwts) {
-      throw LoginExceedException();
-    }
-    // i just want to add the jwt to the user collection
-    // var data = await dbService.mongoDbController
-    //     //! here instead of getting the data from the remote db
-    //     //! just make modification query to the db to add the new jwt to the list
-    //     .collection(app.authSettings.activeJWTCollName)
-    //     .findOne(where.eq(DBRKeys.id, id));
-
-    // List<String> jwts =
-    //     ((data?[ModelFields.activeTokens] ?? []) as List).cast();
-    // // checking if saved jwts list contains the new jwt to skip adding it
-    // if (jwts.any((element) => element == jwt)) {
-    //   return;
-    // }
-
-    var pushQuery = where.eq(DBRKeys.id, id);
-    var pushUpdate = modify.push(ModelFields.activeTokens, jwt);
-
-    await dbService.mongoDbController
-        .collection(app.authSettings.activeJWTCollName)
-        .update(pushQuery, pushUpdate, upsert: true);
-
-    // jwts.add(jwt);
-    // await dbService.mongoDbController
-    //     .collection(app.authSettings.activeJWTCollName)
-    //     .doc(id)
-    //     .set({
-    //   ModelFields.activeTokens: jwts,
-    // });
-  }
-
-  @override
-  Future<bool> checkIfJwtIsActive(String jwt, String id) async {
-    var data = await dbService.mongoDbController
-        .collection(app.authSettings.activeJWTCollName)
-        .findOne(where.eq(DBRKeys.id, id));
-
-    List<String> jwts =
-        ((data?[ModelFields.activeTokens] ?? []) as List).cast();
-    // checking if saved jwts list contains the new jwt to skip adding it
-    if (jwts.any((element) => element == jwt)) {
-      return true;
-    }
-    return false;
-  }
-
-  @override
   Future<void> deleteAuthData(String id) async {
-    await logoutFromAllDevices(id);
-    var userAuthRes = await dbService.mongoDbController
+    var userAuthDoc = dbService.mongoDbController
         .collection(app.authSettings.collectionName)
-        .doc(id)
-        .delete();
+        .doc(id);
+    await logoutFromAllDevices(id);
+    var userAuthRes = await userAuthDoc.delete();
     if (userAuthRes.failure) {
       throw Exception('cant delete user auth data for the user');
     }
@@ -302,19 +234,19 @@ class MongoDbAuthProvider extends AuthDbProvider
 
   @override
   Future<void> changePassword(
-    String email, {
+    String id, {
     required String oldPassword,
     required String newPassword,
 
     /// this will prevent others from using the same jwt to log in after the password gets changed
-    bool logoutFromAllDevices = true,
+    bool doLogoutFromAllDevices = true,
   }) async {
     //? if old password is the same as new password
     if (oldPassword == newPassword) {
       throw Exception('oldPassword must be different from newPassword');
     }
     //? checking for the user password if it's right
-    AuthModel? authModel = await getUserByEmail(email);
+    AuthModel? authModel = await getUserById(id);
     if (authModel == null) {
       throw NoUserRegisteredException();
     }
@@ -326,21 +258,20 @@ class MongoDbAuthProvider extends AuthDbProvider
     // if reached here this means that the user email and password are right
     // the user doesn't need to be logged in to do this
 
-    //? checking if i need to log out from all other devices
-    if (logoutFromAllDevices) {
-      var activeJWTS = dbService.mongoDbController
-          .collection(app.authSettings.activeJWTCollName);
-      var res = await activeJWTS.doc(authModel.id).delete();
-      if (res.failure) {
-        throw Exception(
-            'can\'t log out from other devices, password didn\'t change');
-      }
+    // //? checking if i need to log out from all other devices
+    if (doLogoutFromAllDevices) {
+      await logoutFromAllDevices(authModel.id);
+      await updateAuthInfo(
+        authModel.id,
+        ModelFields.password,
+        DateTime.now().toIso8601String(),
+      );
     }
     //? changing the password
     String passwordHash = SecurePassword(newPassword).getPasswordHash();
     var collection =
         dbService.mongoDbController.collection(app.authSettings.collectionName);
-    var selector = where.eq(ModelFields.email, email);
+    var selector = where.eq(ModelFields.id, id);
 
     var updateQuery = modify.set(ModelFields.passwordHash, passwordHash);
     var res = await collection.updateOne(selector, updateQuery);
@@ -377,7 +308,7 @@ class MongoDbAuthProvider extends AuthDbProvider
     // delete user data
     await deleteUserData(id);
     // logout from all devices
-    await logoutFromAllDevices(email);
+    await logoutFromAllDevices(id);
     // delete user auth data
     await deleteAuthData(id);
   }
@@ -399,12 +330,12 @@ class MongoDbAuthProvider extends AuthDbProvider
 
   @override
   Future<void> logoutFromAllDevices(String id) async {
-    var activeJwts = dbService.mongoDbController
-        .collection(app.authSettings.activeJWTCollName);
-    var res = await activeJwts.doc(id).delete();
-
+    var authUpdates = dbService.mongoDbController
+        .collection(app.authSettings.authUpdatesCollName);
+    var res = await authUpdates.doc(id).delete();
     if (res.failure) {
-      throw Exception('can\'t logout from all devices');
+      throw Exception(
+          'can\'t log out from other devices, password didn\'t change');
     }
   }
 
@@ -419,5 +350,37 @@ class MongoDbAuthProvider extends AuthDbProvider
     if (res.failure) {
       throw Exception('can\'t update user data');
     }
+  }
+
+  @override
+  Future<bool> checkIfJwtIsActive(JWTPayloadModel jwt) async {
+    var authUpdates = dbService.mongoDbController
+        .collection(app.authSettings.authUpdatesCollName);
+    var doc = await authUpdates.doc(jwt.id).getData();
+    String? passwordValue = doc?[ModelFields.password];
+    if (passwordValue == null) {
+      // this means that the password was never updates
+      return true;
+    }
+    // here check if the password was updated after this jwt was created
+    DateTime? passwordChangeDate = DateTime.tryParse(passwordValue);
+    DateTime? jwtCreatedAt = DateTime.tryParse(jwt.createdAt);
+    if (passwordChangeDate == null || jwtCreatedAt == null) {
+      throw InvalidDateValue();
+    }
+    bool valid = jwtCreatedAt.isAfter(passwordChangeDate);
+    return valid;
+  }
+
+  Future<void> updateAuthInfo(
+    String userId,
+    String fieldName,
+    dynamic value,
+  ) async {
+    var authUpdates = dbService.mongoDbController
+        .collection(app.authSettings.authUpdatesCollName);
+    await authUpdates.doc(userId).update({
+      fieldName: value,
+    });
   }
 }

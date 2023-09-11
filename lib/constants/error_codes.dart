@@ -9,6 +9,7 @@ class ErrorCodes {
   static const String noServerSettings = 'no-server-settings-provided';
   static const String noUserDataSettings = 'no-user-data-settings-provided';
   static const String noEmailSettings = 'no-email-settings-provided';
+  static const String invalidDateValue = 'invalid-date-value';
   //? server error codes
   static const String noRouterSet = 'no-router-set';
   static const String requestBoyError = 'bad-body-provided';
@@ -41,6 +42,7 @@ class ErrorCodes {
   static const String noAppIdProvided = 'no-app-id-provided';
   static const String notAuthorizedAppId = 'not-authorized-appid';
   static const String userEmailNotVerified = 'user-email-not-verified';
+  static const String passwordChanged = 'password-changed';
 
   //? email errors
   static const String emailTemplateFileNotFound =

@@ -73,3 +73,11 @@ class NoEmailSettingsException extends AppExceptions {
           ErrorCodes.noUserDataSettings,
         );
 }
+
+class InvalidDateValue extends AppExceptions {
+  InvalidDateValue()
+      : super(
+          'invalid date value',
+          ErrorCodes.invalidDateValue,
+        );
+}

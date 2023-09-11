@@ -28,7 +28,6 @@ class Dashboard {
     DBSettings dbSettings = DBSettings(mongoDBProvider: _mongoDBProvider);
     AuthSettings authSettings = AuthSettings(
       jwtSecretKey: _mainApp.authSettings.jwtSecretKey,
-      maximumActiveJwts: 10000000,
     );
     UserDataSettings userDataSettings = const UserDataSettings();
     _app = App(

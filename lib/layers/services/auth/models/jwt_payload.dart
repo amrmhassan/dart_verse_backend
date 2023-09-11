@@ -7,7 +7,7 @@ class JWTPayloadModel {
   final String id;
   final String email;
   final String? ip;
-  final String? createdAt;
+  final String createdAt;
   final Map<String, dynamic> other;
 
   const JWTPayloadModel({
