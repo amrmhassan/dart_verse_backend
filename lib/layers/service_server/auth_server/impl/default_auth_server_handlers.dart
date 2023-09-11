@@ -246,16 +246,16 @@ class DefaultAuthServerHandlers implements AuthServerHandlers {
   ) {
     return _wrapper(request, response, pathArgs, () async {
       var body = await request.readAsJson();
-      String? email = body[ModelFields.email];
+      String? id = request.context[ContextFields.userId];
       String? oldPassword = body[BodyFields.oldPassword];
       String? newPassword = body[BodyFields.newPassword];
-      if (email == null || oldPassword == null || newPassword == null) {
+      if (id == null || oldPassword == null || newPassword == null) {
         throw RequestBodyError(
-            'email && oldPassword && newPassword can\'t be empty');
+            'user not logged in or (oldPassword or newPassword are empty)');
       }
 
       await authService.changePassword(
-        email,
+        id,
         oldPassword: oldPassword,
         newPassword: newPassword,
       );
@@ -319,8 +319,10 @@ class DefaultAuthServerHandlers implements AuthServerHandlers {
     ResponseHolder response,
     Map<String, dynamic> pathArgs,
   ) {
-    // TODO: implement logout
-    throw UnimplementedError();
+    return _wrapper(request, response, pathArgs, () async {
+      // TODO: implement logout
+      throw UnimplementedError();
+    });
   }
 
   //? this method will require the user to be logged in

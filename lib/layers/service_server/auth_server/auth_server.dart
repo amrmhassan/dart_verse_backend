@@ -1,22 +1,23 @@
 import 'package:dart_verse_backend/constants/path_fields.dart';
-import 'package:dart_verse_backend/layers/service_server/service_server.dart';
-import 'package:dart_verse_backend/layers/services/web_server/server_service.dart';
 import 'package:dart_verse_backend/layers/settings/app/app.dart';
+import 'package:dart_verse_backend/layers/service_server/service_server.dart';
+import 'package:dart_verse_backend/layers/services/web_server/models/router_info.dart';
 import 'package:dart_verse_backend/layers/service_server/auth_server/repo/auth_server_settings.dart';
 import 'package:dart_webcore/dart_webcore.dart';
 
 class AuthServer implements ServiceServerLayer {
   final AuthServerSettings _authServerSettings;
-  ServerService serverService;
-  AuthServer(this.serverService, this._authServerSettings);
+
+  @override
+  App app;
+  AuthServer(this.app, this._authServerSettings);
 
   AuthServerSettings get authServerSettings {
     return _authServerSettings;
   }
 
   @override
-  void addRouters() {
-    App app = serverService.app;
+  List<RouterInfo> addRouters() {
     String login = app.endpoints.authEndpoints.login;
     String register = app.endpoints.authEndpoints.register;
     String getVerificationEmail =
@@ -34,7 +35,7 @@ class AuthServer implements ServiceServerLayer {
     // String forgetPassword = _app.endpoints.authEndpoints.forgetPassword;
 
     // other needed data
-    int port = app.serverSettings.port;
+    int port = app.mainServerSettings.port;
     String host = app.backendHost;
 
     // adding auth endpoints pipeline
@@ -45,9 +46,7 @@ class AuthServer implements ServiceServerLayer {
         _authServerSettings.authServerHandlers.verifyEmail,
       )
       //? will check for app id from here
-      ..addRouterMiddleware(
-        _authServerSettings.authServerMiddlewares.checkAppId,
-      )
+
       ..post(
         login,
         _authServerSettings.authServerHandlers.login,
@@ -104,6 +103,7 @@ class AuthServer implements ServiceServerLayer {
         fullyDeleteUser,
         _authServerSettings.authServerHandlers.fullyDeleteUser,
       );
-    serverService.addRouter(authRouter);
+    RouterInfo authRouterInfo = RouterInfo(authRouter);
+    return [authRouterInfo];
   }
 }

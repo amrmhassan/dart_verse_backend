@@ -106,29 +106,6 @@ class DefaultAuthMiddlewares implements AuthServerMiddlewares {
   }
 
   @override
-  FutureOr<PassedHttpEntity> checkAppId(
-    RequestHolder request,
-    ResponseHolder response,
-    Map<String, dynamic> pathArgs,
-  ) {
-    return _wrapper(request, response, pathArgs, () async {
-      var allowedAppIds =
-          authService.authDbProvider.app.authSettings.allowedAppsIds;
-      // to skip checking app ids if null
-      if (allowedAppIds == null) return request;
-      String? appId = request.headers.value(HeaderFields.appId);
-
-      if (appId == null) {
-        throw NoAppIdException();
-      }
-      if (!allowedAppIds.any((element) => element == appId)) {
-        throw NonAuthorizedAppId();
-      }
-      return request;
-    });
-  }
-
-  @override
   FutureOr<PassedHttpEntity> checkUserEmailVerified(
     RequestHolder request,
     ResponseHolder response,

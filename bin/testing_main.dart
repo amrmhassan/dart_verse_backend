@@ -1,6 +1,16 @@
-import 'package:dart_verse_backend/dart_verse.dart';
-import 'package:dart_verse_backend/features/storage_permissions/data/datasources/storage_permission_source.dart';
+import 'package:dart_verse_backend/dashboard_server/features/app_check/data/datasources/api_key_generator.dart';
 
+List<String> apiKeys = [];
 void main(List<String> args) async {
-  await DartVerse.initializeApp();
+  ApiKeyGenerator generator =
+      ApiKeyGenerator(encrypterSecretKey: 'encrypterSecretKey');
+  for (var i = 0; i < 1000; i++) {
+    String apiKey = generator.generateApiKey('Shiaka', expireAfter: null);
+    if (apiKeys.contains(apiKey)) {
+      throw Exception('This api key already exists');
+    }
+    apiKeys.add(apiKey);
+    print(apiKey);
+  }
+  print(apiKeys.length);
 }

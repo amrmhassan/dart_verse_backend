@@ -8,14 +8,14 @@ part of 'storage_ref.dart';
 
 StorageRefModel _$StorageRefModelFromJson(Map<String, dynamic> json) =>
     StorageRefModel(
-      bucketId: json['bucketName'] as String?,
+      bucketId: json['bucketId'] as String?,
       ref: json['ref'] as String,
       type: json['type'] as String,
     );
 
 Map<String, dynamic> _$StorageRefModelToJson(StorageRefModel instance) =>
     <String, dynamic>{
-      'bucketName': instance.bucketId,
+      'bucketId': instance.bucketId,
       'ref': instance.ref,
       'type': instance.type,
     };

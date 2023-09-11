@@ -1,12 +1,12 @@
 import 'dart:io';
 
-import 'package:dart_verse_backend/features/storage_buckets/acm_permissions/controller/acm_permission_controller.dart';
-import 'package:dart_verse_backend/features/storage_buckets/impl/default_bucket_controller.dart';
-import 'package:dart_verse_backend/features/storage_buckets/repo/bucket_controller_repo.dart';
+import 'package:dart_verse_backend/features/storage_permissions/data/models/bucket_info.dart';
+import 'package:dart_verse_backend/features/storage_permissions/data/repositories/bucket_controller.dart';
+import 'package:dart_verse_backend/features/storage_permissions/data/repositories/permission_checker.dart';
+import 'package:dart_verse_backend/features/storage_permissions/data/repositories/permission_controller.dart';
 import 'package:dart_verse_backend/utils/string_utils.dart';
-import 'package:path/path.dart';
 
-String get defaultBucketsContainer => 'Buckets';
+const String defaultBucketsContainer = 'Buckets';
 
 class StorageBucket {
   /// this name is it's id, should be unique
@@ -23,8 +23,9 @@ class StorageBucket {
 
   /// this is the controller for bucket operations like creating validating and much more
   /// if null, this bucket controller will be assigned to a default bucket controller
-  late BucketControllerRepo _controller;
-  late ACMPermissionController _permissionsController;
+  late BucketController _controller;
+  late StoragePermissionController _permissionController;
+  late PermissionChecker _permissionChecker;
 
   /// this will represent if this storage bucket targets a sub dir inside that bucket or if null this mean that this ref targets
   /// the bucket dir itself
@@ -36,23 +37,29 @@ class StorageBucket {
     this.id, {
     String? parentFolderPath,
     this.maxAllowedSize,
-    BucketControllerRepo? controller,
     this.subRef,
     this.creatorId,
   }) {
-    _controller = controller ?? DefaultBucketController(this);
+    _controller = BucketController(this);
     _parentPath = parentFolderPath ?? defaultBucketsContainer;
     _parentPath = _parentPath.replaceAll('//', '/');
     _parentPath = _parentPath.replaceAll('\\', '/');
     _parentPath = _parentPath.strip('/');
-    _controller.createBucket();
-    _permissionsController = ACMPermissionController(this);
+    _permissionChecker = PermissionChecker(this);
+  }
+
+  Future<void> init() async {
+    await _controller.createBucket();
+    _permissionController = StoragePermissionController(this);
+    // await _permissionController.init();
   }
 
   String get folderPath => '$_parentPath/$id';
   String get parentPath => _parentPath;
-  BucketControllerRepo get controller => _controller;
-  ACMPermissionController get permissionsController => _permissionsController;
+  BucketController get controller => _controller;
+  StoragePermissionController get permissionsController =>
+      _permissionController;
+  PermissionChecker get permissionChecker => _permissionChecker;
 
   StorageBucket child(String name) {
     return StorageBucket(
@@ -69,7 +76,7 @@ class StorageBucket {
 //!
 //@ the creatorId will be stored in the bucket itself as a file containing the id of the creator
 // in this method parent i will know about a storage bucket by it's .acm file
-  StorageBucket? parent() {
+  Future<StorageBucket?> parent() async {
     try {
       String parentPath = Directory(folderPath).parent.path;
       return StorageBucket.fromPath(parentPath);
@@ -83,18 +90,15 @@ class StorageBucket {
     return subRef == null ? folderPath : '${folderPath.strip('/')}/${subRef!}';
   }
 
-  static StorageBucket? fromPath(String path) {
-    String acmFileName = ACMPermissionController.acmFileName;
-    String acmFilePath = '${path.strip('/')}/$acmFileName';
-    var acm = ACMPermissionController.isAcmFileValid(acmFilePath);
-    if (acm == null) return null;
+  static Future<StorageBucket?> fromPath(String path) async {
+    BucketInfo? info = await BucketController.fromPath(path);
+    if (info == null) return null;
     // here this means that the acm file is valid
-    var name = basename(path);
-    String creatorId = acm['creator_id'];
-    int? maxSize = acm['max_size'];
+    String? creatorId = info.creatorId;
+    int? maxSize = info.maxAllowedSize;
     Directory directory = Directory(path);
     return StorageBucket(
-      name,
+      info.id,
       creatorId: creatorId,
       maxAllowedSize: maxSize,
       parentFolderPath: directory.parent.path,

@@ -7,7 +7,6 @@ import 'package:dart_verse_backend/layers/services/storage_service/data/datasour
 import 'package:dart_verse_backend/layers/services/storage_service/data/models/storage_ref.dart';
 import 'package:dart_verse_backend/layers/services/storage_service/utils/buckets_store.dart';
 import 'package:dart_verse_backend/layers/settings/app/app.dart';
-import '../../../features/storage_buckets/repo/bucket_controller_repo.dart';
 
 class StorageService {
   final App app;
@@ -25,7 +24,6 @@ class StorageService {
     String id, {
     String? parentFolderPath,
     int? maxAllowedSize,
-    BucketControllerRepo? controller,
     required String creatorId,
   }) async {
     if (!_initialized) {
@@ -34,7 +32,6 @@ class StorageService {
     StorageBucket storageBucket = StorageBucket(
       id,
       creatorId: creatorId,
-      controller: controller,
       maxAllowedSize: maxAllowedSize,
       parentFolderPath: parentFolderPath,
     );

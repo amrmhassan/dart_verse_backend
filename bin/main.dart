@@ -18,16 +18,20 @@ import 'package:dart_verse_backend/layers/services/auth/auth_service.dart';
 import 'package:dart_verse_backend/layers/services/db_manager/db_providers/impl/mongo_db/mongo_db_provider.dart';
 import 'package:dart_verse_backend/layers/services/db_manager/db_service.dart';
 import 'package:dart_verse_backend/layers/services/storage_service/storage_service.dart';
+import 'package:dart_verse_backend/layers/services/web_server/models/router_info.dart';
 import 'package:dart_verse_backend/layers/services/web_server/server_service.dart';
 import 'package:dart_verse_backend/layers/settings/app/app.dart';
 import 'package:dart_verse_backend/layers/settings/auth_settings/auth_settings.dart';
 import 'package:dart_verse_backend/layers/settings/db_settings/db_settings.dart';
-import 'package:dart_verse_backend/layers/settings/server_settings/server_settings.dart';
+import 'package:dart_verse_backend/layers/settings/server_settings/entities/dashboard_server_settings.dart';
+import 'package:dart_verse_backend/layers/settings/server_settings/entities/http_server_setting.dart';
 import 'package:dart_verse_backend/layers/settings/storage_settings/storage_settings.dart';
 import 'package:dart_verse_backend/layers/settings/user_data_settings/user_data_settings.dart';
 import 'package:dart_webcore/dart_webcore.dart';
-
 import 'constants.dart';
+
+// flutter packages pub run build_runner build --delete-conflicting-outputs
+// flutter pub run build_runner watch --delete-conflicting-outputs
 
 // make all server storage operations pass through a single path, to hide the .acm permissions {folder}
 // save all bucket info inside a folder instead of a file (.acm)
@@ -35,6 +39,7 @@ import 'constants.dart';
 // save in this folder the permissions with the hive boxes
 // flutter packages pub run build_runner build --delete-conflicting-outputs
 // flutter pub run build_runner watch --delete-conflicting-outputs
+
 void main(List<String> arguments) async {
   //? pre settings layer
   await DartVerse.initializeApp();
@@ -45,9 +50,7 @@ void main(List<String> arguments) async {
   UserDataSettings userDataSettings = UserDataSettings();
   AuthSettings authSettings = AuthSettings(
     jwtSecretKey: SecretKey('jwtSecretKey'),
-    allowedAppsIds: ['amrhassan'],
   );
-  ServerSettings serverSettings = ServerSettings(InternetAddress.anyIPv4, 3000);
 
   StorageSettings storageSettings = StorageSettings();
 
@@ -55,9 +58,17 @@ void main(List<String> arguments) async {
     dbSettings: dbSettings,
     authSettings: authSettings,
     userDataSettings: userDataSettings,
-    serverSettings: serverSettings,
     storageSettings: storageSettings,
     backendHost: 'http://localhost:3000',
+    dashboardSettings: DashboardSettings(
+      dashboardConnLink: dashboardConnLink,
+      dashboardServerSettings: HttpServerSetting(InternetAddress.anyIPv4, 3001),
+      // appCheckSettings: AppCheckSettings(
+      //   clientApiAllowance: Duration(seconds: 2),
+      //   encrypterSecretKey: 'This is the encrypter key',
+      // ),
+    ),
+    mainServerSettings: HttpServerSetting(InternetAddress.anyIPv4, 3000),
   );
 
   //? service layer
@@ -72,25 +83,32 @@ void main(List<String> arguments) async {
   ServerService serverService = ServerService(
     app,
     authServerSettings: authServerSettings,
+    dbService: dbService,
   );
   var storageService = StorageService(app);
   //? service server layer
-  var authServer = AuthServer(serverService, authServerSettings);
-  var dbServer = DBServer(serverService, DefaultDbServerSettings(dbService));
+  var authServer = AuthServer(app, authServerSettings);
+  var dbServer = DBServer(app, DefaultDbServerSettings(dbService));
   var storageServer = StorageServer(
-      serverService, DefaultStorageServerSettings(storageService));
-  authServer.addRouters();
-  dbServer.addRouters();
-  storageServer.addRouters();
-
+    app,
+    DefaultStorageServerSettings(storageService),
+  );
+  serverService.serverRunner.serverHolder
+      .addGlobalMiddleware((request, response, pathArgs) {
+    // print(request.headers);
+    return request;
+  });
   Router router = Router()
-    ..get('/checkServerAlive',
-        (request, response, pathArgs) => response.write('Yes i am a live'));
+    ..get('/test', (request, response, pathArgs) => response.write('Hello'));
+  serverService.addRouter(RouterInfo(router, jwtSecured: true));
 
-  serverService.addRouter(router, appIdSecured: true);
   await storageService.init();
-  await serverService.runServer();
+  await serverService.runServers(
+    authServer: authServer,
+    dbServer: dbServer,
+    storageServer: storageServer,
+  );
 }
 
-    // //? visit this google oauth playground https://developers.google.com/oauthplayground to get more info about how to access google services for a google account
-    // //? and this link for google apis assess and manage https://developers.google.com/apis-explorer
+// //? visit this google oauth playground https://developers.google.com/oauthplayground to get more info about how to access google services for a google account
+// //? and this link for google apis assess and manage https://developers.google.com/apis-explorer

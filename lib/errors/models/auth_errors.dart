@@ -204,3 +204,11 @@ class UserEmailNotVerified extends JwtAuthException {
           ErrorCodes.userEmailNotVerified,
         );
 }
+
+class PasswordChangedException extends JwtAuthException {
+  PasswordChangedException()
+      : super(
+          'Password changed, please login again',
+          ErrorCodes.passwordChanged,
+        );
+}

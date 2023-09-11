@@ -24,11 +24,11 @@ class StorageBuckets {
 
     var bucketPath = BucketsStore.getBucketPath(id);
     if (bucketPath == null) return null;
-    StorageBucket? storageBucket = StorageBucket.fromPath(bucketPath);
+    StorageBucket? storageBucket = await StorageBucket.fromPath(bucketPath);
     if (storageBucket == null) return null;
     // _repo.add(storageBucket);
 
-    StorageBucket actualBucket = storageBucket.ref(subRef);
+    StorageBucket actualBucket = await storageBucket.ref(subRef);
     return actualBucket;
   }
 }

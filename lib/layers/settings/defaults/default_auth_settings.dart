@@ -4,5 +4,5 @@ class DefaultAuthSettings {
   static const String collectionName = DBCollections.auth;
   static const bool allowDuplicateEmails = false;
   static const Duration authExpireAfter = Duration(days: 3 * 30);
-  static const String activeTokensCollName = DBCollections.activeJWTs;
+  static const String authUpdatesCollName = DBCollections.authUpdatesCollName;
 }

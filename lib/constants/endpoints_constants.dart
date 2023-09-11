@@ -3,6 +3,7 @@ import 'package:dart_verse_backend/constants/path_fields.dart';
 class EndpointsConstants {
   // server
   static const String serverAlive = '/checkServerAlive';
+  static const String serverTime = '/getServerTime';
 
   // auth
   static const String login = '/login';
@@ -26,4 +27,11 @@ class EndpointsConstants {
 
   // db
   static const String getDbConnLink = '/getDbConnLink';
+  // apis control
+  static const String listApiKeys = '/listApiKeys';
+  static const String listApiHashes = '/listApiHashes';
+  static const String generateApiKey = '/generateApiKey';
+  static const String deleteApiKey = '/deleteApiKey';
+  static const String toggleApiKeyActiveness = '/toggleApiKeyActiveness';
+  static const String apiSecretDecryption = '/apiSecretDecryption';
 }
