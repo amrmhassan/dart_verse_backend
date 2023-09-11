@@ -69,7 +69,7 @@ class StorageService {
     String path = storageBucket.targetRefPath;
     return _storageDatasource.delete(
       path,
-      refModel.type,
+      refModel.type!,
       forceDelete,
     );
   }

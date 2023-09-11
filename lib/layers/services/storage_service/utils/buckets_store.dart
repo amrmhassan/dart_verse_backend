@@ -16,6 +16,7 @@ class BucketsStore {
   }
 
   static String? getBucketPath(String id) {
-    return _bucketsBox.get(id) as String?;
+    String? path = _bucketsBox.get(id) as String?;
+    return path;
   }
 }
