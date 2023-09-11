@@ -25,7 +25,7 @@ class MongoDbConnect {
       db = await _normalConnect(uri);
     }
 
-    logger.i('connected to mongo db.');
+    logger.i('connected to mongo db for App $_appName.');
 
     return db;
   }
