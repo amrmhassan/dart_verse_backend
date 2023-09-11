@@ -10,6 +10,7 @@ import 'package:dart_verse_backend/layers/services/db_manager/db_providers/impl/
 import 'package:dart_verse_backend/layers/services/db_manager/db_service.dart';
 import 'package:dart_verse_backend/layers/services/web_server/server_service.dart';
 import 'package:dart_verse_backend/layers/settings/app/app.dart';
+import 'package:dart_verse_backend/layers/settings/app/app_utils.dart';
 import 'package:dart_verse_backend/layers/settings/auth_settings/auth_settings.dart';
 import 'package:dart_verse_backend/layers/settings/db_settings/db_settings.dart';
 import 'package:dart_verse_backend/layers/settings/server_settings/entities/dashboard_server_settings.dart';
@@ -31,6 +32,7 @@ class Dashboard {
     );
     UserDataSettings userDataSettings = const UserDataSettings();
     _app = App(
+      appName: AppUtils.dashboardAppName,
       backendHost: null,
       dbSettings: dbSettings,
       dashboardSettings: null,

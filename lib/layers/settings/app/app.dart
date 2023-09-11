@@ -2,6 +2,7 @@
 // it will require settings for auth, database, realtime database, etc...
 import 'package:dart_verse_backend/errors/models/app_exceptions.dart';
 import 'package:dart_verse_backend/errors/models/storage_errors.dart';
+import 'package:dart_verse_backend/layers/settings/app/app_utils.dart';
 import 'package:dart_verse_backend/layers/settings/auth_settings/auth_settings.dart';
 import 'package:dart_verse_backend/layers/settings/db_settings/db_settings.dart';
 import 'package:dart_verse_backend/layers/settings/email_settings/email_settings.dart';
@@ -19,6 +20,7 @@ import 'package:dart_verse_backend/layers/settings/server_settings/entities/dash
 //? only pass the dashboard settings to the app settings of the dashboard app
 //? separate the server settings
 class App {
+  late String _appName;
   final AuthSettings? _authSettings;
   final DBSettings? _dbSettings;
   final UserDataSettings? _userDataSettings;
@@ -33,6 +35,9 @@ class App {
   /// this is basically the base url <br>
   late String _backendHost;
   App({
+    /// app name must consist of numbers, english letters(capital, small) or spaces
+    /// must be unique for each app, or data between apps will be overwritten
+    required String appName,
     AuthSettings? authSettings,
     DBSettings? dbSettings,
     UserDataSettings? userDataSettings,
@@ -49,7 +54,10 @@ class App {
         _storageSettings = storageSettings {
     _endpoints = endpoints ?? defaultEndpoints;
     _backendHost = backendHost?.strip('/') ?? '';
+    _appName = AppUtils().appNameCleaner(appName);
   }
+
+  String get appName => _appName;
 
   //# getting difference settings instances
   AuthSettings get authSettings {

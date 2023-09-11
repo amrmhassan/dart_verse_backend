@@ -4,8 +4,9 @@ import 'package:mongo_dart/mongo_dart.dart';
 import '../../../../layers/settings/db_settings/repo/conn_link.dart';
 
 class MongoDbConnect {
+  final String _appName;
   final MongoDbConnLink? _connLink;
-  const MongoDbConnect(this._connLink);
+  const MongoDbConnect(this._connLink, this._appName);
 
   Future<Db?> connect() async {
     String? uri = _connLink?.getConnLink;
@@ -16,7 +17,7 @@ class MongoDbConnect {
 
     late Db db;
 
-    logger.i('trying to connect to mongo db...');
+    logger.i('trying to connect to mongo db for app $_appName...');
 
     if (_connLink is MongoDbDNSConnLink) {
       db = await _dnsConnect(uri);
@@ -24,7 +25,7 @@ class MongoDbConnect {
       db = await _normalConnect(uri);
     }
 
-    logger.i('connected to mongo db.');
+    logger.i('connected to mongo db for App $_appName.');
 
     return db;
   }

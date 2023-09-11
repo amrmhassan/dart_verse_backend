@@ -10,7 +10,7 @@ StorageRefModel _$StorageRefModelFromJson(Map<String, dynamic> json) =>
     StorageRefModel(
       bucketId: json['bucketId'] as String?,
       ref: json['ref'] as String,
-      type: json['type'] as String,
+      type: json['type'] as String?,
     );
 
 Map<String, dynamic> _$StorageRefModelToJson(StorageRefModel instance) =>

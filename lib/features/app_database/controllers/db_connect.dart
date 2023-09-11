@@ -17,7 +17,8 @@ class DbConnect {
     if (_app.dbSettings.mongoDBProvider != null) {
       MongoDbConnLink mongoDbConnLink =
           _app.dbSettings.mongoDBProvider!.connLink;
-      MongoDbConnect mongoDbConnect = MongoDbConnect(mongoDbConnLink);
+      MongoDbConnect mongoDbConnect =
+          MongoDbConnect(mongoDbConnLink, _app.appName);
       Db? db = await mongoDbConnect.connect();
       // setting the app _db because the app depends on it
       if (db != null) {

@@ -4,7 +4,7 @@
 import 'package:dart_verse_backend/features/storage_buckets/models/storage_bucket_model.dart';
 
 class BucketPermissionsRepo {
-  late StorageBucket bucket;
+  late StorageBucketModel bucket;
   // each bucket will have 4 default permissions (write, read, delete, editPermissions) and will be stored in .acm binary file
   // each bucket .acm file will contain sub files permissions or sub files .acm files
   // -- for example bucket called amr with some files profilePic, personalPic

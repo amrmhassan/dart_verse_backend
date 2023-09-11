@@ -99,7 +99,7 @@ class DefaultStorageServerHandlers implements StorageServerHandlers {
       String? bucketName = pathArgs[PathFields.bucketName] == 'null'
           ? null
           : pathArgs[PathFields.bucketName];
-      StorageBucket? storageBucket =
+      StorageBucketModel? storageBucket =
           await _storageBuckets.getBucketById(bucketName);
       if (storageBucket == null) {
         throw NoBucketException(bucketName);
@@ -130,7 +130,8 @@ class DefaultStorageServerHandlers implements StorageServerHandlers {
       // if the bucket name is null or not sent then the user will upload or deal with the default bucket
       // if the user user sent bucket not found an error will be returned to the user
       String? bucketName = request.headers.value(HeaderFields.bucketName);
-      StorageBucket? bucket = await _storageBuckets.getBucketById(bucketName);
+      StorageBucketModel? bucket =
+          await _storageBuckets.getBucketById(bucketName);
       String? onFileExist = request.headers.value(HeaderFields.onFileExist);
       String? fileName = request.headers.value(HeaderFields.fileName);
       //! add this file name to the receive file on the dart_webcore
@@ -161,7 +162,8 @@ class DefaultStorageServerHandlers implements StorageServerHandlers {
       // but now i need a way to get the path of the file i want to save like
 
       String ref = request.headers.value(HeaderFields.ref) ?? '/';
-      StorageBucket refBucket = ref == '/' ? bucket : await bucket.ref(ref);
+      StorageBucketModel refBucket =
+          ref == '/' ? bucket : await bucket.ref(ref);
       //! here i should check if this permission is allowed from the refBucket and the operation write
 
       //? bucket permissions will be checked for the refBucket not the original bucket
