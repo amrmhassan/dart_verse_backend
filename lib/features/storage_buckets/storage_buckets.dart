@@ -11,17 +11,12 @@ StorageBucket _defaultStorageBucket(String? subDirRef) {
 }
 
 class StorageBuckets {
+  static StorageBucket get defaultBucket => _defaultStorageBucket(null);
   Future<StorageBucket?> getBucketById(
     String? id, {
     String? subRef,
   }) async {
     if (id == null) return _defaultStorageBucket(subRef);
-    // StorageBucket? bucket = _repo.cast().firstWhere(
-    //       (element) => element.name == name,
-    //       orElse: () => null,
-    //     );
-    // if (bucket != null) return bucket;
-
     var bucketPath = BucketsStore.getBucketPath(id);
     if (bucketPath == null) return null;
     StorageBucket? storageBucket = await StorageBucket.fromPath(bucketPath);

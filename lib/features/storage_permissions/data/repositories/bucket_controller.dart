@@ -65,7 +65,7 @@ class BucketController {
     SBBoxes sbBoxes = SBBoxes(storageBucket.id);
     BucketInfo? savedInfo = await _fromBoxes(sbBoxes);
     if (savedInfo != null) {
-      await _validateSavedBucketInfo(savedInfo);
+      _validateSavedBucketInfo(savedInfo);
       _bucketInfo = savedInfo;
       return savedInfo;
     }
@@ -87,7 +87,7 @@ class BucketController {
     return PermissionParser.infoParser(infoBox);
   }
 
-  Future<void> _validateSavedBucketInfo(BucketInfo savedInfo) async {
+  void _validateSavedBucketInfo(BucketInfo savedInfo) {
     if (storageBucket.folderPath.strip('/') != savedInfo.path.strip('/')) {
       throw ProhebitedBucketEditException();
     }
@@ -129,6 +129,9 @@ class BucketController {
     try {
       SBBoxes sbBoxes = SBBoxes.fromPath(bucketPath);
       BucketInfo? info = await _fromBoxes(sbBoxes);
+      if (info == null) {
+        // here i will create and initialize the bucket and return it's info
+      }
       return info;
     } catch (e) {
       return null;

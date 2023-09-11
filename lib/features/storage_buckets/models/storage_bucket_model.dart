@@ -45,13 +45,12 @@ class StorageBucket {
     _parentPath = _parentPath.replaceAll('//', '/');
     _parentPath = _parentPath.replaceAll('\\', '/');
     _parentPath = _parentPath.strip('/');
-    _permissionChecker = PermissionChecker(this);
   }
 
   Future<void> init() async {
     await _controller.createBucket();
     _permissionController = StoragePermissionController(this);
-    // await _permissionController.init();
+    _permissionChecker = PermissionChecker(this);
   }
 
   String get folderPath => '$_parentPath/$id';

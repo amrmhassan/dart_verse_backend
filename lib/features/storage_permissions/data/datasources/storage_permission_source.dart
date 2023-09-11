@@ -43,15 +43,10 @@ class SBBoxes {
 
 //? this will return the box for the bucket info, permissions
   Future<Box> bucketBox() async {
-    Box box = await Hive.openBox(SPConstants.bucketPermissionsBox,
-        path: _dataDir.path);
+    Box box = await Hive.openBox(
+      SPConstants.bucketPermissionsBox,
+      path: _dataDir.path,
+    );
     return box;
   }
-
-// this will return the box for the refs inside the bucket
-//   Future<Box> refMapBox() async {
-//     Box box =
-//         await Hive.openBox(SPConstants.redMappingBox, path: _dataDir.path);
-//     return box;
-//   }
 }

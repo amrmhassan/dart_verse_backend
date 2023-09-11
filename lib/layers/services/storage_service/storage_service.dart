@@ -17,6 +17,8 @@ class StorageService {
 
   Future<void> init() async {
     await BucketsStore().init();
+    // var defaultBucket = StorageBuckets.defaultBucket;
+    // await defaultBucket.init();
     _initialized = true;
   }
 
@@ -56,8 +58,8 @@ class StorageService {
           bucketId: storageBucket.id,
           ref: ref,
           type: e.statSync().type == FileSystemEntityType.file
-              ? 'file'
-              : 'folder',
+              ? EntityType.file
+              : EntityType.folder,
         );
       },
     ).toList();
