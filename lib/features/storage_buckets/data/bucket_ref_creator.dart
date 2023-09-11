@@ -1,7 +1,7 @@
 import 'package:dart_verse_backend/features/storage_buckets/models/storage_bucket_model.dart';
 import 'package:dart_verse_backend/utils/string_utils.dart';
 
-extension BucketRefCreator on StorageBucket {
+extension BucketRefCreator on StorageBucketModel {
   ///? this will migrate from the requested bucket in the headers to <br>
   ///? another bucket reached from the ref, but the allowing rules will be applied from the referenced bucket <br>
   ///? but if there is no storage bucket from the ref, this will return the original bucket with it's rule <br>
@@ -26,10 +26,10 @@ extension BucketRefCreator on StorageBucket {
   //b -- path is main/stores/store1/images/image1.jpg
   // -- the bucket must be store1 and the subDirRef will be images
 
-  Future<StorageBucket> ref(String? path) async {
+  Future<StorageBucketModel> ref(String? path) async {
     path ??= '';
     List<String> iterations = path.strip('/').split('/');
-    StorageBucket nearestSubBucket = this;
+    StorageBucketModel nearestSubBucket = this;
     subRef = path;
     String collector = '';
     int nearestBucketIndex = -1;
@@ -37,7 +37,8 @@ extension BucketRefCreator on StorageBucket {
     for (int i = 0; i < iterations.length; i++) {
       String iteration = iterations[i];
       collector = '$collector$iteration/';
-      StorageBucket? currentBucket = await StorageBucket.fromPath(collector);
+      StorageBucketModel? currentBucket =
+          await StorageBucketModel.fromPath(collector);
       // StorageBucket? currentBucket = collector == 'stores/store1/'
       //     ? StorageBucket(
       //         'store1',

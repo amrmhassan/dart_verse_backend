@@ -55,6 +55,7 @@ void main(List<String> arguments) async {
   StorageSettings storageSettings = StorageSettings();
 
   App app = App(
+    appName: 'MainApp',
     dbSettings: dbSettings,
     authSettings: authSettings,
     userDataSettings: userDataSettings,

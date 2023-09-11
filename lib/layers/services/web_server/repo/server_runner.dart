@@ -46,6 +46,9 @@ class ServerRunner {
       backlog: setting.backlog,
       shared: setting.shared,
       v6Only: setting.v6Only,
+      afterServerMessage: (protocol, address, port) {
+        return 'listening on $protocol://$address:$port for App ${_app.appName}';
+      },
     );
   }
 
@@ -59,6 +62,9 @@ class ServerRunner {
       backlog: setting.backlog,
       shared: setting.shared,
       v6Only: setting.v6Only,
+      afterServerMessage: (protocol, address, port) {
+        return 'listening on $protocol://$address:$port for App ${_app.appName}';
+      },
     );
   }
 }

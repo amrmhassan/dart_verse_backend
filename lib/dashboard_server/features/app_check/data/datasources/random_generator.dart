@@ -1,10 +1,11 @@
 import 'dart:math';
 
+const charset =
+    'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+
 class RandomGenerator {
   String generate(int length) {
     final random = Random.secure();
-    const charset =
-        'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
     String apiKey = '';
 

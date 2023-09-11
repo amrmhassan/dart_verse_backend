@@ -28,7 +28,7 @@ bool _valid(String name) {
 }
 
 class BucketController {
-  final StorageBucket storageBucket;
+  final StorageBucketModel storageBucket;
   BucketInfo? _bucketInfo;
   BucketInfo get bucketInfo {
     if (_bucketInfo == null) {
@@ -48,7 +48,7 @@ class BucketController {
       try {
         directory.createSync(recursive: true);
         // here just add the bucket id to the buckets data
-        _saveBucketId();
+        await _saveBucketId();
       } catch (e) {
         throw StorageBucketFolderPathException(
             'can\'t create the bucket folder, $e');
@@ -62,10 +62,13 @@ class BucketController {
   }
 
   Future<BucketInfo> _createBucketInfoBox() async {
-    SBBoxes sbBoxes = SBBoxes(storageBucket.id);
-    BucketInfo? savedInfo = await _fromBoxes(sbBoxes);
+    SBBoxes sbBoxes = SBBoxes(
+      storageBucket.id,
+      create: true,
+    );
+    BucketInfo? savedInfo = await _fromBoxes(sbBoxes, storageBucket.folderPath);
     if (savedInfo != null) {
-      await _validateSavedBucketInfo(savedInfo);
+      _validateSavedBucketInfo(savedInfo);
       _bucketInfo = savedInfo;
       return savedInfo;
     }
@@ -82,12 +85,16 @@ class BucketController {
     return info;
   }
 
-  static Future<BucketInfo?> _fromBoxes(SBBoxes sbBoxes) async {
+  static Future<BucketInfo?> _fromBoxes(
+    SBBoxes sbBoxes,
+    String bucketPath,
+  ) async {
     var infoBox = await sbBoxes.bucketBox();
-    return PermissionParser.infoParser(infoBox);
+    var info = PermissionParser.infoParser(infoBox);
+    return info;
   }
 
-  Future<void> _validateSavedBucketInfo(BucketInfo savedInfo) async {
+  void _validateSavedBucketInfo(BucketInfo savedInfo) {
     if (storageBucket.folderPath.strip('/') != savedInfo.path.strip('/')) {
       throw ProhebitedBucketEditException();
     }
@@ -107,7 +114,7 @@ class BucketController {
     }
   }
 
-  void _saveBucketId() {
+  Future<void> _saveBucketId() async {
     String name = storageBucket.id;
     String path = storageBucket.folderPath;
     var bucketExist = BucketsStore.bucketsBox.get(name);
@@ -117,7 +124,7 @@ class BucketController {
       }
     }
 
-    BucketsStore.putBucket(name, path);
+    await BucketsStore.putBucket(name, path);
   }
 
   Directory _bucketDir() {
@@ -128,7 +135,11 @@ class BucketController {
   static Future<BucketInfo?> fromPath(String bucketPath) async {
     try {
       SBBoxes sbBoxes = SBBoxes.fromPath(bucketPath);
-      BucketInfo? info = await _fromBoxes(sbBoxes);
+      BucketInfo? info = await _fromBoxes(sbBoxes, bucketPath);
+      // if (info == null) {
+      // here i will create and initialize the bucket and return it's info
+      // don't do that
+      // }
       return info;
     } catch (e) {
       return null;
