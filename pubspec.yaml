@@ -3,6 +3,7 @@ description: A new Flutter package project.
 version: 0.0.1
 homepage:
 
+
 environment:
   sdk: '>=3.1.0 <4.0.0'
   flutter: ">=1.17.0"
@@ -15,8 +16,7 @@ dependencies:
   async: ^2.11.0
   crypto: ^3.0.3
   dart_jsonwebtoken: ^2.7.1
-  dart_webcore: 
-    path: ../dart_webcore
+
   dotenv: ^4.1.0
   encrypt: ^5.0.1
   google_sign_in: ^6.1.0
@@ -32,6 +32,7 @@ dependencies:
   uuid: ^3.0.7
   googleapis_auth: ^1.4.1
   googleapis: ^11.4.0
+  dart_webcore: ^0.3.0
 
 
 
