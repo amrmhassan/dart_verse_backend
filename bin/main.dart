@@ -101,7 +101,7 @@ void main(List<String> arguments) async {
   });
   Router router = Router()
     ..get('/test', (request, response, pathArgs) => response.write('Hello'));
-  serverService.addRouter(RouterInfo(router, jwtSecured: true));
+  serverService.addRouter(RouterInfo(router));
 
   await storageService.init();
   await serverService.runServers(
