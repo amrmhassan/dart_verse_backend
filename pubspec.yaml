@@ -1,18 +1,17 @@
 name: dart_verse_backend
-description: A new Flutter package project.
-version: 0.0.1
-homepage:
-
+description: A starting point for Dart libraries or applications.
+version: 1.0.0
+# repository: https://github.com/my_org/my_repo
 
 environment:
-  sdk: '>=3.1.0 <4.0.0'
+  sdk: ^3.1.2
 
+# Add regular dependencies here.
 dependencies:
   archive: ^3.3.7
   async: ^2.11.0
   crypto: ^3.0.3
   dart_jsonwebtoken: ^2.7.1
-
   dotenv: ^4.1.0
   encrypt: ^5.0.1
   google_sign_in: ^6.1.0
@@ -27,7 +26,6 @@ dependencies:
   path: ^1.8.3
   uuid: ^3.0.7
   dart_webcore: ^0.3.0
-
 
 
 dev_dependencies:
