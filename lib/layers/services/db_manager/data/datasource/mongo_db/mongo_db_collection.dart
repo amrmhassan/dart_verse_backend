@@ -18,7 +18,7 @@ class MongoDbCollection extends DbCollection {
 
     List<Map<String, dynamic>> data = [];
 
-    var stream = find().listen((event) {
+    var stream = find(selector).listen((event) {
       data.add(event);
     });
     stream.onDone(() {
