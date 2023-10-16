@@ -18,6 +18,11 @@ class ServerRunner {
       _pipeline,
       onPathNotFound: (request, response, pathArgs) {
         if (disableCORS && request.request.method.toLowerCase() == 'options') {
+          request.response.headers.add('Access-Control-Allow-Origin', '*');
+          request.response.headers.add('Access-Control-Allow-Methods',
+              'GET, POST, PUT, DELETE, OPTIONS');
+          request.response.headers.add('Access-Control-Allow-Headers',
+              'Origin, X-Requested-With, Content-Type, Accept');
           return response
             ..write('CORS disabled', code: HttpStatus.noContent)
             ..close();
