@@ -30,9 +30,7 @@ FutureOr<PassedHttpEntity> _corsMiddleWare(
   if (request.request.method == 'OPTIONS') {
     // Pre-flight request response
     request.response.response.statusCode = HttpStatus.noContent;
-    return response
-      ..write('Options done')
-      ..close();
+    return response..close();
   }
   return request;
 }
