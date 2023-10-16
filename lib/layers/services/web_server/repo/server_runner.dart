@@ -7,9 +7,27 @@ class ServerRunner {
   final App _app;
   final Pipeline _pipeline;
   late ServerHolder _serverHolder;
+  final bool disableCORS;
 
-  ServerRunner(this._app, this._pipeline) {
-    _serverHolder = ServerHolder(_pipeline);
+  ServerRunner(
+    this._app,
+    this._pipeline, {
+    required this.disableCORS,
+  }) {
+    _serverHolder = ServerHolder(
+      _pipeline,
+      onPathNotFound: (request, response, pathArgs) {
+        if (disableCORS && request.request.method.toLowerCase() == 'options') {
+          return response
+            ..write('CORS disabled', code: HttpStatus.noContent)
+            ..close();
+        } else {
+          return response
+            ..write('Path Not Found')
+            ..close();
+        }
+      },
+    );
   }
 
   /// this is the main server helper

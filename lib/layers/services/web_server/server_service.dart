@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:dart_verse_backend/dashboard_server/dashboard.dart';
 import 'package:dart_verse_backend/dashboard_server/features/app_check/server/app_check_middleware.dart';
 import 'package:dart_verse_backend/layers/service_server/auth_server/auth_server.dart';
@@ -12,6 +13,29 @@ import 'package:dart_verse_backend/layers/services/web_server/models/router_info
 import 'package:dart_verse_backend/layers/services/web_server/repo/server_runner.dart';
 import 'package:dart_verse_backend/layers/settings/app/app.dart';
 import 'package:dart_webcore/dart_webcore.dart';
+import 'package:dart_webcore/dart_webcore/server/impl/response_holder.dart';
+import 'package:dart_webcore/dart_webcore/server/repo/passed_http_entity.dart';
+
+FutureOr<PassedHttpEntity> _corsMiddleWare(
+  request,
+  ResponseHolder response,
+  pathArgs,
+) {
+  // Enable CORS by setting the necessary headers
+  request.response.headers.add('Access-Control-Allow-Origin', '*');
+  request.response.headers
+      .add('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  request.response.headers.add('Access-Control-Allow-Headers',
+      'Origin, X-Requested-With, Content-Type, Accept');
+  if (request.request.method == 'OPTIONS') {
+    // Pre-flight request response
+    request.response.response.statusCode = HttpStatus.noContent;
+    return response
+      ..write('Options done')
+      ..close();
+  }
+  return request;
+}
 
 //! move handlers  of the auth service to a middle step between the authService and serverService
 //! you can call this step serverAuth
@@ -21,14 +45,20 @@ class ServerService {
   final AuthServerSettings authServerSettings;
   final DbService dbService;
   late Dashboard _dashboard;
+  final bool disableCORS;
 
   ServerService(
     this.app, {
     required this.authServerSettings,
     required this.dbService,
+    this.disableCORS = false,
   }) {
     _pipeline = Pipeline();
-    serverRunner = ServerRunner(app, _pipeline);
+    serverRunner = ServerRunner(
+      app,
+      _pipeline,
+      disableCORS: disableCORS,
+    );
     if (app.dashboardSettings != null) {
       _dashboard = Dashboard(app.dashboardSettings!, app);
     }
@@ -58,6 +88,9 @@ class ServerService {
     bool jwtSecured = routerInfo.jwtSecured;
     bool emailMustBeVerified = routerInfo.emailMustBeVerified;
     Router router = routerInfo.router;
+    if (disableCORS) {
+      router.addUpperMiddleware(null, HttpMethods.all, _corsMiddleWare);
+    }
 
     //? run checks here
     if (!jwtSecured && emailMustBeVerified) {
