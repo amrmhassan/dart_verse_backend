@@ -13,7 +13,7 @@ import 'package:dart_verse_backend/layers/services/web_sockets/data/models/web_s
 class WebSockets {
   final HttpServer server;
   late Stream<WebSocket> webSocketServer;
-  final List<WebSocketModel> _sockets = [];
+  // final List<WebSocketModel> _sockets = [];
 
   WebSockets(this.server) {
     //
