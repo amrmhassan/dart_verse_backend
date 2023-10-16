@@ -23,7 +23,3 @@ MongoDbConnLink localConnLink = const DNSHostFullLink(
 MongoDbConnLink dashboardConnLink = const DNSHostFullLink(
   connLink: 'mongodb://localhost:27017/dashboard',
 );
-
-const String clientId =
-    '339385684924-9itqkqk4afkpgo0449882ftllciqv7ah.apps.googleusercontent.com';
-const String clientSecret = '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';
