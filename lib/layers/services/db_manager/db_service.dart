@@ -11,6 +11,15 @@ class DbService implements DVService {
   final App _app;
   DbService(App app) : _app = app;
   bool _dbConnected = false;
+  Db? db;
+
+  bool get connected {
+    return db != null && db!.masterConnection.connected;
+  }
+
+  Future<void> reconnect() async {
+    await connectToDb(force: true);
+  }
 
   /// MongoDb controller
   MongoDbController get mongoDbController {
@@ -43,16 +52,19 @@ class DbService implements DVService {
   }
 
   //#  Connect DBs
-  Future<void> connectToDb() async {
-    if (_dbConnected) {
+  Future<Db?> connectToDb({
+    bool force = false,
+  }) async {
+    if (_dbConnected && !force) {
       throw DbAlreadyConnectedException();
     }
     DbConnect dbConnect = DbConnect(_app);
-    await dbConnect.connectAllProvidedDBs(
+    db = await dbConnect.connectAllProvidedDBs(
       setMemoryController: _setMemoryController,
       setMongoDb: _setMongoDb,
     );
     _dbConnected = true;
+    return db;
   }
 
   //# setting DBs after connecting

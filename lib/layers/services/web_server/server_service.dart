@@ -89,6 +89,14 @@ class ServerService {
     if (disableCORS) {
       router.addUpperMiddleware(null, HttpMethods.all, _corsMiddleWare);
     }
+    // this middleware will check for db auto reconnecting
+    router.addUpperMiddleware(null, HttpMethods.all,
+        (request, response, pathArgs) async {
+      if (dbService.connected) return request;
+      await dbService.reconnect();
+
+      return request;
+    });
 
     //? run checks here
     if (!jwtSecured && emailMustBeVerified) {

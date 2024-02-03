@@ -9,17 +9,18 @@ class DbConnect {
   final App _app;
 
   const DbConnect(this._app);
-  Future<void> connectAllProvidedDBs({
+  Future<Db?> connectAllProvidedDBs({
     required Function(MemoryDbController) setMemoryController,
     required Function(Db) setMongoDb,
   }) async {
+    Db? db;
     //? trying to connect to mongodb if exist
     if (_app.dbSettings.mongoDBProvider != null) {
       MongoDbConnLink mongoDbConnLink =
           _app.dbSettings.mongoDBProvider!.connLink;
       MongoDbConnect mongoDbConnect =
           MongoDbConnect(mongoDbConnLink, _app.appName);
-      Db? db = await mongoDbConnect.connect();
+      db = await mongoDbConnect.connect();
       // setting the app _db because the app depends on it
       if (db != null) {
         setMongoDb(db);
@@ -33,5 +34,6 @@ class DbConnect {
       await memoryDbConnect.connect();
       setMemoryController(MemoryDbController(memoryDb));
     }
+    return db;
   }
 }
