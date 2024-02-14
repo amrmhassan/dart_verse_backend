@@ -1,7 +1,7 @@
 name: dart_verse_backend
 description: The ultimate dart backend framework. 
 homepage: https://github.com/amrmhassan/dart_verse_backend
-version: 1.1.0
+version: 1.2.0
 # repository: https://github.com/my_org/my_repo
 
 environment:
