@@ -7,3 +7,9 @@
 
 ## 1.2.0
 * Patch added to cors exception
+
+## 1.3.0
+* all requests accepted
+
+## 1.4.0
+* returned to origin

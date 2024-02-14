@@ -23,8 +23,8 @@ FutureOr<PassedHttpEntity> _corsMiddleWare(
 ) {
   // Enable CORS by setting the necessary headers
   request.response.headers.add('Access-Control-Allow-Origin', '*');
-  request.response.headers.add(
-      'Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
+  request.response.headers
+      .add('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   request.response.headers.add('Access-Control-Allow-Headers',
       'Origin, X-Requested-With, Content-Type, Accept');
   if (request.request.method == 'OPTIONS') {
