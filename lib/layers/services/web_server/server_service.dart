@@ -20,17 +20,20 @@ FutureOr<PassedHttpEntity> _corsMiddleWare(
   request,
   ResponseHolder response,
   pathArgs,
-) {
+) async {
   // Enable CORS by setting the necessary headers
-  request.response.headers.add('Access-Control-Allow-Origin', '*');
+  request.response.headers.add(HttpHeaders.accessControlAllowOriginHeader, '*');
   request.response.headers
-      .add('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  request.response.headers.add('Access-Control-Allow-Headers',
-      'Origin, X-Requested-With, Content-Type, Accept');
-  if (request.request.method == 'OPTIONS') {
-    // Pre-flight request response
-    request.response.response.statusCode = HttpStatus.noContent;
-    return response..close();
+      .add(HttpHeaders.accessControlAllowMethodsHeader, '*');
+  request.response.headers
+      .add(HttpHeaders.accessControlAllowHeadersHeader, '*');
+
+  // Handle preflight request (OPTIONS)
+  if (request.method == 'OPTIONS') {
+    request.response.statusCode = HttpStatus.noContent;
+
+    await response.close();
+    return response;
   }
   return request;
 }
