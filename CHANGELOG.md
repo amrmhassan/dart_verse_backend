@@ -16,3 +16,6 @@
 
 ## 1.5.0
 * CORS error handling and moved to a new package
+
+## 1.6.0
+* CORS updated
