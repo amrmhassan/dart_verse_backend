@@ -21,20 +21,34 @@ FutureOr<PassedHttpEntity> _corsMiddleWare(
   ResponseHolder response,
   pathArgs,
 ) async {
-  // Enable CORS by setting the necessary headers
-  request.response.headers.add(HttpHeaders.accessControlAllowOriginHeader, '*');
-  request.response.headers
-      .add(HttpHeaders.accessControlAllowMethodsHeader, '*');
-  request.response.headers
-      .add(HttpHeaders.accessControlAllowHeadersHeader, '*');
+  var method = request.request.method;
 
-  // Handle preflight request (OPTIONS)
-  if (request.method == 'OPTIONS') {
-    request.response.statusCode = HttpStatus.noContent;
+  // Extract requested headers from the OPTIONS preflight request
+  var requestedHeaders =
+      request.request.headers[HttpHeaders.accessControlRequestHeadersHeader];
 
+  // Add CORS headers
+  request.response.headers
+    ..set(HttpHeaders.accessControlAllowOriginHeader, '*')
+    ..set(HttpHeaders.accessControlAllowMethodsHeader,
+        'GET, POST, PUT, DELETE, OPTIONS');
+
+  // Allow the requested headers from the preflight request
+  if (requestedHeaders != null) {
+    request.response.headers.set(HttpHeaders.accessControlAllowHeadersHeader,
+        requestedHeaders.join(', '));
+  } else {
+    // If no specific headers were requested, allow all common headers
+    request.response.headers
+        .set(HttpHeaders.accessControlAllowHeadersHeader, '*');
+  }
+
+  if (method == 'OPTIONS') {
+    request.request.response.statusCode = HttpStatus.noContent;
     await response.close();
     return response;
   }
+
   return request;
 }
 
