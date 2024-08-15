@@ -1,11 +1,11 @@
 // ignore_for_file: overridden_fields
 
-import 'package:dart_verse_backend/constants/model_fields.dart';
-import 'package:dart_verse_backend/constants/reserved_keys.dart';
-import 'package:dart_verse_backend/errors/models/auth_errors.dart';
-import 'package:dart_verse_backend/features/auth_db_provider/repo/mongo_db_repo_provider.dart';
-import 'package:dart_verse_backend/features/user_data_db_provider/user_data_db_provider.dart';
-import 'package:dart_verse_backend/layers/services/db_manager/db_service.dart';
+import 'package:dart_verse_backend_new/constants/model_fields.dart';
+import 'package:dart_verse_backend_new/constants/reserved_keys.dart';
+import 'package:dart_verse_backend_new/errors/models/auth_errors.dart';
+import 'package:dart_verse_backend_new/features/auth_db_provider/repo/mongo_db_repo_provider.dart';
+import 'package:dart_verse_backend_new/features/user_data_db_provider/user_data_db_provider.dart';
+import 'package:dart_verse_backend_new/layers/services/db_manager/db_service.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 import '../../../layers/settings/app/app.dart';

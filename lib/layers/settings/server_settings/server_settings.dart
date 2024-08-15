@@ -1,4 +1,4 @@
-// import 'package:dart_verse_backend/layers/settings/server_settings/entities/http_server_setting.dart';
+// import 'package:dart_verse_backend_new/layers/settings/server_settings/entities/http_server_setting.dart';
 
 // //? delete this server settings and pass each settings individually
 // //? make the dashboard settings to hold all dashboard settings including dashboardServerSettings

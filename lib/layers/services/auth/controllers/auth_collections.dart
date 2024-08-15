@@ -1,5 +1,5 @@
-// import 'package:dart_verse_backend/services/db_manager/db_service.dart';
-// import 'package:dart_verse_backend/settings/app/app.dart';
+// import 'package:dart_verse_backend_new/services/db_manager/db_service.dart';
+// import 'package:dart_verse_backend_new/settings/app/app.dart';
 // import 'package:mongo_dart/mongo_dart.dart';
 
 // class AuthCollections {

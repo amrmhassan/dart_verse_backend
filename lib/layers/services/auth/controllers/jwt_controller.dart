@@ -1,5 +1,5 @@
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
-import 'package:dart_verse_backend/layers/settings/app/app.dart';
+import 'package:dart_verse_backend_new/layers/settings/app/app.dart';
 
 import '../models/jwt_payload.dart';
 

@@ -1,8 +1,8 @@
-import 'package:dart_verse_backend/constants/path_fields.dart';
-import 'package:dart_verse_backend/layers/settings/app/app.dart';
-import 'package:dart_verse_backend/layers/service_server/service_server.dart';
-import 'package:dart_verse_backend/layers/services/web_server/models/router_info.dart';
-import 'package:dart_verse_backend/layers/service_server/auth_server/repo/auth_server_settings.dart';
+import 'package:dart_verse_backend_new/constants/path_fields.dart';
+import 'package:dart_verse_backend_new/layers/settings/app/app.dart';
+import 'package:dart_verse_backend_new/layers/service_server/service_server.dart';
+import 'package:dart_verse_backend_new/layers/services/web_server/models/router_info.dart';
+import 'package:dart_verse_backend_new/layers/service_server/auth_server/repo/auth_server_settings.dart';
 import 'package:dart_webcore/dart_webcore.dart';
 
 class AuthServer implements ServiceServerLayer {

@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:dart_verse_backend/errors/models/storage_errors.dart';
-import 'package:dart_verse_backend/layers/services/storage_service/data/datasource/custom_isolate.dart';
+import 'package:dart_verse_backend_new/errors/models/storage_errors.dart';
+import 'package:dart_verse_backend_new/layers/services/storage_service/data/datasource/custom_isolate.dart';
 
 class EntityType {
   static const String file = 'file';

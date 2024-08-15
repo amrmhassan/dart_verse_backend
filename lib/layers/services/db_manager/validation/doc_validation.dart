@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:dart_verse_backend/constants/reserved_keys.dart';
-import 'package:dart_verse_backend/errors/models/database_errors.dart';
+import 'package:dart_verse_backend_new/constants/reserved_keys.dart';
+import 'package:dart_verse_backend_new/errors/models/database_errors.dart';
 
 class DocValidation {
   final String id;

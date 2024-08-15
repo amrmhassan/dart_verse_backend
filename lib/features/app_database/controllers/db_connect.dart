@@ -1,8 +1,8 @@
-import 'package:dart_verse_backend/features/app_database/controllers/db_connect/memory_db_connect.dart';
-import 'package:dart_verse_backend/features/app_database/controllers/db_connect/mongo_db_connect.dart';
-import 'package:dart_verse_backend/layers/services/db_manager/data/repositories/db_controllers/memory_db_controller.dart';
-import 'package:dart_verse_backend/layers/settings/app/app.dart';
-import 'package:dart_verse_backend/layers/settings/db_settings/repo/conn_link.dart';
+import 'package:dart_verse_backend_new/features/app_database/controllers/db_connect/memory_db_connect.dart';
+import 'package:dart_verse_backend_new/features/app_database/controllers/db_connect/mongo_db_connect.dart';
+import 'package:dart_verse_backend_new/layers/services/db_manager/data/repositories/db_controllers/memory_db_controller.dart';
+import 'package:dart_verse_backend_new/layers/settings/app/app.dart';
+import 'package:dart_verse_backend_new/layers/settings/db_settings/repo/conn_link.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 class DbConnect {

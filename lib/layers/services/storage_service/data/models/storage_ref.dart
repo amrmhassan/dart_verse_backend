@@ -1,4 +1,4 @@
-import 'package:dart_verse_backend/layers/services/storage_service/data/datasource/storage_datasource.dart';
+import 'package:dart_verse_backend_new/layers/services/storage_service/data/datasource/storage_datasource.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'storage_ref.g.dart';
 

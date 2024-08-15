@@ -1,6 +1,6 @@
-import 'package:dart_verse_backend/layers/services/auth/models/auth_model.dart';
-import 'package:dart_verse_backend/layers/services/auth/models/jwt_payload.dart';
-import 'package:dart_verse_backend/layers/services/db_manager/db_service.dart';
+import 'package:dart_verse_backend_new/layers/services/auth/models/auth_model.dart';
+import 'package:dart_verse_backend_new/layers/services/auth/models/jwt_payload.dart';
+import 'package:dart_verse_backend_new/layers/services/db_manager/db_service.dart';
 
 import '../../layers/settings/app/app.dart';
 

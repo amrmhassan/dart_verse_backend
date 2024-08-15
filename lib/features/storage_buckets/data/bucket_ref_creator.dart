@@ -1,5 +1,5 @@
-import 'package:dart_verse_backend/features/storage_buckets/models/storage_bucket_model.dart';
-import 'package:dart_verse_backend/utils/string_utils.dart';
+import 'package:dart_verse_backend_new/features/storage_buckets/models/storage_bucket_model.dart';
+import 'package:dart_verse_backend_new/utils/string_utils.dart';
 
 extension BucketRefCreator on StorageBucketModel {
   ///? this will migrate from the requested bucket in the headers to <br>

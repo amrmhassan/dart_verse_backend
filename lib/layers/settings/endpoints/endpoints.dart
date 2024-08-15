@@ -1,9 +1,9 @@
-import 'package:dart_verse_backend/layers/service_server/db_server/impl/default_db_server_endpoints.dart';
-import 'package:dart_verse_backend/layers/service_server/db_server/repo/db_server_endpoints.dart';
-import 'package:dart_verse_backend/layers/settings/endpoints/impl/default_storage_endpoints.dart';
-import 'package:dart_verse_backend/layers/settings/endpoints/repo/auth_endpoints.dart';
-import 'package:dart_verse_backend/layers/settings/endpoints/impl/default_auth_endpoints.dart';
-import 'package:dart_verse_backend/layers/settings/endpoints/repo/storage_endpoints.dart';
+import 'package:dart_verse_backend_new/layers/service_server/db_server/impl/default_db_server_endpoints.dart';
+import 'package:dart_verse_backend_new/layers/service_server/db_server/repo/db_server_endpoints.dart';
+import 'package:dart_verse_backend_new/layers/settings/endpoints/impl/default_storage_endpoints.dart';
+import 'package:dart_verse_backend_new/layers/settings/endpoints/repo/auth_endpoints.dart';
+import 'package:dart_verse_backend_new/layers/settings/endpoints/impl/default_auth_endpoints.dart';
+import 'package:dart_verse_backend_new/layers/settings/endpoints/repo/storage_endpoints.dart';
 
 class EndpointsSettings {
   final AuthEndpoints authEndpoints;

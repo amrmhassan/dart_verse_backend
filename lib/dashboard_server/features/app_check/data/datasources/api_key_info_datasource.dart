@@ -1,14 +1,14 @@
-import 'package:dart_verse_backend/constants/collections.dart';
-import 'package:dart_verse_backend/dashboard_server/features/app_check/data/datasources/api_key_generator.dart';
-import 'package:dart_verse_backend/dashboard_server/features/app_check/data/datasources/api_secret_generator.dart';
-import 'package:dart_verse_backend/dashboard_server/features/app_check/data/datasources/checker/base64_encrypter.dart';
-import 'package:dart_verse_backend/dashboard_server/features/app_check/data/models/api_secret_model.dart';
-import 'package:dart_verse_backend/dashboard_server/features/app_check/data/repositories/api_keys_repo.dart';
-import 'package:dart_verse_backend/dashboard_server/features/app_check/data/models/api_hash_model.dart';
-import 'package:dart_verse_backend/errors/models/api_key_exceptions.dart';
-import 'package:dart_verse_backend/errors/models/encryption_exceptions.dart';
-import 'package:dart_verse_backend/layers/services/db_manager/data/repositories/mongo_ref/coll_ref_mongo.dart';
-import 'package:dart_verse_backend/layers/services/db_manager/db_service.dart';
+import 'package:dart_verse_backend_new/constants/collections.dart';
+import 'package:dart_verse_backend_new/dashboard_server/features/app_check/data/datasources/api_key_generator.dart';
+import 'package:dart_verse_backend_new/dashboard_server/features/app_check/data/datasources/api_secret_generator.dart';
+import 'package:dart_verse_backend_new/dashboard_server/features/app_check/data/datasources/checker/base64_encrypter.dart';
+import 'package:dart_verse_backend_new/dashboard_server/features/app_check/data/models/api_secret_model.dart';
+import 'package:dart_verse_backend_new/dashboard_server/features/app_check/data/repositories/api_keys_repo.dart';
+import 'package:dart_verse_backend_new/dashboard_server/features/app_check/data/models/api_hash_model.dart';
+import 'package:dart_verse_backend_new/errors/models/api_key_exceptions.dart';
+import 'package:dart_verse_backend_new/errors/models/encryption_exceptions.dart';
+import 'package:dart_verse_backend_new/layers/services/db_manager/data/repositories/mongo_ref/coll_ref_mongo.dart';
+import 'package:dart_verse_backend_new/layers/services/db_manager/db_service.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 ApiKeysRepo _apiKeysRepo = ApiKeysRepo();

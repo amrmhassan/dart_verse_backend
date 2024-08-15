@@ -1,5 +1,5 @@
-import 'package:dart_verse_backend/layers/settings/db_settings/impl/conn_link_impl.dart';
-import 'package:dart_verse_backend/layers/settings/db_settings/repo/conn_link.dart';
+import 'package:dart_verse_backend_new/layers/settings/db_settings/impl/conn_link_impl.dart';
+import 'package:dart_verse_backend_new/layers/settings/db_settings/repo/conn_link.dart';
 import 'package:dotenv/dotenv.dart';
 
 final env = DotEnv(includePlatformEnvironment: true)..load();

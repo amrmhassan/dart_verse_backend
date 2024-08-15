@@ -1,4 +1,4 @@
-import 'package:dart_verse_backend/dashboard_server/features/app_check/data/datasources/api_key_generator.dart';
+import 'package:dart_verse_backend_new/dashboard_server/features/app_check/data/datasources/api_key_generator.dart';
 
 List<String> apiKeys = [];
 void main(List<String> args) async {

@@ -1,10 +1,10 @@
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
-import 'package:dart_verse_backend/constants/reserved_keys.dart';
-import 'package:dart_verse_backend/errors/models/auth_errors.dart';
-import 'package:dart_verse_backend/errors/models/database_errors.dart';
-import 'package:dart_verse_backend/features/auth_db_provider/auth_db_provider.dart';
-import 'package:dart_verse_backend/layers/services/auth/models/jwt_payload.dart';
-import 'package:dart_verse_backend/layers/services/service.dart';
+import 'package:dart_verse_backend_new/constants/reserved_keys.dart';
+import 'package:dart_verse_backend_new/errors/models/auth_errors.dart';
+import 'package:dart_verse_backend_new/errors/models/database_errors.dart';
+import 'package:dart_verse_backend_new/features/auth_db_provider/auth_db_provider.dart';
+import 'package:dart_verse_backend_new/layers/services/auth/models/jwt_payload.dart';
+import 'package:dart_verse_backend_new/layers/services/service.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 import 'controllers/secure_password.dart';

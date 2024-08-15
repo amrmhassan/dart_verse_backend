@@ -1,4 +1,4 @@
-import 'package:dart_verse_backend/constants/logger.dart';
+import 'package:dart_verse_backend_new/constants/logger.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 import '../../../../layers/settings/db_settings/repo/conn_link.dart';

@@ -1,20 +1,20 @@
-import 'package:dart_verse_backend/dashboard_server/features/app_check/data/datasources/api_key_info_datasource.dart';
-import 'package:dart_verse_backend/dashboard_server/features/app_check/server/api_crud_server.dart';
-import 'package:dart_verse_backend/dashboard_server/features/server/data/datasources/dashboard_server.dart';
-import 'package:dart_verse_backend/features/auth_db_provider/impl/mongo_db_auth_provider/mongo_db_auth_provider.dart';
-import 'package:dart_verse_backend/layers/service_server/auth_server/auth_server.dart';
-import 'package:dart_verse_backend/layers/service_server/auth_server/impl/default_auth_server_settings.dart';
-import 'package:dart_verse_backend/layers/service_server/auth_server/repo/auth_server_settings.dart';
-import 'package:dart_verse_backend/layers/services/auth/auth_service.dart';
-import 'package:dart_verse_backend/layers/services/db_manager/db_providers/impl/mongo_db/mongo_db_provider.dart';
-import 'package:dart_verse_backend/layers/services/db_manager/db_service.dart';
-import 'package:dart_verse_backend/layers/services/web_server/server_service.dart';
-import 'package:dart_verse_backend/layers/settings/app/app.dart';
-import 'package:dart_verse_backend/layers/settings/app/app_utils.dart';
-import 'package:dart_verse_backend/layers/settings/auth_settings/auth_settings.dart';
-import 'package:dart_verse_backend/layers/settings/db_settings/db_settings.dart';
-import 'package:dart_verse_backend/layers/settings/server_settings/entities/dashboard_server_settings.dart';
-import 'package:dart_verse_backend/layers/settings/user_data_settings/user_data_settings.dart';
+import 'package:dart_verse_backend_new/dashboard_server/features/app_check/data/datasources/api_key_info_datasource.dart';
+import 'package:dart_verse_backend_new/dashboard_server/features/app_check/server/api_crud_server.dart';
+import 'package:dart_verse_backend_new/dashboard_server/features/server/data/datasources/dashboard_server.dart';
+import 'package:dart_verse_backend_new/features/auth_db_provider/impl/mongo_db_auth_provider/mongo_db_auth_provider.dart';
+import 'package:dart_verse_backend_new/layers/service_server/auth_server/auth_server.dart';
+import 'package:dart_verse_backend_new/layers/service_server/auth_server/impl/default_auth_server_settings.dart';
+import 'package:dart_verse_backend_new/layers/service_server/auth_server/repo/auth_server_settings.dart';
+import 'package:dart_verse_backend_new/layers/services/auth/auth_service.dart';
+import 'package:dart_verse_backend_new/layers/services/db_manager/db_providers/impl/mongo_db/mongo_db_provider.dart';
+import 'package:dart_verse_backend_new/layers/services/db_manager/db_service.dart';
+import 'package:dart_verse_backend_new/layers/services/web_server/server_service.dart';
+import 'package:dart_verse_backend_new/layers/settings/app/app.dart';
+import 'package:dart_verse_backend_new/layers/settings/app/app_utils.dart';
+import 'package:dart_verse_backend_new/layers/settings/auth_settings/auth_settings.dart';
+import 'package:dart_verse_backend_new/layers/settings/db_settings/db_settings.dart';
+import 'package:dart_verse_backend_new/layers/settings/server_settings/entities/dashboard_server_settings.dart';
+import 'package:dart_verse_backend_new/layers/settings/user_data_settings/user_data_settings.dart';
 import 'package:dart_webcore/dart_webcore/routing/impl/pipeline.dart';
 
 class Dashboard {

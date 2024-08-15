@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:dart_verse_backend/features/storage_permissions/data/models/bucket_info.dart';
-import 'package:dart_verse_backend/features/storage_permissions/data/repositories/bucket_controller.dart';
-import 'package:dart_verse_backend/features/storage_permissions/data/repositories/permission_checker.dart';
-import 'package:dart_verse_backend/features/storage_permissions/data/repositories/permission_controller.dart';
-import 'package:dart_verse_backend/utils/string_utils.dart';
+import 'package:dart_verse_backend_new/features/storage_permissions/data/models/bucket_info.dart';
+import 'package:dart_verse_backend_new/features/storage_permissions/data/repositories/bucket_controller.dart';
+import 'package:dart_verse_backend_new/features/storage_permissions/data/repositories/permission_checker.dart';
+import 'package:dart_verse_backend_new/features/storage_permissions/data/repositories/permission_controller.dart';
+import 'package:dart_verse_backend_new/utils/string_utils.dart';
 
 const String defaultBucketsContainer = 'Buckets';
 

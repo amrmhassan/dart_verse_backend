@@ -1,4 +1,4 @@
-import 'package:dart_verse_backend/helpers/buckets_hive.dart';
+import 'package:dart_verse_backend_new/helpers/buckets_hive.dart';
 import 'package:hive/hive.dart';
 
 late Box _bucketsBox;

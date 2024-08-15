@@ -1,7 +1,7 @@
-import 'package:dart_verse_backend/dashboard_server/features/app_check/data/datasources/checker/base64_encrypter.dart';
-import 'package:dart_verse_backend/dashboard_server/features/app_check/data/datasources/random_generator.dart';
-import 'package:dart_verse_backend/dashboard_server/features/app_check/data/models/api_secret_model.dart';
-import 'package:dart_verse_backend/errors/models/encryption_exceptions.dart';
+import 'package:dart_verse_backend_new/dashboard_server/features/app_check/data/datasources/checker/base64_encrypter.dart';
+import 'package:dart_verse_backend_new/dashboard_server/features/app_check/data/datasources/random_generator.dart';
+import 'package:dart_verse_backend_new/dashboard_server/features/app_check/data/models/api_secret_model.dart';
+import 'package:dart_verse_backend_new/errors/models/encryption_exceptions.dart';
 
 class ApiSecretGenerator {
   final String _encrypterSecretKey;

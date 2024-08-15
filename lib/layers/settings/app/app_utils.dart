@@ -1,4 +1,4 @@
-import 'package:dart_verse_backend/dashboard_server/features/app_check/data/datasources/random_generator.dart';
+import 'package:dart_verse_backend_new/dashboard_server/features/app_check/data/datasources/random_generator.dart';
 
 class AppUtils {
   List<String> get _allowedLetters => charset.split('');

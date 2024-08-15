@@ -1,6 +1,6 @@
-import 'package:dart_verse_backend/features/storage_buckets/data/bucket_ref_creator.dart';
-import 'package:dart_verse_backend/features/storage_buckets/models/storage_bucket_model.dart';
-import 'package:dart_verse_backend/layers/services/storage_service/utils/buckets_store.dart';
+import 'package:dart_verse_backend_new/features/storage_buckets/data/bucket_ref_creator.dart';
+import 'package:dart_verse_backend_new/features/storage_buckets/models/storage_bucket_model.dart';
+import 'package:dart_verse_backend_new/layers/services/storage_service/utils/buckets_store.dart';
 
 StorageBucketModel _defaultStorageBucket(String? subDirRef) {
   return StorageBucketModel(

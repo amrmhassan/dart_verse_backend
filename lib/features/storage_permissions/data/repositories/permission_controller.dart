@@ -1,7 +1,7 @@
-import 'package:dart_verse_backend/features/storage_buckets/models/storage_bucket_model.dart';
-import 'package:dart_verse_backend/features/storage_permissions/data/datasources/storage_permission_source.dart';
-import 'package:dart_verse_backend/features/storage_permissions/utils/path_utils.dart';
-import 'package:dart_verse_backend/features/storage_permissions/utils/permissions_utils.dart';
+import 'package:dart_verse_backend_new/features/storage_buckets/models/storage_bucket_model.dart';
+import 'package:dart_verse_backend_new/features/storage_permissions/data/datasources/storage_permission_source.dart';
+import 'package:dart_verse_backend_new/features/storage_permissions/utils/path_utils.dart';
+import 'package:dart_verse_backend_new/features/storage_permissions/utils/permissions_utils.dart';
 import 'package:hive/hive.dart';
 
 //? the ref permissions is as it's bucket permissions as long as the ref doesn't have any permissions defined for it

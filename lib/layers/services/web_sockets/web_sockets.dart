@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:dart_verse_backend/layers/services/web_sockets/data/models/web_socket_model.dart';
+import 'package:dart_verse_backend_new/layers/services/web_sockets/data/models/web_socket_model.dart';
 
 //! this structure is the best for the users and rooms for broadcasting to rooms
 //! and also good for sending a specific message to a specific user

@@ -1,6 +1,6 @@
-import 'package:dart_verse_backend/features/storage_permissions/data/constants/boxes_keys.dart';
-import 'package:dart_verse_backend/features/storage_permissions/data/constants/storage_permissions.dart';
-import 'package:dart_verse_backend/features/storage_permissions/data/models/bucket_info.dart';
+import 'package:dart_verse_backend_new/features/storage_permissions/data/constants/boxes_keys.dart';
+import 'package:dart_verse_backend_new/features/storage_permissions/data/constants/storage_permissions.dart';
+import 'package:dart_verse_backend_new/features/storage_permissions/data/models/bucket_info.dart';
 import 'package:hive/hive.dart';
 
 class PermissionParser {

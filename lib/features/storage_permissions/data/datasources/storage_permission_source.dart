@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:dart_verse_backend/errors/models/storage_errors.dart';
-import 'package:dart_verse_backend/features/storage_permissions/data/constants/permissions_constants.dart';
-import 'package:dart_verse_backend/layers/services/storage_service/utils/buckets_store.dart';
-import 'package:dart_verse_backend/utils/string_utils.dart';
+import 'package:dart_verse_backend_new/errors/models/storage_errors.dart';
+import 'package:dart_verse_backend_new/features/storage_permissions/data/constants/permissions_constants.dart';
+import 'package:dart_verse_backend_new/layers/services/storage_service/utils/buckets_store.dart';
+import 'package:dart_verse_backend_new/utils/string_utils.dart';
 import 'package:hive/hive.dart';
 
 class SBBoxes {

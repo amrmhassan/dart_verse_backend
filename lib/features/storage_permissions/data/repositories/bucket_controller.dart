@@ -1,13 +1,13 @@
 import 'dart:io';
 
-import 'package:dart_verse_backend/errors/models/storage_errors.dart';
-import 'package:dart_verse_backend/features/storage_buckets/models/storage_bucket_model.dart';
-import 'package:dart_verse_backend/features/storage_permissions/data/constants/boxes_keys.dart';
-import 'package:dart_verse_backend/features/storage_permissions/data/datasources/permission_parser.dart';
-import 'package:dart_verse_backend/features/storage_permissions/data/datasources/storage_permission_source.dart';
-import 'package:dart_verse_backend/features/storage_permissions/data/models/bucket_info.dart';
-import 'package:dart_verse_backend/layers/services/storage_service/utils/buckets_store.dart';
-import 'package:dart_verse_backend/utils/string_utils.dart';
+import 'package:dart_verse_backend_new/errors/models/storage_errors.dart';
+import 'package:dart_verse_backend_new/features/storage_buckets/models/storage_bucket_model.dart';
+import 'package:dart_verse_backend_new/features/storage_permissions/data/constants/boxes_keys.dart';
+import 'package:dart_verse_backend_new/features/storage_permissions/data/datasources/permission_parser.dart';
+import 'package:dart_verse_backend_new/features/storage_permissions/data/datasources/storage_permission_source.dart';
+import 'package:dart_verse_backend_new/features/storage_permissions/data/models/bucket_info.dart';
+import 'package:dart_verse_backend_new/layers/services/storage_service/utils/buckets_store.dart';
+import 'package:dart_verse_backend_new/utils/string_utils.dart';
 import 'package:dart_webcore/dart_webcore/server/impl/request_holder.dart';
 import 'package:path/path.dart';
 

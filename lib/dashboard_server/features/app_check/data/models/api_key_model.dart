@@ -1,4 +1,4 @@
-import 'package:dart_verse_backend/dashboard_server/features/app_check/data/models/api_hash_model.dart';
+import 'package:dart_verse_backend_new/dashboard_server/features/app_check/data/models/api_hash_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'api_key_model.g.dart';

@@ -15,4 +15,4 @@
 * returned to origin
 
 ## 1.5.0
-* CORS error handling
+* CORS error handling and moved to a new package

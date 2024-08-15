@@ -1,5 +1,5 @@
-import 'package:dart_verse_backend/dashboard_server/features/app_check/data/datasources/check_app_datasource.dart';
-import 'package:dart_verse_backend/layers/services/db_manager/db_service.dart';
+import 'package:dart_verse_backend_new/dashboard_server/features/app_check/data/datasources/check_app_datasource.dart';
+import 'package:dart_verse_backend_new/layers/services/db_manager/db_service.dart';
 
 class AppCheck {
   final String _encrypterSecretKey;

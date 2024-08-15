@@ -1,6 +1,6 @@
 // ignore_for_file: overridden_fields
 
-import 'package:dart_verse_backend/constants/error_codes.dart';
+import 'package:dart_verse_backend_new/constants/error_codes.dart';
 
 import '../serverless_exception.dart';
 

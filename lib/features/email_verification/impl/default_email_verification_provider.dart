@@ -1,7 +1,7 @@
 // ignore_for_file: overridden_fields
 
-import 'package:dart_verse_backend/features/email_verification/repo/email_verification_provider.dart';
-import 'package:dart_verse_backend/layers/services/auth/auth_service.dart';
+import 'package:dart_verse_backend_new/features/email_verification/repo/email_verification_provider.dart';
+import 'package:dart_verse_backend_new/layers/services/auth/auth_service.dart';
 
 class DefaultEmailVerificationProvider extends EmailVerificationProvider {
   @override
