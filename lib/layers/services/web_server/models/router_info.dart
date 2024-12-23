@@ -1,4 +1,4 @@
-import 'package:dart_webcore/dart_webcore.dart';
+import 'package:dart_webcore_new/dart_webcore_new.dart';
 
 class RouterInfo {
   final Router router;

@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:dart_verse_backend_new/layers/services/auth/auth_service.dart';
-import 'package:dart_webcore/dart_webcore/server/impl/request_holder.dart';
-import 'package:dart_webcore/dart_webcore/server/impl/response_holder.dart';
-import 'package:dart_webcore/dart_webcore/server/repo/passed_http_entity.dart';
+import 'package:dart_webcore_new/dart_webcore_new/server/impl/request_holder.dart';
+import 'package:dart_webcore_new/dart_webcore_new/server/impl/response_holder.dart';
+import 'package:dart_webcore_new/dart_webcore_new/server/repo/passed_http_entity.dart';
 
 import '../../../../features/email_verification/repo/email_verification_provider.dart';
 

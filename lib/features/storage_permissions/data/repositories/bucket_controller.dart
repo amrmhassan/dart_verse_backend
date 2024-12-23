@@ -8,7 +8,7 @@ import 'package:dart_verse_backend_new/features/storage_permissions/data/datasou
 import 'package:dart_verse_backend_new/features/storage_permissions/data/models/bucket_info.dart';
 import 'package:dart_verse_backend_new/layers/services/storage_service/utils/buckets_store.dart';
 import 'package:dart_verse_backend_new/utils/string_utils.dart';
-import 'package:dart_webcore/dart_webcore/server/impl/request_holder.dart';
+import 'package:dart_webcore_new/dart_webcore_new/server/impl/request_holder.dart';
 import 'package:path/path.dart';
 
 List<String> reservedBucketsName = ['null'];

@@ -19,3 +19,6 @@
 
 ## 1.6.0
 * CORS updated
+
+## 1.7.0
+* implemented dart_webcore_new

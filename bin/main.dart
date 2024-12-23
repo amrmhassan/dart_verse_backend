@@ -27,7 +27,7 @@ import 'package:dart_verse_backend_new/layers/settings/server_settings/entities/
 import 'package:dart_verse_backend_new/layers/settings/server_settings/entities/http_server_setting.dart';
 import 'package:dart_verse_backend_new/layers/settings/storage_settings/storage_settings.dart';
 import 'package:dart_verse_backend_new/layers/settings/user_data_settings/user_data_settings.dart';
-import 'package:dart_webcore/dart_webcore.dart';
+import 'package:dart_webcore_new/dart_webcore_new.dart';
 import 'constants.dart';
 
 // flutter packages pub run build_runner build --delete-conflicting-outputs
@@ -100,7 +100,18 @@ void main(List<String> arguments) async {
     return request;
   });
   Router router = Router()
-    ..get('/test', (request, response, pathArgs) => response.write('Hello'));
+    ..post('/users', (request, response, pathArgs) async {
+      try {
+        var obj = await request.readAsJson();
+        String email = obj['email'];
+        String password = obj['password'];
+        var res =
+            await authService.registerUser(email: email, password: password);
+        return response.write(res);
+      } catch (e) {
+        return response.write(e.toString());
+      }
+    });
   serverService.addRouter(RouterInfo(router));
 
   await storageService.init();

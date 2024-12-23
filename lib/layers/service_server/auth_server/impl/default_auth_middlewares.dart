@@ -6,9 +6,9 @@ import 'package:dart_verse_backend_new/errors/models/auth_errors.dart';
 import 'package:dart_verse_backend_new/errors/serverless_exception.dart';
 import 'package:dart_verse_backend_new/layers/services/auth/auth_service.dart';
 import 'package:dart_verse_backend_new/layers/service_server/auth_server/repo/auth_middlewares.dart';
-import 'package:dart_webcore/dart_webcore/server/impl/request_holder.dart';
-import 'package:dart_webcore/dart_webcore/server/impl/response_holder.dart';
-import 'package:dart_webcore/dart_webcore/server/repo/passed_http_entity.dart';
+import 'package:dart_webcore_new/dart_webcore_new/server/impl/request_holder.dart';
+import 'package:dart_webcore_new/dart_webcore_new/server/impl/response_holder.dart';
+import 'package:dart_webcore_new/dart_webcore_new/server/repo/passed_http_entity.dart';
 
 import '../../../settings/server_settings/utils/send_response.dart';
 

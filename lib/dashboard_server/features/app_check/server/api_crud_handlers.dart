@@ -10,9 +10,9 @@ import 'package:dart_verse_backend_new/errors/models/app_check_exceptions.dart';
 import 'package:dart_verse_backend_new/errors/models/server_errors.dart';
 import 'package:dart_verse_backend_new/errors/serverless_exception.dart';
 import 'package:dart_verse_backend_new/layers/settings/server_settings/utils/send_response.dart';
-import 'package:dart_webcore/dart_webcore/server/impl/request_holder.dart';
-import 'package:dart_webcore/dart_webcore/server/impl/response_holder.dart';
-import 'package:dart_webcore/dart_webcore/server/repo/passed_http_entity.dart';
+import 'package:dart_webcore_new/dart_webcore_new/server/impl/request_holder.dart';
+import 'package:dart_webcore_new/dart_webcore_new/server/impl/response_holder.dart';
+import 'package:dart_webcore_new/dart_webcore_new/server/repo/passed_http_entity.dart';
 
 class ApiCrudHandlers {
   final ApiKeyInfoDatasource _apiKeyInfoDatasource;

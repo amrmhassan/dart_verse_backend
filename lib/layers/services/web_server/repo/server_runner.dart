@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:dart_verse_backend_new/layers/settings/app/app.dart';
 import 'package:dart_verse_backend_new/layers/settings/server_settings/entities/http_server_setting.dart';
-import 'package:dart_webcore/dart_webcore.dart';
+import 'package:dart_webcore_new/dart_webcore_new.dart';
 
 class ServerRunner {
   final App _app;

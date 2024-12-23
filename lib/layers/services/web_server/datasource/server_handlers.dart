@@ -1,6 +1,6 @@
 import 'package:dart_verse_backend_new/constants/endpoints_constants.dart';
 import 'package:dart_verse_backend_new/layers/services/web_server/models/router_info.dart';
-import 'package:dart_webcore/dart_webcore.dart';
+import 'package:dart_webcore_new/dart_webcore_new.dart';
 
 class ServerHandlers {
   RouterInfo getServerRouter() {

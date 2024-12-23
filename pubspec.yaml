@@ -1,7 +1,7 @@
 name: dart_verse_backend_new
 description: The ultimate dart backend framework. 
 homepage: https://github.com/amrmhassan/dart_verse_backend
-version: 1.6.0
+version: 1.7.0
 # repository: https://github.com/my_org/my_repo
 
 environment:
@@ -25,7 +25,7 @@ dependencies:
   mongo_dart: ^0.9.1
   path: ^1.8.3
   uuid: ^3.0.7
-  dart_webcore: ^0.3.0
+  dart_webcore_new: ^0.3.1
 
 
 dev_dependencies:

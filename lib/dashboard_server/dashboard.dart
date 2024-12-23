@@ -15,7 +15,7 @@ import 'package:dart_verse_backend_new/layers/settings/auth_settings/auth_settin
 import 'package:dart_verse_backend_new/layers/settings/db_settings/db_settings.dart';
 import 'package:dart_verse_backend_new/layers/settings/server_settings/entities/dashboard_server_settings.dart';
 import 'package:dart_verse_backend_new/layers/settings/user_data_settings/user_data_settings.dart';
-import 'package:dart_webcore/dart_webcore/routing/impl/pipeline.dart';
+import 'package:dart_webcore_new/dart_webcore_new/routing/impl/pipeline.dart';
 
 class Dashboard {
   final DashboardSettings _dashboardSettings;

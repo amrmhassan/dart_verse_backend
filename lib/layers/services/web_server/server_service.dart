@@ -12,9 +12,9 @@ import 'package:dart_verse_backend_new/layers/services/web_server/datasource/ser
 import 'package:dart_verse_backend_new/layers/services/web_server/models/router_info.dart';
 import 'package:dart_verse_backend_new/layers/services/web_server/repo/server_runner.dart';
 import 'package:dart_verse_backend_new/layers/settings/app/app.dart';
-import 'package:dart_webcore/dart_webcore.dart';
-import 'package:dart_webcore/dart_webcore/server/impl/response_holder.dart';
-import 'package:dart_webcore/dart_webcore/server/repo/passed_http_entity.dart';
+import 'package:dart_webcore_new/dart_webcore_new.dart';
+import 'package:dart_webcore_new/dart_webcore_new/server/impl/response_holder.dart';
+import 'package:dart_webcore_new/dart_webcore_new/server/repo/passed_http_entity.dart';
 
 FutureOr<PassedHttpEntity> _corsMiddleWare(
   request,
