@@ -22,3 +22,5 @@
 
 ## 1.7.0
 * implemented dart_webcore_new
+## 1.8.0
+* auto db reconnect update

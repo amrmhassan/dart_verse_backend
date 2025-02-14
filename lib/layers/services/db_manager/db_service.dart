@@ -1,3 +1,4 @@
+import 'package:dart_verse_backend_new/constants/logger.dart';
 import 'package:dart_verse_backend_new/errors/models/app_exceptions.dart';
 import 'package:dart_verse_backend_new/errors/models/database_errors.dart';
 import 'package:dart_verse_backend_new/features/app_database/controllers/db_connect.dart';
@@ -14,7 +15,12 @@ class DbService implements DVService {
   Db? db;
 
   bool get connected {
-    return db != null && db!.masterConnection.connected;
+    try {
+      return db != null && db!.masterConnection.connected;
+    } catch (e) {
+      logger.e(e);
+      return false;
+    }
   }
 
   Future<void> reconnect() async {

@@ -61,12 +61,14 @@ class ServerService {
   final DbService dbService;
   late Dashboard _dashboard;
   final bool disableCORS;
+  final bool autoDBReconnect;
 
   ServerService(
     this.app, {
     required this.authServerSettings,
     required this.dbService,
     this.disableCORS = false,
+    this.autoDBReconnect = true,
   }) {
     _pipeline = Pipeline();
     serverRunner = ServerRunner(
@@ -106,14 +108,16 @@ class ServerService {
     if (disableCORS) {
       router.addUpperMiddleware(null, HttpMethods.all, _corsMiddleWare);
     }
-    // this middleware will check for db auto reconnecting
-    router.addUpperMiddleware(null, HttpMethods.all,
-        (request, response, pathArgs) async {
-      if (dbService.connected) return request;
-      await dbService.reconnect();
+    if (autoDBReconnect) {
+      // this middleware will check for db auto reconnecting
+      router.addUpperMiddleware(null, HttpMethods.all,
+          (request, response, pathArgs) async {
+        if (dbService.connected) return request;
+        await dbService.reconnect();
 
-      return request;
-    });
+        return request;
+      });
+    }
 
     //? run checks here
     if (!jwtSecured && emailMustBeVerified) {
